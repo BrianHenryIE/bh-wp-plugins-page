@@ -7,17 +7,17 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              http://example.com
+ * @link              https://github.com/brianhenryie/bh-wp-plugins-page
  * @since             1.0.0
  * @package           BH_WP_Plugins_Page
  *
  * @wordpress-plugin
- * Plugin Name:       BH WP Plugins Page
- * Plugin URI:        http://github.com/username/bh-wp-plugins-page/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Plugin Name:       Plugins Page Cleanup
+ * Plugin URI:        http://github.com/BrianHenryIE/bh-wp-plugins-page/
+ * Description:       Removes formatting and up-sells, and moves Settings links to the beginning and Deactivate links to the end of plugins.php action links. Disables plugin deactivation surveys.
  * Version:           1.0.0
  * Author:            BrianHenryIE
- * Author URI:        http://example.com/
+ * Author URI:        https://github.com/brianhenryie/bh-wp-plugins-page/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       bh-wp-plugins-page
@@ -46,28 +46,6 @@ require_once plugin_dir_path( __FILE__ ) . 'autoload.php';
 define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.0' );
 
 /**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-activator.php
- */
-function activate_bh_wp_plugins_page() {
-
-	Activator::activate();
-}
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-deactivator.php
- */
-function deactivate_bh_wp_plugins_page() {
-
-	Deactivator::deactivate();
-}
-
-register_activation_hook( __FILE__, 'BH_WP_Plugins_Page\activate_bh_wp_plugins_page' );
-register_deactivation_hook( __FILE__, 'BH_WP_Plugins_Page\deactivate_bh_wp_plugins_page' );
-
-
-/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,
@@ -78,8 +56,7 @@ register_deactivation_hook( __FILE__, 'BH_WP_Plugins_Page\deactivate_bh_wp_plugi
  */
 function instantiate_bh_wp_plugins_page() {
 
-	$loader = new WPPB_Loader();
-	$plugin = new BH_WP_Plugins_Page( $loader );
+	$plugin = new BH_WP_Plugins_Page();
 
 	return $plugin;
 }
@@ -88,5 +65,5 @@ function instantiate_bh_wp_plugins_page() {
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and frontend-facing site hooks.
  */
-$GLOBALS['bh_wp_plugins_page'] = $bh_wp_plugins_page = instantiate_bh_wp_plugins_page();
-$bh_wp_plugins_page->run();
+instantiate_bh_wp_plugins_page();
+

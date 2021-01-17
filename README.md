@@ -1,22 +1,54 @@
-[![WordPress tested 5.5](https://img.shields.io/badge/WordPress-v5.5%20tested-0073aa.svg)](https://wordpress.org/plugins/plugin_slug) [![PHPCS WPCS](https://img.shields.io/badge/PHPCS-WordPress%20Coding%20Standards-8892BF.svg)](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards) [![PHPUnit ](.github/coverage.svg)](https://brianhenryie.github.io/plugin_slug/)
+[![WordPress tested 5.6](https://img.shields.io/badge/WordPress-v5.6%20tested-0073aa.svg)](https://wordpress.org/plugins/bh-wp-plugins-page) [![PHPCS WPCS](https://img.shields.io/badge/PHPCS-WordPress%20Coding%20Standards-8892BF.svg)](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards) [![PHPUnit ](.github/coverage.svg)](https://brianhenryie.github.io/plugin_slug/)
 
 # BH WP Plugins Page
 
+Cleans up WordPress's plugins.php.
+
+## Description
+
 * Removes formatting from links on plugins.php
-* Moves external links from the action links (first) column into the description column.
-* Moves deactivate to the end of the list of action links, and settings to the beginning (where it exists).
+* Moves external links from the action links (first) column into the description column
+* Moves deactivate to the end of the list of action links, and settings to the beginning (where it exists)
+* Replaces GitHub links with icons
+* Removes click handlers on Deactivate links (to remove deactivation surveys)
+
+
+![Before](./assets/screenshot-1.png "BH WP Plugins Page before screenshot")
+Before.
+
+![After](./assets/screenshot-2.png "BH WP Plugins Page after screenshot")
+After
+
+![Deactivate](./assets/screenshot-3.png "BH WP Plugins Page deactivation dialog")
+Removes JavaScript hooked to deactivation buttons.
+
+## Installation
+
+[Download the latest release](https://github.com/BrianHenryIE/bh-wp-plugins-page/releases).
+
+## TODO:
+
+* Set a max-length on plugin titles (line-break) so the description column isn't too cramped.
+* When removing a Licence link, add an admin notice for a few days so users can still easily access the page.
+* Add a UI for specifying Settings links for plugins that don't have them
+* Add installed date and last updated date on each plugin
 
 ## Contributing
+
+Open an issue with a link to a plugin that still needs something addressed. 
+
+
+### Development
 
 Clone this repo, open PhpStorm, then run `composer install` to install the dependencies.
 
 ```
-git clone https://github.com/brianhenryie/plugin_slug.git;
+git clone https://github.com/brianhenryie/bh-wp-plugins-page.git;
 open -a PhpStorm ./;
 composer install;
 ```
 
-For integration and acceptance tests, a local webserver must be running with `localhost:8080/plugin_slug/` pointing at the root of the repo. MySQL must also be running locally – with two databases set up with:
+For integration and acceptance tests, a local webserver must be running with `localhost:8080/bh-wp-plugins-page/` pointing at the root of the repo. MySQL must also be running locally – with two databases set up with:
 
 ```
 mysql_username="root"
@@ -59,9 +91,7 @@ vendor/bin/codecept run acceptance;
 Output and merge code coverage with:
 
 ```
-vendor/bin/codecept run unit --coverage unit.cov;
-vendor/bin/codecept run wpunit --coverage wpunit.cov;
-vendor/bin/phpcov merge --clover tests/_output/clover.xml --html tests/_output/html tests/_output --text;
+composer run-script coverage-tests
 ```
 
 To save changes made to the acceptance database:
@@ -77,8 +107,14 @@ To clear Codeception cache after moving/removing test files:
 vendor/bin/codecept clean
 ```
 
+To create an installable zip `bh-wp-plugins-page-1.0.0.zip` from the `src` directory run:
+
+`composer run-script create-plugin-archive`
+
 ### More Information
 
 See [github.com/BrianHenryIE/WordPress-Plugin-Boilerplate](https://github.com/BrianHenryIE/WordPress-Plugin-Boilerplate) for initial setup rationale. 
 
 # Acknowledgements
+
+I was finally promoted to write this after seeing someone (Timbr) complain about this same irritating problem on Discord.

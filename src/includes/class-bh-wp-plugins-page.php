@@ -5,7 +5,7 @@
  * A class definition that includes attributes and functions used across both the
  * frontend-facing side of the site and the admin area.
  *
- * @link       http://example.com
+ * @link       https://github.com/brianhenryie/bh-wp-plugins-page
  * @since      1.0.0
  *
  * @package    BH_WP_Plugins_Page
@@ -15,9 +15,7 @@
 namespace BH_WP_Plugins_Page\includes;
 
 use BH_WP_Plugins_Page\admin\Admin;
-use BH_WP_Plugins_Page\frontend\Frontend;
-use BH_WP_Plugins_Page\BrianHenryIE\WPPB\WPPB_Loader_Interface;
-use BH_WP_Plugins_Page\BrianHenryIE\WPPB\WPPB_Plugin_Abstract;
+use BH_WP_Plugins_Page\admin\Plugins_List_Table;
 
 /**
  * The core plugin class.
@@ -33,7 +31,7 @@ use BH_WP_Plugins_Page\BrianHenryIE\WPPB\WPPB_Plugin_Abstract;
  * @subpackage BH_WP_Plugins_Page/includes
  * @author     BrianHenryIE <BrianHenryIE@gmail.com>
  */
-class BH_WP_Plugins_Page extends WPPB_Plugin_Abstract {
+class BH_WP_Plugins_Page {
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -43,22 +41,11 @@ class BH_WP_Plugins_Page extends WPPB_Plugin_Abstract {
 	 * the frontend-facing side of the site.
 	 *
 	 * @since    1.0.0
-	 *
-	 * @param WPPB_Loader_Interface $loader The WPPB class which adds the hooks and filters to WordPress.
 	 */
-	public function __construct( $loader ) {
-		if ( defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ) {
-			$version = BH_WP_PLUGINS_PAGE_VERSION;
-		} else {
-			$version = '1.0.0';
-		}
-		$plugin_name = 'bh-wp-plugins-page';
-
-		parent::__construct( $loader, $plugin_name, $version );
+	public function __construct() {
 
 		$this->set_locale();
 		$this->define_admin_hooks();
-		$this->define_frontend_hooks();
 
 	}
 
@@ -75,7 +62,7 @@ class BH_WP_Plugins_Page extends WPPB_Plugin_Abstract {
 
 		$plugin_i18n = new I18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		add_action( 'plugins_loaded', array( $plugin_i18n, 'load_plugin_textdomain' ) );
 
 	}
 
@@ -88,26 +75,24 @@ class BH_WP_Plugins_Page extends WPPB_Plugin_Abstract {
 	 */
 	protected function define_admin_hooks() {
 
-		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Admin();
+		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ), PHP_INT_MAX );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$plugins_page   = new Plugins_List_Table();
+		$active_plugins = (array) get_option( 'active_plugins', array() );
 
-	}
-
-	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	protected function define_frontend_hooks() {
-
-		$plugin_frontend = new Frontend( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_frontend, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_frontend, 'enqueue_scripts' );
+		add_action( 'plugin_action_links', array( $plugins_page, 'action_links' ), PHP_INT_MAX, 4 );
+		add_action( 'plugin_row_meta', array( $plugins_page, 'row_meta' ), PHP_INT_MAX, 4 );
+		foreach ( $active_plugins as $plugin_basename ) {
+			add_action(
+				"plugin_action_links_{$plugin_basename}",
+				function( $action_link ) use ( $plugin_basename, $plugins_page ) {
+					return $plugins_page->plugin_specific_action_links( $action_link, $plugin_basename );
+				},
+				PHP_INT_MAX,
+				1
+			);
+		}
 
 	}
 

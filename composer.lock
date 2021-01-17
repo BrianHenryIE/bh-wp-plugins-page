@@ -4,31 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dea1a6c1d64ffb275b854db340296566",
+    "content-hash": "3b6ac0f1b4d6f50b3f4abf474e33d274",
     "packages": [
-        {
-            "name": "brianhenryie/wppb-lib",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/BrianHenryIE/WPPB-lib",
-                "reference": "c317c34fd65dd61ee025089ee77b0870ac389c93"
-            },
-            "require": {
-                "php": ">=5.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "BrianHenryIE\\WPPB\\": "src"
-                }
-            },
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Common files from WordPress Plugin Boilerplate",
-            "time": "2020-12-07T00:31:42+00:00"
-        },
         {
             "name": "pablo-sg-pacheco/wp-namespace-autoloader",
             "version": "dev-master",
@@ -2337,6 +2314,11 @@
                 "bin/php-coverage-badger"
             ],
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "Allow customising the text": "https://github.com/JASchilz/PHPCoverageBadge/pull/1.patch"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -8997,6 +8979,60 @@
             "time": "2020-05-13T23:57:56+00:00"
         },
         {
+            "name": "wpackagist-plugin/flexible-shipping",
+            "version": "4.0.7",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/flexible-shipping/",
+                "reference": "tags/4.0.7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/flexible-shipping.4.0.7.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/flexible-shipping/"
+        },
+        {
+            "name": "wpackagist-plugin/user-switching",
+            "version": "1.5.6",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/user-switching/",
+                "reference": "tags/1.5.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/user-switching.1.5.6.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/user-switching/"
+        },
+        {
+            "name": "wpackagist-plugin/woocommerce-google-adwords-conversion-tracking-tag",
+            "version": "1.7.11",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/woocommerce-google-adwords-conversion-tracking-tag/",
+                "reference": "tags/1.7.11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/woocommerce-google-adwords-conversion-tracking-tag.1.7.11.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/"
+        },
+        {
             "name": "wpackagist-theme/twentytwenty",
             "version": "1.6",
             "source": {
@@ -9070,7 +9106,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "brianhenryie/wppb-lib": 20,
         "pablo-sg-pacheco/wp-namespace-autoloader": 20,
         "brianhenryie/composer-phpstorm": 20,
         "brianhenryie/wp-dev": 20,

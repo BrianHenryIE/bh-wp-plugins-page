@@ -4,7 +4,7 @@
  *
  * Uses classmap, PSR4 & wp-namespace-autoloader.
  *
- * @link              http://example.com
+ * @link              https://github.com/brianhenryie/bh-wp-plugins-page
  * @since             1.0.0
  * @package           BH_WP_Plugins_Page
  *

@@ -42,7 +42,6 @@
         }
     ],
     "require": {
-        "brianhenryie/wppb-lib": "dev-master",
         "php": ">=7.2",
         "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master"
     },
@@ -71,6 +70,9 @@
         "wp-cli/wp-cli-bundle": "*",
         "wp-coding-standards/wpcs": "*",
         "wpackagist-theme/twentytwenty": "*",
+        "wpackagist-plugin/woocommerce-google-adwords-conversion-tracking-tag": "*",
+        "wpackagist-plugin/flexible-shipping": "*",
+        "wpackagist-plugin/user-switching": "*",
         "voku/portable-ascii": "dev-master"
     },
     "extra": {

@@ -2,7 +2,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       http://example.com
+ * @link       https://github.com/brianhenryie/bh-wp-plugins-page
  * @since      1.0.0
  *
  * @package    BH_WP_Plugins_Page
@@ -10,8 +10,6 @@
  */
 
 namespace BH_WP_Plugins_Page\admin;
-
-use BH_WP_Plugins_Page\BrianHenryIE\WPPB\WPPB_Object;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -23,51 +21,23 @@ use BH_WP_Plugins_Page\BrianHenryIE\WPPB\WPPB_Object;
  * @subpackage BH_WP_Plugins_Page/admin
  * @author     BrianHenryIE <BrianHenryIE@gmail.com>
  */
-class Admin extends WPPB_Object {
-
-	/**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/bh-wp-plugins-page-admin.css', array(), $this->version, 'all' );
-
-	}
+class Admin {
 
 	/**
 	 * Register the JavaScript for the admin area.
+	 *
+	 * @hooked admin_enqueue_scripts
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+		global $pagenow;
+		if ( 'plugins.php' !== $pagenow ) {
+			return;
+		}
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/bh-wp-plugins-page-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'bh-wp-plugins-page', plugin_dir_url( __FILE__ ) . 'js/bh-wp-plugins-page-admin.js', array( 'jquery' ), '1.0.0', false );
 
 	}
 

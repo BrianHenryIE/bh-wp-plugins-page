@@ -1,114 +1,74 @@
-=== BH WP Plugins Page ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: http://example.com/
-Tags: comments, spam
+=== Plugins Page Cleanup ===
+Contributors: BrianHenryIE
+Donate link: https://github.com/brianhenryie/bh-wp-plugins-page
+Tags: plugins, tidy, clean
 Requires at least: 3.0.1
 Tested up to: 3.4
 Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Removes formatting and up-sells, and moves Settings links to the beginning and Deactivate links to the end of plugins.php action links. Disables plugin deactivation surveys.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
-
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
-
-A few notes about the sections above:
-
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
-
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
-
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+* Removes formatting from links on plugins.php
+* Moves external links from the action links (first) column into the description column
+* Moves deactivate to the end of the list of action links, and settings to the beginning (where it exists)
+* Replaces GitHub links with icons
+* Removes click handlers on Deactivate links (to remove deactivation surveys)
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+Install from WordPress plugins repo, or download from the releases on [GitHub](https://github.com/BrianHenryIE/bh-wp-plugins-page/releases).
 
-e.g.
-
-1. Upload `bh-wp-plugins-page.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_snake_hook'); ?>` in your templates
+No configuration necessary.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= How can I help? =
 
-An answer to that question.
+Open an issue on [GitHub](https://github.com/BrianHenryIE/bh-wp-plugins-page/issues) with a link to a plugin that is still offensive.
 
-= What about foo bar? =
+= GitHub =
 
-Answer to foo bar dilemma.
+Yes: [BrianHenryIE/bh-wp-plugins-page](https://github.com/BrianHenryIE/bh-wp-plugins-page)
+
+= I like this plugin, what else will I like? =
+
+**[Admin Menu Editor](https://adminmenueditor.com/)**
+
+This allows reordering the wp-admin menu items, i.e. categorise them and hide unwanted menu items.
+
+[Admin Menu Editor on WordPress.org](https://wordpress.org/plugins/admin-menu-editor/) | [Admin Menu Editor Pro](https://adminmenueditor.com/)
+
+**[Plugin Notes Plus](https://wordpress.org/plugins/plugin-notes-plus/)**
+
+This adds another column on the plugins page where you can write "what bad thing will happen if I disable this plugin".
+
+[Plugin Notes Plus on WordPress.org](https://wordpress.org/plugins/plugin-notes-plus/) | [Plugin Notes Plus on GitHub.com](https://github.com/jamiebergen/plugin-notes-plus)
+
+= What other plugins do you have? =
+
+[Autologin URLs](https://wordpress.org/plugins/bh-wp-autologin-urls/) adds short-lived login codes to links in emails sent from WordPress.
+
+[Set Gateway By URL](https://wordpress.org/plugins/bh-wc-set-gateway-by-url/) allows setting WooCommerce's selected payment gateway in links shared with customers.
+
+A plethora of working but unpolished plugins on GitHub: [Brian](https://github.com/BrianHenryIE?tab=repositories&q=&type=source&language=php)
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Before
+
+2. After
+
+3. No more deactivation dialogs
 
 == Changelog ==
 
 = 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+* Removes formatting from links on plugins.php
+* Moves external links from the action links (first) column into the description column
+* Moves deactivate to the end of the list of action links, and settings to the beginning (where it exists)
+* Replaces GitHub links with icons
+* Removes click handlers on Deactivate links (to remove deactivation surveys)
