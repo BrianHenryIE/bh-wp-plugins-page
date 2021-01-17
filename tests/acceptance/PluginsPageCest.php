@@ -21,7 +21,7 @@ class PluginsPageCest
 	 */
 	public function testPluginsPageForName( AcceptanceTester $I ) {
 
-		$I->canSee( 'BH WP Plugins Page' );
+		$I->canSee( 'Plugins Page Cleanup' );
 	}
 
 	/**
