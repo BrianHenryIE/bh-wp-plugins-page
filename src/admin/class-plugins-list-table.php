@@ -14,6 +14,9 @@
 
 namespace BH_WP_Plugins_Page\admin;
 
+use DOMDocument;
+use DOMNode;
+
 /**
  * Class Plugins_List_Table
  *
@@ -28,6 +31,45 @@ class Plugins_List_Table {
 	 * @var array
 	 */
 	protected $move_to_meta_column = array();
+
+	/**
+	 * Get the anchor as an object from the HTML string.
+	 *
+	 * Discards the rest of the HTML string (e.g. "Version...", "By...").
+	 * Presumes one anchor per string.
+	 *
+	 * @param string $html_anchor_string A HTML string whose anchor we want to analyse.
+	 *
+	 * @return DOMNode|null
+	 */
+	protected function map_html_link_to_node( $html_anchor_string ): ?DOMNode {
+		$dom_document = new DOMDocument();
+
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$bool_result = @$dom_document->loadHtml( $html_anchor_string );
+
+		if ( false === $bool_result ) {
+			return null;
+		}
+
+		return $dom_document->getElementsByTagName( 'a' )->item( 0 );
+	}
+
+	/**
+	 * Given a DOMNode (presumably a modified link), return its HTML string.
+	 *
+	 * @param DOMNode $node The object that has been analysed.
+	 *
+	 * @return string HTML.
+	 */
+	protected function map_node_to_html_link( DOMNode $node ): string {
+
+		$node_document = new DOMDocument();
+		$node_document->appendChild( $node_document->importNode( $node, true ) );
+		$node_html = $node_document->saveHTML();
+
+		return $node_html;
+	}
 
 	/**
 	 * Hooked to the general filter for action links for plugins.
@@ -45,7 +87,11 @@ class Plugins_List_Table {
 	 */
 	public function action_links( $actions, $plugin_file, $plugin_data, $context ) {
 
-		return $this->get_good_action_links( $actions, $plugin_file );
+		$actions_nodes = array_map( array( $this, 'map_html_link_to_node' ), $actions );
+
+		$good_action_links = $this->get_good_action_links( $actions_nodes, $plugin_file );
+
+		return array_map( array( $this, 'map_node_to_html_link' ), $good_action_links );
 	}
 
 
@@ -61,7 +107,11 @@ class Plugins_List_Table {
 	 */
 	public function plugin_specific_action_links( $links_array, $plugin_basename ) {
 
-		return $this->get_good_action_links( $links_array, $plugin_basename );
+		$actions_nodes = array_map( array( $this, 'map_html_link_to_node' ), $links_array );
+
+		$good_action_links = $this->get_good_action_links( $actions_nodes, $plugin_basename );
+
+		return array_map( array( $this, 'map_node_to_html_link' ), $good_action_links );
 	}
 
 
@@ -83,21 +133,50 @@ class Plugins_List_Table {
 	 */
 	public function row_meta( $plugin_meta, $plugin_file_name, $plugin_data, $status ) {
 
+		$plugin_meta_anchor_nodes = array_map( array( $this, 'map_html_link_to_node' ), $plugin_meta );
+
+		$plugin_meta_templates = array_map(
+			function( $element ) {
+				return preg_replace( '/<a.*\/a>/', '%anchor%', $element );
+			},
+			$plugin_meta
+		);
+
+		$plugin_meta_anchor_nodes = array_combine( $plugin_meta_templates, $plugin_meta_anchor_nodes );
+
 		// Remove upsells.
-		$plugin_meta = array_filter( $plugin_meta, array( $this, 'check_link_has_no_unwanted_terms' ) );
+		$plugin_meta_anchor_nodes = array_filter( $plugin_meta_anchor_nodes, array( $this, 'check_link_has_no_unwanted_terms' ) );
 
 		// Remove formatting.
-		$plugin_meta = array_map( array( $this, 'remove_formatting' ), $plugin_meta );
+		$plugin_meta_anchor_nodes = array_map( array( $this, 'remove_formatting' ), $plugin_meta_anchor_nodes );
+
+		// Replace (GitHub) links with icon.
+		$plugin_meta_anchor_nodes = array_map( array( $this, 'replace_text_with_icons' ), $plugin_meta_anchor_nodes );
+
+		$new_plugin_meta = array();
+
+		foreach ( $plugin_meta_anchor_nodes as $template => $node ) {
+			if ( $node instanceof DOMNode ) {
+				$html_link         = $this->map_node_to_html_link( $node );
+				$new_plugin_meta[] = str_replace( '%anchor%', $html_link, $template );
+			} else {
+				$new_plugin_meta[] = $template;
+			}
+		}
 
 		// Merge external links from action links.
 		if ( isset( $this->move_to_meta_column[ $plugin_file_name ] ) ) {
-			$plugin_meta = array_merge( $plugin_meta, $this->move_to_meta_column[ $plugin_file_name ] );
+			$new_plugin_meta = array_merge(
+				$new_plugin_meta,
+				array_map(
+					array( $this, 'map_node_to_html_link' ),
+					$this->move_to_meta_column[ $plugin_file_name ]
+				)
+			);
 		}
 
-		// Replace (GitHub) links with icon.
-		$plugin_meta = array_map( array( $this, 'replace_text_with_icons' ), $plugin_meta );
+		return array_unique( $new_plugin_meta );
 
-		return array_unique( $plugin_meta );
 	}
 
 
@@ -106,66 +185,76 @@ class Plugins_List_Table {
 	 *
 	 * TODO: Use a proper array_sort().
 	 *
-	 * @param string[] $action_links Array of HTML anchors.
-	 * @param string   $plugin_basename The plugin's directory/filename.php.
+	 * @param DOMNode[] $action_nodes Array of HTML anchors.
+	 * @param string    $plugin_basename The plugin's directory/filename.php.
 	 *
 	 * @return string[]
 	 */
-	protected function get_good_action_links( $action_links, $plugin_basename ) {
+	protected function get_good_action_links( $action_nodes, $plugin_basename ) {
 
-		$deactivate_link = null;
-		$settings_link   = null;
+		$deactivate_node = null;
+		$settings_node   = null;
 
 		// Remove upsells.
-		$action_links = array_filter( $action_links, array( $this, 'check_link_has_no_unwanted_terms' ) );
+		$action_nodes = array_filter( $action_nodes, array( $this, 'check_link_has_no_unwanted_terms' ) );
 
 		// Remove licence links.
-		$action_links = array_filter( $action_links, array( $this, 'check_link_is_not_licence' ) );
+		$action_nodes = array_filter( $action_nodes, array( $this, 'check_link_is_not_licence' ) );
 
 		// Remove external links.
-		$action_links = array_filter(
-			$action_links,
+		$action_nodes = array_filter(
+			$action_nodes,
 			function( $action_link ) use ( $plugin_basename ) {
 				return $this->check_link_has_no_external_url( $action_link, $plugin_basename );
 			}
 		);
 
-		$action_links = array_map( array( $this, 'remove_formatting' ), $action_links );
+		$action_nodes = array_map( array( $this, 'remove_formatting' ), $action_nodes );
 
-		$good_actions = array();
+		$good_action_nodes = array();
 
-		foreach ( $action_links as $action_link ) {
+		foreach ( $action_nodes as $action_node ) {
+
+			/**
+			 * "WooCommerce Sync for QuickBooks Online - by MyWorks Software" has an empty entry in its action links.
+			 */
+			if ( ! ( $action_node instanceof DOMNode ) ) {
+				continue;
+			}
 
 			// Nothing to do on deactivated plugins.
-			if ( strstr( $action_link, 'Activate' ) ) {
-				return $action_links;
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( strstr( $action_node->nodeValue, 'Activate' ) ) {
+				return $action_nodes;
 			}
 
 			// Grab the deactivate link so it can be added to the end.
-			if ( strstr( $action_link, 'Deactivate' ) ) {
-				$deactivate_link = $action_link;
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( strstr( $action_node->nodeValue, 'Deactivate' ) ) {
+				$deactivate_node = $action_node;
 				continue;
 			}
 
 			// Grab the settings link so it can be moved to the start.
-			if ( strstr( $action_link, 'Settings' ) ) {
-				$settings_link = $action_link;
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( strstr( $action_node->nodeValue, 'Settings' ) ) {
+				$settings_node = $action_node;
 				continue;
 			}
 
-			$good_actions[] = $action_link;
+			$good_action_nodes[] = $action_node;
 		}
 
 		// Place the Settings link at the beginning.
-		if ( ! is_null( $settings_link ) ) {
-			array_unshift( $good_actions, $settings_link );
+		if ( ! is_null( $settings_node ) ) {
+			array_unshift( $good_action_nodes, $settings_node );
 
 		}
 
 		// Place the Deactivate link at the end.
-		$good_actions[] = $deactivate_link;
+		$good_action_nodes[] = $deactivate_node;
 
-		return $good_actions;
+		return $good_action_nodes;
 	}
 
 	/**
@@ -173,11 +262,15 @@ class Plugins_List_Table {
 	 * .
 	 * "Donate" links are not removed.
 	 *
-	 * @param string $link The HTML anchor.
+	 * @param DOMNode $link The HTML anchor.
 	 *
 	 * @return bool True if the link should remain, false to remove.
 	 */
-	protected function check_link_has_no_unwanted_terms( $link ) {
+	protected function check_link_has_no_unwanted_terms( ?DOMNode $link ): bool {
+
+		if ( is_null( $link ) ) {
+			return true;
+		}
 
 		$unwanted_terms = array(
 			'opt in',
@@ -187,11 +280,11 @@ class Plugins_List_Table {
 			'free',
 			'upgrade',
 			'trial',
-			'premium',
 		);
 
 		foreach ( $unwanted_terms as $term ) {
-			if ( stristr( $link, $term ) ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( stristr( $link->nodeValue, $term ) ) {
 				return false;
 			}
 		}
@@ -204,21 +297,27 @@ class Plugins_List_Table {
 	 * Records external links in an instance array keyed with the plugin basename so they
 	 * can be added to the description column.
 	 *
-	 * @param string $action_link The HTML anchor.
-	 * @param string $plugin_basename The plugin's directory/filename.php.
+	 * @param DOMNode $action_node The HTML anchor.
+	 * @param string  $plugin_basename The plugin's directory/filename.php.
 	 *
 	 * @return bool True if no external URL (i.e. array_filter should keep it).
 	 */
-	protected function check_link_has_no_external_url( $action_link, $plugin_basename ) {
+	protected function check_link_has_no_external_url( ?DOMNode $action_node, string $plugin_basename ): bool {
 
-		$other_domain_match_pattern = '/<a href="http(?!' . preg_quote( substr( get_site_url(), 4 ), '/' ) . ')/';
+		if ( is_null( $action_node ) ) {
+			return true;
+		}
+
+		$other_domain_match_pattern = '/http(?!' . preg_quote( substr( get_site_url(), 4 ), '/' ) . ')/';
+
+		$href = $action_node->attributes->getNamedItem( 'href' )->nodeValue;
 
 		// Check for external domains.
-		if ( 1 === preg_match( $other_domain_match_pattern, $action_link ) ) {
+		if ( 1 === preg_match( $other_domain_match_pattern, $href ) ) {
 			if ( ! isset( $this->move_to_meta_column[ $plugin_basename ] ) ) {
 				$this->move_to_meta_column[ $plugin_basename ] = array();
 			}
-			$this->move_to_meta_column[ $plugin_basename ][] = $action_link;
+			$this->move_to_meta_column[ $plugin_basename ][] = $action_node;
 
 			return false;
 		}
@@ -232,34 +331,41 @@ class Plugins_List_Table {
 	 *
 	 * TODO: A dismissible admin banner should be used to keep the link available for a few days after plugin activation.
 	 *
-	 * @param string $action_link The HTML anchor.
+	 * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+	 *
+	 * @param DOMNode $action_link The HTML anchor.
 	 *
 	 * @return bool True if it is not a licence link (i.e. keep the link).
 	 */
-	protected function check_link_is_not_licence( $action_link ) {
+	protected function check_link_is_not_licence( ?DOMNode $action_link ): bool {
 
-		return ! ( stristr( $action_link, 'licence' )
-				|| stristr( $action_link, 'license' ) );
+		if ( is_null( $action_link ) ) {
+			return true;
+		}
+
+		return ! ( stristr( $action_link->nodeValue, 'licence' )
+				|| stristr( $action_link->nodeValue, 'license' ) );
 	}
 
 	/**
 	 * Remove CSS styles and classes.
 	 *
-	 * TODO: Use wp_kses();
+	 * TODO: Use wp_kses(); ?
 	 *
 	 * @see wp_kses()
 	 *
-	 * @param string $link The HTML anchor link.
+	 * @param DOMNode $link The HTML anchor link.
 	 *
 	 * @return string
 	 */
-	protected function remove_formatting( $link ) {
+	protected function remove_formatting( ?DOMNode $link ): ?DOMNode {
 
-		// Remove styles.
-		$link = preg_replace( '/\s(style="[^"]*")/', '$2', $link );
+		if ( is_null( $link ) ) {
+			return $link;
+		}
 
-		// Remove classes.
-		$link = preg_replace( '/\s(class="[^"]*")/', '$2', $link );
+		$link->setAttribute( 'style', null );
+		$link->setAttribute( 'class', null );
 
 		return $link;
 	}
@@ -269,30 +375,33 @@ class Plugins_List_Table {
 	 *
 	 * TODO: Add the original text as a mouseover hint.
 	 * TODO: Pulling the icon straight from GitHub probably isn't best practice.
-	 * TODO: Should this only act on repo links?
 	 * TODO: WordPress.org links with WordPress icon?
 	 *
-	 * @param string $link The HTML anchor.
+	 * @param DOMNode $link_node The HTML anchor.
 	 *
 	 * @return string
 	 */
-	protected function replace_text_with_icons( $link ) {
+	protected function replace_text_with_icons( ?DOMNode $link_node ): ?DOMNode {
 
-		if ( ! stristr( $link, 'GitHub.com/' ) ) {
-			return $link;
+		if ( is_null( $link_node ) ) {
+			return $link_node;
 		}
+
+		$href = $link_node->attributes->getNamedItem( 'href' )->nodeValue;
 
 		$style = "background: url('https://github.com/favicon.ico'); background-size: contain; height: 14px; width: 14px;  display: inline-block; vertical-align: middle; margin-top: -1px;";
 
-		if ( 1 === preg_match( '/".*?(github.com[^"]*)/', $link, $output_array ) ) {
+		$match_github_repo_links = '/https?:\/\/github.com\/(?!sponsors)[^\/]*\/[^\/]*\/?$/i';
 
-			$github_link = untrailingslashit( $output_array[1] );
+		if ( 1 === preg_match( $match_github_repo_links, $href ) ) {
 
-			$link = "<a target=\"_blank\" style=\"{$style}\" href=\"https://{$github_link}\"></a>";
+			$link_node->setAttribute( 'style', $style );
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$link_node->nodeValue = '';
 
 		}
 
-		return $link;
+		return $link_node;
 
 	}
 

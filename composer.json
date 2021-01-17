@@ -42,6 +42,7 @@
         }
     ],
     "require": {
+        "ext-dom": "*",
         "php": ">=7.2",
         "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master"
     },
