@@ -12,15 +12,15 @@ Cleans up WordPress's plugins.php.
 * Replaces GitHub links with icons
 * Removes click handlers on Deactivate links (to remove deactivation surveys)
 
-
+Before:
 ![Before](./assets/screenshot-1.png "BH WP Plugins Page before screenshot")
-Before.
 
+After:
 ![After](./assets/screenshot-2.png "BH WP Plugins Page after screenshot")
-After
 
+Removes JavaScript hooked to deactivation buttons to prevent these:
 ![Deactivate](./assets/screenshot-3.png "BH WP Plugins Page deactivation dialog")
-Removes JavaScript hooked to deactivation buttons.
+
 
 ## Installation
 
