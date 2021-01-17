@@ -66,6 +66,11 @@ A plethora of working but unpolished plugins on GitHub: [Brian](https://github.c
 
 == Changelog ==
 
+= 1.0.1 =
+* Improvement: GitHub icons are now only used when the link is to a repo (i.e. not to repo/issues etc.)
+* Bugfix: Was hiding links when "premium" was in the URL (when trying to hide upsells).
+* Bugfix: Plugins with empty action links were crashing things.
+
 = 1.0 =
 * Removes formatting from links on plugins.php
 * Moves external links from the action links (first) column into the description column

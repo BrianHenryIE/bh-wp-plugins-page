@@ -9,7 +9,6 @@
 namespace BH_WP_Plugins_Page\includes;
 
 use BH_WP_Plugins_Page\admin\Admin;
-use BH_WP_Plugins_Page\frontend\Frontend;
 
 /**
  * Class Develop_Test

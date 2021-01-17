@@ -15,9 +15,9 @@
  * Plugin Name:       Plugins Page Cleanup
  * Plugin URI:        http://github.com/BrianHenryIE/bh-wp-plugins-page/
  * Description:       Removes formatting and up-sells, and moves Settings links to the beginning and Deactivate links to the end of plugins.php action links. Disables plugin deactivation surveys.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            BrianHenryIE
- * Author URI:        https://github.com/brianhenryie/bh-wp-plugins-page/
+ * Author URI:        https://BrianHenry.ie
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       bh-wp-plugins-page
@@ -26,10 +26,7 @@
 
 namespace BH_WP_Plugins_Page;
 
-use BH_WP_Plugins_Page\includes\Activator;
-use BH_WP_Plugins_Page\includes\Deactivator;
 use BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page;
-use BH_WP_Plugins_Page\BrianHenryIE\WPPB\WPPB_Loader;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -43,7 +40,7 @@ require_once plugin_dir_path( __FILE__ ) . 'autoload.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.0' );
+define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.1' );
 
 /**
  * Begins execution of the plugin.
