@@ -350,11 +350,7 @@ class Plugins_List_Table {
 	/**
 	 * Remove CSS styles and classes.
 	 *
-	 * TODO: Use wp_kses(); ?
-	 *
-	 * @see wp_kses()
-	 *
-	 * @param DOMNode $link The HTML anchor link.
+	 * @param ?DOMNode $link The HTML anchor link.
 	 *
 	 * @return string
 	 */
@@ -364,8 +360,19 @@ class Plugins_List_Table {
 			return $link;
 		}
 
+		$link_css_classes = $link->attributes->getNamedItem( 'class' )->textContent;
+
+		$allowable_css_classes = array( 'thickbox', 'open-plugin-details-modal' );
+
+		$allowed_classes = array_filter(
+			explode( ' ', $link_css_classes ),
+			function( $css_class ) use ( $allowable_css_classes ) {
+				return in_array( $css_class, $allowable_css_classes, true );
+			}
+		);
+
 		$link->setAttribute( 'style', null );
-		$link->setAttribute( 'class', null );
+		$link->setAttribute( 'class', implode( ' ', $allowed_classes ) );
 
 		return $link;
 	}
