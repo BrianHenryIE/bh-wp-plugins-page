@@ -1,0 +1,72 @@
+# When a plugin is updated on master and its version number is higher than the latest release,
+# create a new release.
+
+on:
+  push:
+    branches:
+      - master
+
+# TODO: how to check have the other actions succeeded?
+
+env:
+  PLUGIN_SLUG: bh-wp-github-actions-tests
+  PLUGIN_FILE: src/bh-wp-github-actions-tests.php
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Check plugin.php version
+        run:  |
+          PLUGIN_HEADER_VERSION=$(sed -ne "s/^.*Version:[[:space:]]*\([[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*\)$/\1/p" ${{ env.PLUGIN_FILE }})
+          echo $PLUGIN_HEADER_VERSION
+          echo "RELEASE_VERSION=${PLUGIN_HEADER_VERSION}" >> $GITHUB_ENV
+          echo "RELEASE_TAG=v${PLUGIN_HEADER_VERSION}" >> $GITHUB_ENV
+
+      - id: existing
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: ${{ github.repository }}
+
+      #      - name: Check for existing release
+      #        uses: actions/github-script@v2
+      #        if: ${{ steps.existing.outputs.release }} == ${{ env.RELEASE_VERSION }}
+      #        run: |
+      #          echo "release version already exists"
+      #          return 'stop'
+
+      - name: Run composer install
+        uses: php-actions/composer@v2
+
+      - name: Create plugin archive
+        run:  composer run-script create-plugin-archive
+
+      - name: Set enviroment for github-release
+        run: |
+          echo "RELEASE_FILE=${{ env.PLUGIN_SLUG }}-${{ env.RELEASE_VERSION }}.zip" >> $GITHUB_ENV
+
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ${{ env.RELEASE_FILE }}
+          asset_name: ${{ env.RELEASE_FILE }}
+          asset_content_type: application/zip
