@@ -66,6 +66,9 @@ A plethora of working but unpolished plugins on GitHub: [Brian](https://github.c
 
 == Changelog ==
 
+= 1.0.2 =
+* Bugfix: Plugins' View Details thickbox was not displaying – rather then strip all CSS classes, allow a whitelist.
+
 = 1.0.1 =
 * Improvement: GitHub icons are now only used when the link is to a repo (i.e. not to repo/issues etc.)
 * Bugfix: Was hiding links when "premium" was in the URL (when trying to hide upsells).
