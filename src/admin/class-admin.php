@@ -37,7 +37,13 @@ class Admin {
 			return;
 		}
 
-		wp_enqueue_script( 'bh-wp-plugins-page', plugin_dir_url( __FILE__ ) . 'js/bh-wp-plugins-page-admin.js', array( 'jquery' ), '1.0.0', false );
+		if ( defined( BH_WP_PLUGINS_PAGE_VERSION ) ) {
+			$version = BH_WP_PLUGINS_PAGE_VERSION;
+		} else {
+			$version = time();
+		}
+
+		wp_enqueue_script( 'bh-wp-plugins-page', plugin_dir_url( __FILE__ ) . 'js/bh-wp-plugins-page-admin.js', array( 'jquery' ), $version, false );
 
 	}
 
