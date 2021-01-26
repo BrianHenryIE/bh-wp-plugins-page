@@ -360,6 +360,12 @@ class Plugins_List_Table {
 			return $link;
 		}
 
+		$link->setAttribute( 'style', null );
+
+		if ( is_null( $link->attributes->getNamedItem( 'class' ) ) ) {
+			return $link;
+		}
+
 		$link_css_classes = $link->attributes->getNamedItem( 'class' )->textContent;
 
 		$allowable_css_classes = array( 'thickbox', 'open-plugin-details-modal' );
@@ -371,7 +377,6 @@ class Plugins_List_Table {
 			}
 		);
 
-		$link->setAttribute( 'style', null );
 		$link->setAttribute( 'class', implode( ' ', $allowed_classes ) );
 
 		return $link;
