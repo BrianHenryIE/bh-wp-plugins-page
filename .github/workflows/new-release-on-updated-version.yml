@@ -9,8 +9,8 @@ on:
 # TODO: how to check have the other actions succeeded?
 
 env:
-  PLUGIN_SLUG: bh-wp-github-actions-tests
-  PLUGIN_FILE: src/bh-wp-github-actions-tests.php
+  PLUGIN_SLUG: bh-wp-plugins-page
+  PLUGIN_FILE: src/bh-wp-plugins-page.php
 
 jobs:
   ci:
