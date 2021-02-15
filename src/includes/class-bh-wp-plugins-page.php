@@ -46,6 +46,7 @@ class BH_WP_Plugins_Page {
 
 		$this->set_locale();
 		$this->define_admin_hooks();
+		$this->define_plugins_list_table_hooks();
 
 	}
 
@@ -77,6 +78,9 @@ class BH_WP_Plugins_Page {
 
 		$plugin_admin = new Admin();
 		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ), PHP_INT_MAX );
+	}
+
+	protected function define_plugins_list_table_hooks() {
 
 		$plugins_page   = new Plugins_List_Table();
 		$active_plugins = (array) get_option( 'active_plugins', array() );
