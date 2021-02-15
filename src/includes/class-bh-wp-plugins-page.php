@@ -59,7 +59,7 @@ class BH_WP_Plugins_Page {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	protected function set_locale() {
+	protected function set_locale(): void {
 
 		$plugin_i18n = new I18n();
 
@@ -74,13 +74,13 @@ class BH_WP_Plugins_Page {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	protected function define_admin_hooks() {
+	protected function define_admin_hooks(): void {
 
 		$plugin_admin = new Admin();
 		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ), PHP_INT_MAX );
 	}
 
-	protected function define_plugins_list_table_hooks() {
+	protected function define_plugins_list_table_hooks(): void {
 
 		$plugins_page   = new Plugins_List_Table();
 		$active_plugins = (array) get_option( 'active_plugins', array() );

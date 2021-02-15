@@ -30,7 +30,7 @@ class Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts(): void {
 
 		global $pagenow;
 		if ( 'plugins.php' !== $pagenow ) {

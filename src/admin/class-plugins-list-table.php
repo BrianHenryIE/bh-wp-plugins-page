@@ -28,7 +28,7 @@ class Plugins_List_Table {
 	 * Instance variable to hold external links that were found in the first plugins column and
 	 * should be moved to the description column.
 	 *
-	 * @var array
+	 * @var string[][]
 	 */
 	protected $move_to_meta_column = array();
 
@@ -81,11 +81,13 @@ class Plugins_List_Table {
 	 *                              'deactivate', and 'delete'. With Multisite active this can also include
 	 *                              'network_active' and 'network_only' items.
 	 * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
-	 * @param array    $plugin_data An array of plugin data. See `get_plugin_data()`.
+	 * @param string[] $plugin_data An array of plugin data. See `get_plugin_data()`.
 	 * @param string   $context     The plugin context. By default this can include 'all', 'active', 'inactive',
 	 *                              'recently_activated', 'upgrade', 'mustuse', 'dropins', and 'search'.
+	 *
+	 * @return string[] The updated list of action links.
 	 */
-	public function action_links( $actions, $plugin_file, $plugin_data, $context ) {
+	public function action_links( $actions, $plugin_file, $plugin_data, $context ): array {
 
 		$actions_nodes = array_map( array( $this, 'map_html_link_to_node' ), $actions );
 
@@ -94,18 +96,17 @@ class Plugins_List_Table {
 		return array_map( array( $this, 'map_node_to_html_link' ), $good_action_links );
 	}
 
-
 	/**
 	 * Hooked to plugin-specific action links filters (by looping over 'active_plugins' option).
 	 *
 	 * @hooked plugin_action_links_{$basename} via closure. The closure needed to also pass the basename.
 	 *
-	 * @param array  $links_array The existing plugin links (usually "Deactivate").
-	 * @param string $plugin_basename The plugin's directory/filename.php.
+	 * @param string[] $links_array The existing plugin links (usually "Deactivate").
+	 * @param string   $plugin_basename The plugin's directory/filename.php.
 	 *
-	 * @return array The links to display below the plugin name on plugins.php.
+	 * @return string[] The links to display below the plugin name on plugins.php.
 	 */
-	public function plugin_specific_action_links( $links_array, $plugin_basename ) {
+	public function plugin_specific_action_links( $links_array, $plugin_basename ): array {
 
 		$actions_nodes = array_map( array( $this, 'map_html_link_to_node' ), $links_array );
 
@@ -126,12 +127,12 @@ class Plugins_List_Table {
 	 *
 	 * @param string[] $plugin_meta The meta information/links displayed by the plugin description.
 	 * @param string   $plugin_file_name The plugin filename to match when filtering.
-	 * @param array    $plugin_data Associative array including PluginURI, slug, Author, Version.
+	 * @param string[] $plugin_data Associative array including PluginURI, slug, Author, Version.
 	 * @param string   $status The plugin status, e.g. 'Inactive'.
 	 *
-	 * @return array The filtered $plugin_meta.
+	 * @return string[] The filtered $plugin_meta.
 	 */
-	public function row_meta( $plugin_meta, $plugin_file_name, $plugin_data, $status ) {
+	public function row_meta( $plugin_meta, $plugin_file_name, $plugin_data, $status ): array {
 
 		$plugin_meta_anchor_nodes = array_map( array( $this, 'map_html_link_to_node' ), $plugin_meta );
 
@@ -188,9 +189,9 @@ class Plugins_List_Table {
 	 * @param DOMNode[] $action_nodes Array of HTML anchors.
 	 * @param string    $plugin_basename The plugin's directory/filename.php.
 	 *
-	 * @return string[]
+	 * @return DOMNode[]
 	 */
-	protected function get_good_action_links( $action_nodes, $plugin_basename ) {
+	protected function get_good_action_links( $action_nodes, $plugin_basename ): array {
 
 		$deactivate_node = null;
 		$settings_node   = null;
@@ -352,7 +353,7 @@ class Plugins_List_Table {
 	 *
 	 * @param ?DOMNode $link The HTML anchor link.
 	 *
-	 * @return string
+	 * @return ?DOMNode
 	 */
 	protected function remove_formatting( ?DOMNode $link ): ?DOMNode {
 
@@ -389,9 +390,9 @@ class Plugins_List_Table {
 	 * TODO: Pulling the icon straight from GitHub probably isn't best practice.
 	 * TODO: WordPress.org links with WordPress icon?
 	 *
-	 * @param DOMNode $link_node The HTML anchor.
+	 * @param ?DOMNode $link_node The HTML anchor.
 	 *
-	 * @return string
+	 * @return ?DOMNode
 	 */
 	protected function replace_text_with_icons( ?DOMNode $link_node ): ?DOMNode {
 

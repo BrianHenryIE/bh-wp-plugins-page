@@ -51,11 +51,10 @@ define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.3' );
  *
  * @since    1.0.0
  */
-function instantiate_bh_wp_plugins_page() {
+function instantiate_bh_wp_plugins_page(): void {
 
-	$plugin = new BH_WP_Plugins_Page();
+	new BH_WP_Plugins_Page();
 
-	return $plugin;
 }
 
 /**
