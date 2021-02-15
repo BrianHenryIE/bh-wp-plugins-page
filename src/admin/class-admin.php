@@ -37,7 +37,7 @@ class Admin {
 			return;
 		}
 
-		if ( defined( BH_WP_PLUGINS_PAGE_VERSION ) ) {
+		if ( defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ) {
 			$version = BH_WP_PLUGINS_PAGE_VERSION;
 		} else {
 			$version = time();
