@@ -1,0 +1,9 @@
+parameters:
+    level: 6
+    paths:
+        - src
+    excludePaths:
+        - src/vendor/*
+        - src/dependencies/*
+    bootstrapFiles:
+        - src/autoload.php
