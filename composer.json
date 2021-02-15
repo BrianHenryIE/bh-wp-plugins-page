@@ -83,6 +83,9 @@
             },
             "squizlabs/php_codesniffer": {
                 "Add GitHub Actions Annotations report type": "https://github.com/squizlabs/PHP_CodeSniffer/pull/2918.patch"
+            },
+            "10up/wp_mock": {
+                "Add AnyObject matcher": "https://github.com/BrianHenryIE/wp_mock/pull/1.patch"
             }
         },
         "mozart": {
