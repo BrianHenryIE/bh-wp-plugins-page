@@ -66,6 +66,13 @@ A plethora of working but unpolished plugins on GitHub: [Brian](https://github.c
 
 == Changelog ==
 
+= 1.0.4 =
+* Bugfix: Now preserves array keys. Previously was causing e.g. "Undefined index: deactivate" in other plugins.
+* Bugfix: Was calling defined() without using a string as the parameter.
+
+= 1.0.3 =
+* Bugfix: "Notice: Trying to get property 'textContent' of non-object..." when a link had no CSS classes.
+
 = 1.0.2 =
 * Bugfix: Plugins' View Details thickbox was not displaying – rather then strip all CSS classes, allow a whitelist.
 
