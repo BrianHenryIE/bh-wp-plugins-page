@@ -57,7 +57,6 @@ class BH_WP_Plugins_Page {
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
-	 * @access   private
 	 */
 	protected function set_locale(): void {
 
@@ -72,7 +71,6 @@ class BH_WP_Plugins_Page {
 	 * of the plugin.
 	 *
 	 * @since    1.0.0
-	 * @access   private
 	 */
 	protected function define_admin_hooks(): void {
 
@@ -80,6 +78,12 @@ class BH_WP_Plugins_Page {
 		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ), PHP_INT_MAX );
 	}
 
+	/**
+	 * Hooks for the plugins list table.
+	 * Adds the generic plugin_action_links and plugin_row_meta actions and a specific action for each active plugin.
+	 *
+	 * @since    1.0.4
+	 */
 	protected function define_plugins_list_table_hooks(): void {
 
 		$plugins_page   = new Plugins_List_Table();
