@@ -33,26 +33,7 @@ if ( file_exists( $class_map_file ) ) {
 	}
 }
 
-// The plugin-scoped namespace for composer required libraries, as specified in composer.json Mozart config.
-$dep_namespace = 'BH_WP_Plugins_Page';
-// The Mozart config `dep_directory` adjusted for relative path.
-$dep_directory = '/vendor/';
-
-spl_autoload_register(
-	function ( $namespaced_class_name ) use ( $dep_namespace, $dep_directory ) {
-
-		$autoload_directory = __DIR__ . $dep_directory . '/';
-
-		// The class name with its true namespace.
-		$bare_namespaced_class_name = preg_replace( "#$dep_namespace\\\*#", '', $namespaced_class_name );
-
-		$file_path = $autoload_directory . str_replace( '\\', DIRECTORY_SEPARATOR, $bare_namespaced_class_name ) . '.php';
-
-		if ( file_exists( $file_path ) ) {
-			require_once $file_path;
-		}
-	}
-);
+require_once __DIR__ . '/strauss/autoload.php';
 
 $wpcs_autoloader = new WP_Namespace_Autoloader();
 $wpcs_autoloader->init();

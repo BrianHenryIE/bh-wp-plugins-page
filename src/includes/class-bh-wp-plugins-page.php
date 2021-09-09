@@ -89,7 +89,6 @@ class BH_WP_Plugins_Page {
 		$plugins_page   = new Plugins_List_Table();
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
-		add_action( 'plugin_action_links', array( $plugins_page, 'action_links' ), PHP_INT_MAX, 4 );
 		add_action( 'plugin_row_meta', array( $plugins_page, 'row_meta' ), PHP_INT_MAX, 4 );
 		foreach ( $active_plugins as $plugin_basename ) {
 			add_action(

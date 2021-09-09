@@ -5,6 +5,7 @@ Tags: plugins, tidy, clean
 Requires at least: 3.0.1
 Tested up to: 3.4
 Stable tag: 4.3
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,11 +67,16 @@ A plethora of working but unpolished plugins on GitHub: [Brian](https://github.c
 
 == Changelog ==
 
+= 1.0.5 =
+
+Bugfix: null error when a plugin was required with afragen/wp-dependency-installer.
+More edge cases addressed.
+
 = 1.0.4 =
 * Bugfix: Now preserves array keys. Previously was causing e.g. "Undefined index: deactivate" in other plugins.
 * Bugfix: Was calling defined() without using a string as the parameter.
 
-= 1.0.3 =
+= 1.0.4 =
 * Bugfix: "Notice: Trying to get property 'textContent' of non-object..." when a link had no CSS classes.
 
 = 1.0.2 =

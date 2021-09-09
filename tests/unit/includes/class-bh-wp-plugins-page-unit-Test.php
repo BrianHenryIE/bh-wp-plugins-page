@@ -71,13 +71,6 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		);
 
 		\WP_Mock::expectActionAdded(
-			'plugin_action_links',
-			array( new AnyInstance( Plugins_List_Table::class ), 'action_links' ),
-			PHP_INT_MAX,
-			4
-		);
-
-		\WP_Mock::expectActionAdded(
 			'plugin_row_meta',
 			array( new AnyInstance( Plugins_List_Table::class ), 'row_meta' ),
 			PHP_INT_MAX,
