@@ -110,6 +110,12 @@ export $(grep -v '^#' .env.testing | xargs)
 mysqldump -u $TEST_SITE_DB_USER -p$TEST_SITE_DB_PASSWORD $TEST_SITE_DB_NAME > tests/_data/dump.sql
 ```
 
+Static analysis:
+
+```
+vendor/bin/phpstan analyse --memory-limit 1G
+```
+
 To clear Codeception cache after moving/removing test files:
 
 ```

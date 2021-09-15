@@ -67,7 +67,7 @@ A plethora of working but unpolished plugins on GitHub: [Brian](https://github.c
 
 == Changelog ==
 
-= 1.0.5 =
+= 1.0.7 =
 
 Bugfix: null error when a plugin was required with afragen/wp-dependency-installer.
 More edge cases addressed.

@@ -89,18 +89,18 @@ class BH_WP_Plugins_Page {
 		$plugins_page   = new Plugins_List_Table();
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
-		add_action( 'plugin_row_meta', array( $plugins_page, 'row_meta' ), PHP_INT_MAX, 4 );
 		foreach ( $active_plugins as $plugin_basename ) {
 			add_action(
 				"plugin_action_links_{$plugin_basename}",
-				function( $action_link ) use ( $plugin_basename, $plugins_page ) {
-					return $plugins_page->plugin_specific_action_links( $action_link, $plugin_basename );
-				},
+//				function( $action_link ) use ( $plugin_basename, $plugins_page ) {
+//					return $plugins_page->plugin_specific_action_links( $action_link, $plugin_basename );
+//				},
+                array($plugins_page, 'plugin_specific_action_links' ),
 				PHP_INT_MAX,
-				1
+				4
 			);
 		}
-
+        add_action( 'plugin_row_meta', array( $plugins_page, 'row_meta' ), PHP_INT_MAX, 4 );
 	}
 
 }
