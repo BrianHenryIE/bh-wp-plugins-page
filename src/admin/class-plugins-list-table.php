@@ -52,19 +52,19 @@ class Plugins_List_Table {
 	 *
 	 * @param array<int|string, string> $action_links The existing plugin links (usually "Deactivate").
 	 * @param string                    $plugin_basename The plugin's directory/filename.php.
-     * @param array    $plugin_data An array of plugin data. See `get_plugin_data()`.
-     * @param string   $context     The plugin context. By default this can include 'all', 'active', 'inactive',
-     *                              'recently_activated', 'upgrade', 'mustuse', 'dropins', and 'search'.
-     *
-     * @return array<int|string, string> The links to display below the plugin name on plugins.php.
+	 * @param array                     $plugin_data An array of plugin data. See `get_plugin_data()`.
+	 * @param string                    $context     The plugin context. By default this can include 'all', 'active', 'inactive',
+	 *                                               'recently_activated', 'upgrade', 'mustuse', 'dropins', and 'search'.
+	 *
+	 * @return array<int|string, string> The links to display below the plugin name on plugins.php.
 	 */
-    public function plugin_specific_action_links( array $action_links, string $plugin_basename, $plugin_data, $context  ): array {
+	public function plugin_specific_action_links( array $action_links, string $plugin_basename, $plugin_data, $context ): array {
 
-	    /**
-	     * Remove empty links.
-	     * `myworks-woo-sync-for-quickbooks-online%2Fmyworks-woo-sync-for-quickbooks-online.php` was adding an empty entry!
-	     */
-	    $action_links = array_filter( $action_links );
+		/**
+		 * Remove empty links.
+		 * `myworks-woo-sync-for-quickbooks-online%2Fmyworks-woo-sync-for-quickbooks-online.php` was adding an empty entry!
+		 */
+		$action_links = array_filter( $action_links );
 
 		// Save external links to move them to the middle column.
 		$this->external_action_links[ $plugin_basename ] = array_filter( $action_links, array( $this, 'is_html_contains_external_link' ) );
@@ -257,8 +257,8 @@ class Plugins_List_Table {
 	 * @return DOMElement|null
 	 */
 	protected function map_html_to_anchor_element( $html_anchor_string ): ?DOMElement {
-		$dom_document = new DOMDocument();
-        $dom_document->strictErrorChecking = false;
+		$dom_document                      = new DOMDocument();
+		$dom_document->strictErrorChecking = false;
 
 		$bool_result = @$dom_document->loadHtml( $html_anchor_string );
 
