@@ -80,7 +80,7 @@ class Plugins_List_Table {
 
 		// Filter unwanted links.
 		// Remove upsells.
-		$action_links = array_filter( $action_links, array( $this, 'check_link_has_no_unwanted_terms' ) );
+		$action_links = array_filter( array_filter( $action_links ), array( $this, 'check_link_has_no_unwanted_terms' ) );
 
 		// Remove licence links.
 		$action_links = array_filter( $action_links, array( $this, 'check_link_is_not_licence' ) );
@@ -163,7 +163,7 @@ class Plugins_List_Table {
 
 		// Filter unwanted links.
 		// Remove upsells.
-		$meta_links = array_filter( $meta_links, array( $this, 'check_link_has_no_unwanted_terms' ) );
+		$meta_links = array_filter( array_filter( $meta_links ), array( $this, 'check_link_has_no_unwanted_terms' ) );
 
 		// Remove licence links.
 		$meta_links = array_filter( $meta_links, array( $this, 'check_link_is_not_licence' ) );
