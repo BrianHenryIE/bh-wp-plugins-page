@@ -78,52 +78,66 @@ class Plugins_List_Table {
 
 		$action_links = $this->merge_assoc_arrays( $action_links, $internal_meta_links );
 
-		// Filter unwanted links.
-		// Remove upsells.
-		$action_links = array_filter( array_filter( $action_links ), array( $this, 'check_link_has_no_unwanted_terms' ) );
-
-		// Remove licence links.
-		$action_links = array_filter( $action_links, array( $this, 'check_link_is_not_licence' ) );
-
 		$settings   = array();
 		$links      = array();
 		$log        = array();
 		$deactivate = array();
 
-		foreach ( $action_links as $key => $value ) {
-			if ( stristr( $value, 'settings' ) ) {
+		foreach ( $action_links as $key => $link ) {
+
+			$anchor = $this->map_html_to_anchor_element( $link );
+
+			// If there is no anchor, e.g. it is just text, we do not want it in the action links.
+			if ( is_null( $anchor ) ) {
+				continue;
+			}
+
+			if ( false !== stristr( $link, 'View details' ) ) {
+				continue;
+			}
+
+			// Filter unwanted links.
+			// Remove upsells.
+			if ( ! $this->check_link_has_no_unwanted_terms( $link ) ) {
+				continue;
+			}
+
+			// Remove licence links.
+			if ( ! $this->check_link_is_not_licence( $link ) ) {
+				continue;
+			}
+
+			if ( stristr( $link, 'settings' ) ) {
 				if ( is_int( $key ) ) {
-					$settings[] = $value;
+					$settings[] = $link;
 				} else {
-					$settings[ $key ] = $value;
+					$settings[ $key ] = $link;
 				}
-			} elseif ( stristr( $value, 'log' ) ) {
+			} elseif ( stristr( $link, 'log' ) ) {
 				if ( is_int( $key ) ) {
-					$log[] = $value;
+					$log[] = $link;
 				} else {
-					$log[ $key ] = $value;
+					$log[ $key ] = $link;
 				}
-			} elseif ( stristr( $value, 'deactivate' ) ) {
+			} elseif ( stristr( $link, 'deactivate' ) ) {
 				if ( is_int( $key ) ) {
-					$deactivate[] = $value;
+					$deactivate[] = $link;
 				} else {
-					$deactivate[ $key ] = $value;
+					$deactivate[ $key ] = $link;
 				}
 			} else {
 				if ( is_int( $key ) ) {
-					$links[] = $value;
+					$links[] = $link;
 				} else {
-					$links[ $key ] = $value;
+					$links[ $key ] = $link;
 				}
 			}
 		}
 
-		// Reorder to put Deactivate at the end.
-
-		// Move Logs second to end.
-
+		// Reorder:
 		// Move settings to the beginning.
-
+		// Move Logs second to end.
+		// Move Deactivate at the end.
 		$action_links = array();
 		$links_arrays = array( $settings, $links, $log, $deactivate );
 		foreach ( $links_arrays as $links_array ) {
@@ -190,9 +204,9 @@ class Plugins_List_Table {
 	 *
 	 * TODO: Is there a PHP function for this already?
 	 *
-	 * @param array $primary_array
-	 * @param array $secondary_array
-	 * @return array
+	 * @param array<string|int, mixed> $primary_array The array whose keys take precedence.
+	 * @param array<string|int, mixed> $secondary_array The lesser array.
+	 * @return array<string|int, mixed>
 	 */
 	protected function merge_assoc_arrays( array $primary_array, array $secondary_array ): array {
 
@@ -397,7 +411,7 @@ class Plugins_List_Table {
 	 */
 	protected function is_not_html_contains_external_link( string $html_string ): bool {
 		$is_html_contains_external_link = $this->is_html_contains_external_link( $html_string );
-		return is_null( $is_html_contains_external_link ) ? false : $is_html_contains_external_link;
+		return is_null( $is_html_contains_external_link ) ? true : ! $is_html_contains_external_link;
 	}
 
 	/**

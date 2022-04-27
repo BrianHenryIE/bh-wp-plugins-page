@@ -108,9 +108,11 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 		$plugin_actions = $ga_google_analytics_actions;
 		$plugin_meta    = $ga_google_analytics_meta;
-		$plugin_file    = '';
+		$plugin_file    = 'plugin/plugin.php';
 		$plugin_data    = array();
 		$status         = '';
+
+		$sut->row_meta( $ga_google_analytics_meta, $plugin_file, array(), '' );
 
 		$actions_result = $sut->plugin_specific_action_links( $plugin_actions, $plugin_file, array(), '' );
 
