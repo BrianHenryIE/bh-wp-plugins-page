@@ -255,12 +255,17 @@ class Plugins_List_Table {
 	 * @param string $html_anchor_string A HTML string whose anchor we want to analyse.
 	 *
 	 * @return DOMElement|null
+	 *
+	 * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+	 * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 	 */
-	protected function map_html_to_anchor_element( $html_anchor_string ): ?DOMElement {
-		$dom_document = new DOMDocument();
-        $dom_document->strictErrorChecking = false;
+	protected function map_html_to_anchor_element( $html_anchor_string ): ?DOMNode {
+		$dom_document                      = new DOMDocument();
+		$dom_document->strictErrorChecking = false;
 
-		$bool_result = @$dom_document->loadHtml( $html_anchor_string );
+		$previous_internal_errors_value = libxml_use_internal_errors( true );
+		$bool_result                    = @$dom_document->loadHTML( $html_anchor_string );
+		libxml_use_internal_errors( $previous_internal_errors_value );
 
 		if ( false === $bool_result ) {
 			return null;
