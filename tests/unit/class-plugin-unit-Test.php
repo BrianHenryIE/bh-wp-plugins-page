@@ -10,21 +10,27 @@ namespace BH_WP_Plugins_Page;
 
 use BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page;
 
-/**
- * Class Plugin_WP_Mock_Test
- *
- * @coversNothing
- */
 class Plugin_Unit_Test extends \Codeception\Test\Unit {
 
-	protected function _before() {
+	protected function setup(): void {
 		\WP_Mock::setUp();
 	}
 
+	protected function tearDown(): void {
+		\WP_Mock::tearDown();
+		\Patchwork\restoreAll();
+	}
+
 	/**
-	 * Verifies the plugin does not output anything to screen.
+	 * Verifies the plugin initialization.
 	 */
-	public function test_plugin_include_no_output() {
+	public function test_plugin_include(): void {
+
+		// Prevents code-coverage counting, and removes the need to define the WordPress functions that are used in that class.
+		\Patchwork\redefine(
+			array( BH_WP_Plugins_Page::class, '__construct' ),
+			function() {}
+		);
 
 		$plugin_root_dir = dirname( __DIR__, 2 ) . '/src';
 
@@ -33,20 +39,27 @@ class Plugin_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( \WP_Mock\Functions::type( 'string' ) ),
 				'return' => $plugin_root_dir . '/',
+				'times'  => 1,
 			)
 		);
 
 		\WP_Mock::userFunction(
-			'get_option',
+			'register_activation_hook',
 			array(
-				'args' => array( 'active_plugins',  \WP_Mock\Functions::type( 'array' ) ),
-				'return' => array()
+				'times' => 0,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'register_deactivation_hook',
+			array(
+				'times' => 0,
 			)
 		);
 
 		ob_start();
 
-		require_once $plugin_root_dir . '/bh-wp-plugins-page.php';
+		include $plugin_root_dir . '/bh-wp-plugins-page.php';
 
 		$printed_output = ob_get_contents();
 
