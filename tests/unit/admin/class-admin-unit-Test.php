@@ -15,13 +15,11 @@ namespace BH_WP_Plugins_Page\admin;
  */
 class Admin_Unit_Test extends \Codeception\Test\Unit {
 
-	protected function _before() {
+	protected function setup(): void {
 		\WP_Mock::setUp();
 	}
 
-	// This is required for `'times' => 1` to be verified.
-	protected function _tearDown() {
-		parent::_tearDown();
+	protected function tearDown(): void {
 		\WP_Mock::tearDown();
 	}
 

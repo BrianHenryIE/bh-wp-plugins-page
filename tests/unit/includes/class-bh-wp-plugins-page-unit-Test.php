@@ -15,13 +15,11 @@ use WP_Mock\Matcher\AnyInstance;
  */
 class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 
-	protected function _before() {
+	protected function setup(): void {
 		\WP_Mock::setUp();
 	}
 
-	// This is required for `'times' => 1` to be verified.
-	protected function _tearDown() {
-		parent::_tearDown();
+	protected function tearDown(): void {
 		\WP_Mock::tearDown();
 	}
 
@@ -35,6 +33,15 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array( new AnyInstance( I18n::class ), 'load_plugin_textdomain' )
 		);
 
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
+				'return' => array(),
+				'times'  => 1,
+			)
+		);
+
 		new BH_WP_Plugins_Page();
 	}
 
@@ -42,6 +49,15 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 	 * @covers \BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page::define_admin_hooks
 	 */
 	public function test_admin_hooks() {
+
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
+				'return' => array(),
+				'times'  => 1,
+			)
+		);
 
 		\WP_Mock::expectActionAdded(
 			'admin_enqueue_scripts',
@@ -59,14 +75,15 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 
 		$active_plugins = array(
 			'one-plugin/one-plugin.php',
-			'another-plugin/another-plugin.php'
+			'another-plugin/another-plugin.php',
 		);
 
 		\WP_Mock::userFunction(
 			'get_option',
 			array(
-				'args' => array( 'active_plugins',  \WP_Mock\Functions::type( 'array' ) ),
-				'return' => $active_plugins
+				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
+				'return' => $active_plugins,
+				'times'  => 1,
 			)
 		);
 
@@ -79,16 +96,16 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 
 		\WP_Mock::expectActionAdded(
 			'plugin_action_links_one-plugin/one-plugin.php',
-			'__CLOSURE__',
+			array( new AnyInstance( Plugins_List_Table::class ), 'plugin_specific_action_links' ),
 			PHP_INT_MAX,
-			1
+			4
 		);
 
 		\WP_Mock::expectActionAdded(
 			'plugin_action_links_another-plugin/another-plugin.php',
-			'__CLOSURE__',
+			array( new AnyInstance( Plugins_List_Table::class ), 'plugin_specific_action_links' ),
 			PHP_INT_MAX,
-			1
+			4
 		);
 
 		new BH_WP_Plugins_Page();
