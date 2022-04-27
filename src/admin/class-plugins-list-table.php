@@ -273,6 +273,7 @@ class Plugins_List_Table {
 	 * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 	 * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 	 */
+
 	protected function map_html_to_anchor_element( $html_anchor_string ): ?DOMNode {
 		$dom_document                      = new DOMDocument();
 		$dom_document->strictErrorChecking = false;
