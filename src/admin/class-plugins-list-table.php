@@ -48,23 +48,23 @@ class Plugins_List_Table {
 	/**
 	 * Hooked to plugin-specific action links filters (by looping over 'active_plugins' option).
 	 *
-	 * @hooked plugin_action_links_{$basename} via closure. The closure needed to also pass the basename.
+	 * @hooked plugin_action_links_{$basename}
 	 *
 	 * @param array<int|string, string> $action_links The existing plugin links (usually "Deactivate").
 	 * @param string                    $plugin_basename The plugin's directory/filename.php.
-     * @param array    $plugin_data An array of plugin data. See `get_plugin_data()`.
-     * @param string   $context     The plugin context. By default this can include 'all', 'active', 'inactive',
-     *                              'recently_activated', 'upgrade', 'mustuse', 'dropins', and 'search'.
-     *
-     * @return array<int|string, string> The links to display below the plugin name on plugins.php.
+	 * @param array<int|string, mixed>  $plugin_data An array of plugin data. See `get_plugin_data()`.
+	 * @param string                    $context     The plugin context. 'all'|'active'|'inactive'|'recently_activated'
+	 *                                                |'upgrade'|'mustuse'|'dropins'|'search'.
+	 *
+	 * @return array<int|string, string> The links to display below the plugin name on plugins.php.
 	 */
-    public function plugin_specific_action_links( array $action_links, string $plugin_basename, $plugin_data, $context  ): array {
+	public function plugin_specific_action_links( array $action_links, string $plugin_basename, array $plugin_data, string $context ): array {
 
-	    /**
-	     * Remove empty links.
-	     * `myworks-woo-sync-for-quickbooks-online%2Fmyworks-woo-sync-for-quickbooks-online.php` was adding an empty entry!
-	     */
-	    $action_links = array_filter( $action_links );
+		/**
+		 * Remove empty links.
+		 * `myworks-woo-sync-for-quickbooks-online%2Fmyworks-woo-sync-for-quickbooks-online.php` was adding an empty entry!
+		 */
+		$action_links = array_filter( $action_links );
 
 		// Save external links to move them to the middle column.
 		$this->external_action_links[ $plugin_basename ] = array_filter( $action_links, array( $this, 'is_html_contains_external_link' ) );
@@ -276,7 +276,7 @@ class Plugins_List_Table {
 
 	/**
 	 * Filter to remove upsells and marketing links.
-	 * .
+	 *
 	 * "Donate" links are not removed.
 	 *
 	 * @param string $html The full meta/action html string.
@@ -315,6 +315,10 @@ class Plugins_List_Table {
 		);
 
 		foreach ( $probably_unwanted_terms as $term ) {
+			if ( is_null( $link->attributes ) || is_null( $link->attributes->getNamedItem( 'href' ) ) ) {
+				continue;
+			}
+
 			$hyperlink = $link->attributes->getNamedItem( 'href' )->nodeValue;
 
             // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
@@ -351,12 +355,16 @@ class Plugins_List_Table {
 	}
 
 	/**
+	 * Given a DOMElement, check is it an anchor link whose href points to an external site.
 	 *
-	 *
-	 * @param DOMElement $anchor_node
+	 * @param DOMElement $anchor_node The A element.
 	 * @return bool
 	 */
-	protected function is_anchor_element_external_link( DOMElement $anchor_node ): bool {
+	protected function is_anchor_element_external_link( DOMElement $anchor_node ): ?bool {
+
+		if ( is_null( $anchor_node->attributes ) || is_null( $anchor_node->attributes->getNamedItem( 'href' ) ) ) {
+			return null;
+		}
 
 		$url_string = $anchor_node->attributes->getNamedItem( 'href' )->nodeValue;
 
@@ -367,9 +375,9 @@ class Plugins_List_Table {
 	 * Checks does the HTML contain, partially or totally, a HTML anchor.
 	 *
 	 * @param string $html_string A meta link, e.g. "By BrianHenryIE" where it is partially a hyperlink.
-	 * @return bool
+	 * @return bool|null Null when the string could not be parsed.
 	 */
-	protected function is_html_contains_external_link( string $html_string ): bool {
+	protected function is_html_contains_external_link( string $html_string ): ?bool {
 
 		$anchor_node = $this->map_html_to_anchor_element( $html_string );
 
@@ -380,8 +388,16 @@ class Plugins_List_Table {
 		return $this->is_anchor_element_external_link( $anchor_node );
 	}
 
+	/**
+	 * Determine is the HTML string NOT an external link.
+	 *
+	 * @param string $html_string A HTML string that may contain a link.
+	 *
+	 * @return bool
+	 */
 	protected function is_not_html_contains_external_link( string $html_string ): bool {
-		return ! $this->is_html_contains_external_link( $html_string );
+		$is_html_contains_external_link = $this->is_html_contains_external_link( $html_string );
+		return is_null( $is_html_contains_external_link ) ? false : $is_html_contains_external_link;
 	}
 
 	/**
@@ -392,10 +408,10 @@ class Plugins_List_Table {
 	 * * Is the view details link
 	 * * Is an external link
 	 *
-	 * @param string $html_string
+	 * @param string $html_string A HTML string from the array of links.
 	 * @return bool
 	 */
-	protected function is_not_link_or_is_external_link_or_is_view_details_link( string $html_string ): bool {
+	protected function is_not_link_or_is_external_link_or_is_view_details_link( string $html_string ): ?bool {
 
 		if ( stristr( $html_string, 'view details' ) ) {
 			return true;
@@ -414,7 +430,7 @@ class Plugins_List_Table {
 	 * Check is the anchor text empty. Some plugins have a JavaScript rating tool in the meta links which when
 	 * removed by wp_kses, results in a string of only whitespace.
 	 *
-	 * @param string $html_string
+	 * @param string $html_string HTML containing and anchor which may not have any text.
 	 * @return bool
 	 */
 	protected function is_not_empty_anchor_text( string $html_string ): bool {
@@ -493,7 +509,17 @@ class Plugins_List_Table {
             // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$node->nodeValue = '';
 
+			if ( is_null( $node->ownerDocument ) ) {
+				$new_links[ $key ] = $html_string;
+				continue;
+			}
+
 			$node_html = $node->ownerDocument->saveHTML();
+
+			if ( false === $node_html ) {
+				$new_links[ $key ] = $html_string;
+				continue;
+			}
 
 			$new_links[ $key ] = $node_html;
 

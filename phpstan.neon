@@ -12,5 +12,4 @@ parameters:
         - wp-content/plugins
         - vendor/wp-cli
     ignoreErrors:
-        - '#LoggerInterface\|null#'
         - '#apply_filters invoked with#'

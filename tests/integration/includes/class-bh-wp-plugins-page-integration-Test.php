@@ -63,7 +63,7 @@ class BH_WP_Plugins_Page_Integration_Test extends \Codeception\TestCase\WPTestCa
 			$action_function = $action['function'];
 			if ( is_array( $action_function ) ) {
 				if ( $action_function[0] instanceof $class_type ) {
-					if( $method_name === $action_function[1] ) {
+					if ( $method_name === $action_function[1] ) {
 						$hooked_method = $action_function[1];
 						break;
 					}

@@ -51,8 +51,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 		global $pagenow;
 		$pagenow = 'plugins.php';
 
-//		define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.3' );
-
+		// define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.3' );
 
 		global $plugin_root_dir;
 
@@ -64,13 +63,13 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$js_src       = $plugin_root_dir . '/admin/js/bh-wp-plugins-page-admin.js';
+		$js_src = $plugin_root_dir . '/admin/js/bh-wp-plugins-page-admin.js';
 
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',
 			array(
 				'times' => 1,
-				'args'  => array( 'bh-wp-plugins-page', $js_src, array( 'jquery' ), "*", false ),
+				'args'  => array( 'bh-wp-plugins-page', $js_src, array( 'jquery' ), '*', false ),
 			)
 		);
 
@@ -93,7 +92,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',
 			array(
-				'times' => 0
+				'times' => 0,
 			)
 		);
 
@@ -101,4 +100,6 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 
 		$admin->enqueue_scripts();
 	}
+
+
 }
