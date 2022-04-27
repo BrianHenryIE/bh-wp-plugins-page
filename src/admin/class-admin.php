@@ -37,11 +37,7 @@ class Admin {
 			return;
 		}
 
-		if ( defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ) {
-			$version = BH_WP_PLUGINS_PAGE_VERSION;
-		} else {
-			$version = time();
-		}
+		$version = defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.0.9';
 
 		wp_enqueue_script( 'bh-wp-plugins-page', plugin_dir_url( __FILE__ ) . 'js/bh-wp-plugins-page-admin.js', array( 'jquery' ), $version, false );
 

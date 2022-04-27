@@ -67,10 +67,18 @@ A plethora of working but unpolished plugins on GitHub: [Brian](https://github.c
 
 == Changelog ==
 
+= 1.0.0 =
+
+* Refactoring, testing and linting.
+
+= 1.0.8 =
+
+* Bugfix: No longer throws errors on malformed HTML.
+
 = 1.0.7 =
 
-Bugfix: null error when a plugin was required with afragen/wp-dependency-installer.
-More edge cases addressed.
+* Bugfix: null error when a plugin was required with afragen/wp-dependency-installer.
+* More edge cases addressed.
 
 = 1.0.4 =
 * Bugfix: Now preserves array keys. Previously was causing e.g. "Undefined index: deactivate" in other plugins.
