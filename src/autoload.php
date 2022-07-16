@@ -31,6 +31,7 @@ if ( file_exists( $class_map_file ) ) {
 			}
 		);
 	}
+	unset( $class_map_file );
 }
 
 require_once __DIR__ . '/strauss/autoload.php';
