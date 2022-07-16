@@ -50,15 +50,15 @@ class Plugins_List_Table {
 	 *
 	 * @hooked plugin_action_links_{$basename}
 	 *
-	 * @param array<int|string, string> $action_links The existing plugin links (usually "Deactivate").
-	 * @param string                    $plugin_basename The plugin's directory/filename.php.
-	 * @param array<int|string, mixed>  $plugin_data An array of plugin data. See `get_plugin_data()`.
-	 * @param string                    $context     The plugin context. 'all'|'active'|'inactive'|'recently_activated'
-	 *                                                |'upgrade'|'mustuse'|'dropins'|'search'.
+	 * @param array<int|string, string>     $action_links The existing plugin links (usually "Deactivate").
+	 * @param string                        $plugin_basename The plugin's directory/filename.php.
+	 * @param null|array<int|string, mixed> $plugin_data An array of plugin data. See `get_plugin_data()`.
+	 * @param string                        $context     The plugin context. 'all'|'active'|'inactive'|'recently_activated'
+	 *                                                    |'upgrade'|'mustuse'|'dropins'|'search'.
 	 *
 	 * @return array<int|string, string> The links to display below the plugin name on plugins.php.
 	 */
-	public function plugin_specific_action_links( array $action_links, string $plugin_basename, array $plugin_data, string $context ): array {
+	public function plugin_specific_action_links( array $action_links, string $plugin_basename, ?array $plugin_data, string $context ): array {
 
 		/**
 		 * Remove empty links.
