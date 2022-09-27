@@ -2,13 +2,13 @@
 /**
  * Tests for the root plugin file.
  *
- * @package Plugin_Package_Name
+ * @package brianhenryie/bh-wp-plugins-page
  * @author  Your Name <email@example.com>
  */
 
-namespace BH_WP_Plugins_Page\i18n;
+namespace BrianHenryIE\WP_Plugins_Page\i18n;
 
-use BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page;
+use BrianHenryIE\WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page;
 
 /**
  * Class Plugin_WP_Mock_Test
@@ -28,7 +28,7 @@ class I18n_Unit_Test extends \Codeception\Test\Unit {
 	/**
 	 * Verify load_plugin_textdomain is correctly called.
 	 *
-	 * @covers \BH_WP_Plugins_Page\includes\I18n::load_plugin_textdomain
+	 * @covers \BH_WP_Plugins_Page\WP_Includes\I18n::load_plugin_textdomain
 	 */
 	public function test_load_plugin_textdomain() {
 

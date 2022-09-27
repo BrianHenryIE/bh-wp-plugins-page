@@ -5,11 +5,11 @@
  * @link       https://github.com/brianhenryie/bh-wp-plugins-page
  * @since      1.0.0
  *
- * @package    BH_WP_Plugins_Page
- * @subpackage BH_WP_Plugins_Page/admin
+ * @package    brianhenryie/bh-wp-plugins-page
+ *
  */
 
-namespace BH_WP_Plugins_Page\admin;
+namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -17,11 +17,11 @@ namespace BH_WP_Plugins_Page\admin;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    BH_WP_Plugins_Page
- * @subpackage BH_WP_Plugins_Page/admin
+ * @package    brianhenryie/bh-wp-plugins-page
+ *
  * @author     BrianHenryIE <BrianHenryIE@gmail.com>
  */
-class Admin {
+class Admin_Assets {
 
 	/**
 	 * Register the JavaScript for the admin area.

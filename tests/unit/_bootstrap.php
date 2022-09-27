@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file for WP_Mock.
  *
- * @package           BH_WP_Plugins_Page
+ * @package           brianhenryie/bh-wp-plugins-page
  */
 
 WP_Mock::setUsePatchwork( true );

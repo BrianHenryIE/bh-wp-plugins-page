@@ -1,12 +1,10 @@
 <?php
 /**
- *
- *
- * @package BH_WP_Plugins_Page
+ *@package brianhenryie/bh-wp-plugins-page
  * @author  BrianHenryIE <BrianHenryIE@gmail.com>
  */
 
-namespace BH_WP_Plugins_Page\admin;
+namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 /**
  *
@@ -14,7 +12,7 @@ namespace BH_WP_Plugins_Page\admin;
 class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\admin\Plugins_List_Table::action_links
+	 * @covers \BH_WP_Plugins_Page\Admin\Plugins_List_Table::action_links
 	 */
 	public function a_test_array_keys_preserved() {
 

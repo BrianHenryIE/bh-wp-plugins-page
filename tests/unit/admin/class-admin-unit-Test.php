@@ -2,13 +2,13 @@
 /**
  * Tests for Admin.
  *
- * @see Admin
+ * @see Admin_Assets
  *
- * @package bh-wp-plugins-page
+ * @package brianhenryie/bh-wp-plugins-page
  * @author Brian Henry <BrianHenryIE@gmail.com>
  */
 
-namespace BH_WP_Plugins_Page\admin;
+namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 /**
  * Class Admin_Test
@@ -41,7 +41,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 	 * Verifies enqueue_styles() calls wp_enqueue_style() with appropriate parameters.
 	 * Verifies the .css file exists.
 	 *
-	 * @covers \BH_WP_Plugins_Page\admin\Admin::enqueue_scripts
+	 * @covers \BH_WP_Plugins_Page\Admin\Admin_Assets::enqueue_scripts
 	 * @see wp_enqueue_style()
 	 */
 	public function test_enqueue_script_on_plugins_page() {
@@ -71,7 +71,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$admin = new Admin();
+		$admin = new Admin_Assets();
 
 		$admin->enqueue_scripts();
 
@@ -82,7 +82,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 	 * Verifies enqueue_scripts() calls wp_enqueue_script() with appropriate parameters.
 	 * Verifies the .js file exists.
 	 *
-	 * @covers \BH_WP_Plugins_Page\admin\Admin::enqueue_scripts
+	 * @covers \BH_WP_Plugins_Page\Admin\Admin_Assets::enqueue_scripts
 	 * @see wp_enqueue_script()
 	 */
 	public function test_enqueue_scripts_on_other_pages() {
@@ -94,7 +94,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$admin = new Admin();
+		$admin = new Admin_Assets();
 
 		$admin->enqueue_scripts();
 	}

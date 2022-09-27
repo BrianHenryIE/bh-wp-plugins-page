@@ -1,13 +1,13 @@
 <?php
 /**
- * @package BH_WP_Plugins_Page_Unit_Name
+ * @package brianhenryie/bh-wp-plugins-page
  * @author  Your Name <email@example.com>
  */
 
-namespace BH_WP_Plugins_Page\includes;
+namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
 
-use BH_WP_Plugins_Page\admin\Admin;
-use BH_WP_Plugins_Page\admin\Plugins_List_Table;
+use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
+use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
 use WP_Mock\Matcher\AnyInstance;
 
 /**
@@ -24,7 +24,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page::set_locale
+	 * @covers \BH_WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page::set_locale
 	 */
 	public function test_set_locale_hooked() {
 
@@ -46,7 +46,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page::define_admin_hooks
+	 * @covers \BH_WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page::define_admin_hooks
 	 */
 	public function test_admin_hooks() {
 
@@ -61,7 +61,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 
 		\WP_Mock::expectActionAdded(
 			'admin_enqueue_scripts',
-			array( new AnyInstance( Admin::class ), 'enqueue_scripts' ),
+			array( new AnyInstance( Admin_Assets::class ), 'enqueue_scripts' ),
 			PHP_INT_MAX
 		);
 
@@ -69,7 +69,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page::define_plugins_list_table_hooks
+	 * @covers \BH_WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page::define_plugins_list_table_hooks
 	 */
 	public function test_plugins_list_table_hooks() {
 

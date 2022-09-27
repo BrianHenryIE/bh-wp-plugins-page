@@ -13,13 +13,13 @@ Cleans up WordPress's plugins.php.
 * Removes click handlers on Deactivate links (to remove deactivation surveys)
 
 Before:
-![Before](./assets/screenshot-1.png "BH WP Plugins Page before screenshot")
+![Before](./.wordpress-org/screenshot-1.png "BH WP Plugins Page before screenshot")
 
 After:
-![After](./assets/screenshot-2.png "BH WP Plugins Page after screenshot")
+![After](./.wordpress-org/screenshot-2.png "BH WP Plugins Page after screenshot")
 
 Removes JavaScript hooked to deactivation buttons to prevent these:
-![Deactivate](./assets/screenshot-3.png "BH WP Plugins Page deactivation dialog")
+![Deactivate](./.wordpress-org/screenshot-3.png "BH WP Plugins Page deactivation dialog")
 
 
 ## Installation

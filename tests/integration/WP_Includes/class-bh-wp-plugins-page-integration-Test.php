@@ -2,13 +2,13 @@
 /**
  * Tests for BH_WP_Plugins_Page main setup class. Tests the actions are correctly added.
  *
- * @package BH_WP_Plugins_Page
+ * @package brianhenryie/bh-wp-plugins-page
  * @author  BrianHenryIE <BrianHenryIE@gmail.com>
  */
 
-namespace BH_WP_Plugins_Page\includes;
+namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
 
-use BH_WP_Plugins_Page\admin\Admin;
+use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 
 /**
  * Class Develop_Test
@@ -24,7 +24,7 @@ class BH_WP_Plugins_Page_Integration_Test extends \Codeception\TestCase\WPTestCa
 
 		$action_name       = 'admin_enqueue_scripts';
 		$expected_priority = PHP_INT_MAX;
-		$class_type        = Admin::class;
+		$class_type        = Admin_Assets::class;
 		$method_name       = 'enqueue_scripts';
 
 		$function_is_hooked = $this->is_function_hooked_on_action( $class_type, $method_name, $action_name, $expected_priority );

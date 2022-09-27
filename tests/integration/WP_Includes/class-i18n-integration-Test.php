@@ -2,11 +2,11 @@
 /**
  * Tests for I18n. Tests load_plugin_textdomain.
  *
- * @package BH_WP_Plugins_Page
+ * @package brianhenryie/bh-wp-plugins-page
  * @author  BrianHenryIE <BrianHenryIE@gmail.com>
  */
 
-namespace BH_WP_Plugins_Page\includes;
+namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
 
 /**
  * Class BH_WP_Plugins_Page_Test

@@ -40,10 +40,9 @@ cache
 
 node_modules
 scratch
-src/strauss/
 wp-content/
 wordpress
-/vendor/
+vendor/
 
 *.zip
 *.phar
@@ -58,3 +57,9 @@ xdebug.sh
 7.4linux.sh
 DOCKER_ENV
 docker_tag
+.phpunit.result.cache
+
+vendor-prefixed
+dist-archive
+
+languages/*.pot

@@ -2,20 +2,21 @@
 /**
  * The file that defines the core plugin class
  *
- * A class definition that includes attributes and functions used across both the
+ * A class definition that WP_Includes attributes and functions used across both the
  * frontend-facing side of the site and the admin area.
  *
  * @link       https://github.com/brianhenryie/bh-wp-plugins-page
  * @since      1.0.0
  *
- * @package    BH_WP_Plugins_Page
- * @subpackage BH_WP_Plugins_Page/includes
+ * @package    brianhenryie/bh-wp-plugins-page
+ *
  */
 
-namespace BH_WP_Plugins_Page\includes;
+namespace BrianHenryIE\WP_Plugins_Page;
 
-use BH_WP_Plugins_Page\admin\Admin;
-use BH_WP_Plugins_Page\admin\Plugins_List_Table;
+use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
+use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
+use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
 
 /**
  * The core plugin class.
@@ -27,8 +28,8 @@ use BH_WP_Plugins_Page\admin\Plugins_List_Table;
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    BH_WP_Plugins_Page
- * @subpackage BH_WP_Plugins_Page/includes
+ * @package    brianhenryie/bh-wp-plugins-page
+ *
  * @author     BrianHenryIE <BrianHenryIE@gmail.com>
  */
 class BH_WP_Plugins_Page {
@@ -47,6 +48,7 @@ class BH_WP_Plugins_Page {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_plugins_list_table_hooks();
+		$this->define_plugins_page_hooks();
 
 	}
 
@@ -74,7 +76,7 @@ class BH_WP_Plugins_Page {
 	 */
 	protected function define_admin_hooks(): void {
 
-		$plugin_admin = new Admin();
+		$plugin_admin = new Admin_Assets();
 		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ), PHP_INT_MAX );
 	}
 
@@ -86,8 +88,8 @@ class BH_WP_Plugins_Page {
 	 */
 	protected function define_plugins_list_table_hooks(): void {
 
-		$plugins_list_table   = new Plugins_List_Table();
-		$active_plugins = (array) get_option( 'active_plugins', array() );
+		$plugins_list_table = new Plugins_List_Table();
+		$active_plugins     = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
 			add_action(
@@ -100,4 +102,13 @@ class BH_WP_Plugins_Page {
 		add_action( 'plugin_row_meta', array( $plugins_list_table, 'row_meta' ), PHP_INT_MAX, 4 );
 	}
 
+	protected function define_plugins_page_hooks(): void {
+
+		$plugins_page = new Plugins_Page();
+
+		add_filter( 'wp_redirect', array( $plugins_page, 'prevent_redirect' ), 1, 2 );
+
+		add_action( 'admin_init', array( $plugins_page, 'add_hook_for_freemius_redirect' ) );
+
+	}
 }

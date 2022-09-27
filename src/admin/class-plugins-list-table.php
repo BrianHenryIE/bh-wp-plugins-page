@@ -11,11 +11,11 @@
  * @link       https://github.com/brianhenryie/bh-wp-plugins-page
  * @since      1.0.0
  *
- * @package    BH_WP_Plugins_Page
- * @subpackage BH_WP_Plugins_Page/admin
+ * @package    brianhenryie/bh-wp-plugins-page
+ *
  */
 
-namespace BH_WP_Plugins_Page\admin;
+namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 use DOMDocument;
 use DOMElement;
@@ -25,7 +25,7 @@ use function tad\WPBrowser\strip_all_tags;
 /**
  * Class Plugins_List_Table
  *
- * @package BH_WP_Plugins_Page\admin
+ * @package brianhenryie/bh-wp-plugins-page
  */
 class Plugins_List_Table {
 
@@ -59,6 +59,11 @@ class Plugins_List_Table {
 	 * @return array<int|string, string> The links to display below the plugin name on plugins.php.
 	 */
 	public function plugin_specific_action_links( array $action_links, string $plugin_basename, ?array $plugin_data, string $context ): array {
+
+		// This is probably the case where JetPack (or maybe another plugin) is running `apply_filters`, so this isn't the case we want to work on.
+		if( empty( $plugin_data ) ) {
+			return $action_links;
+		}
 
 		/**
 		 * Remove empty links.
@@ -120,6 +125,7 @@ class Plugins_List_Table {
 					$log[ $key ] = $link;
 				}
 			} elseif ( stristr( $link, 'deactivate' ) ) {
+				$link = $this->remove_unwanted_html( array( $link ), true )[0];
 				if ( is_int( $key ) ) {
 					$deactivate[] = $link;
 				} else {
@@ -233,7 +239,7 @@ class Plugins_List_Table {
 	 * @param array<int|string, string> $links The meta/action links in full.
 	 * @return array<int|string, string>
 	 */
-	protected function remove_unwanted_html( array $links ): array {
+	protected function remove_unwanted_html( array $links, bool $remove_class = false ): array {
 
 		$allowed_html = array(
 			'a' => array(
@@ -245,6 +251,10 @@ class Plugins_List_Table {
 				'data-title' => array(),
 			),
 		);
+
+		if ( $remove_class ) {
+			unset( $allowed_html['a']['class'] );
+		}
 
 		foreach ( $links as $key => $html_string ) {
 

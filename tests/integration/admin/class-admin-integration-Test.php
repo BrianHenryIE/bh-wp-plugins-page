@@ -1,14 +1,12 @@
 <?php
 /**
- *
- *
- * @package BH_WP_Plugins_Page
+ *@package brianhenryie/bh-wp-plugins-page
  * @author  BrianHenryIE <BrianHenryIE@gmail.com>
  */
 
-namespace BH_WP_Plugins_Page\admin;
+namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
-use BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page;
+use BrianHenryIE\WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page;
 use WP_Scripts;
 
 /**

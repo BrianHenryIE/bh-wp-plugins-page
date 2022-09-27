@@ -6,14 +6,14 @@
  *
  * @link              https://github.com/brianhenryie/bh-wp-plugins-page
  * @since             1.0.0
- * @package           BH_WP_Plugins_Page
+ * @package           brianhenryie/bh-wp-plugins-page
  *
  * @see https://github.com/pablo-sg-pacheco/wp-namespace-autoloader/
  */
 
-namespace BH_WP_Plugins_Page;
+namespace BrianHenryIE\WP_Plugins_Page;
 
-use BH_WP_Plugins_Page\Pablo_Pacheco\WP_Namespace_Autoloader\WP_Namespace_Autoloader;
+use BrianHenryIE\WP_Plugins_Page\Pablo_Pacheco\WP_Namespace_Autoloader\WP_Namespace_Autoloader;
 
 
 $class_map_file = __DIR__ . '/autoload-classmap.php';
@@ -34,7 +34,8 @@ if ( file_exists( $class_map_file ) ) {
 	unset( $class_map_file );
 }
 
-require_once __DIR__ . '/strauss/autoload.php';
 
-$wpcs_autoloader = new WP_Namespace_Autoloader();
+require_once __DIR__ . '/vendor-prefixed/autoload.php';
+
+$wpcs_autoloader = new WP_Namespace_Autoloader( array( 'classes_dir' => array( 'src' ) ) );
 $wpcs_autoloader->init();

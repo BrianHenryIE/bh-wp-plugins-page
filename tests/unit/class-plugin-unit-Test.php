@@ -2,13 +2,13 @@
 /**
  * Tests for the root plugin file.
  *
- * @package BH_WP_Plugins_Page
+ * @package brianhenryie/bh-wp-plugins-page
  * @author  BrianHenryIE <BrianHenryIE@gmail.com>
  */
 
-namespace BH_WP_Plugins_Page;
+namespace BrianHenryIE\WP_Plugins_Page;
 
-use BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page;
+use BrianHenryIE\WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page;
 
 class Plugin_Unit_Test extends \Codeception\Test\Unit {
 

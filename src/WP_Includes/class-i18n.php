@@ -8,11 +8,11 @@
  * @link       https://github.com/brianhenryie/bh-wp-plugins-page
  * @since      1.0.0
  *
- * @package    BH_WP_Plugins_Page
- * @subpackage BH_WP_Plugins_Page/includes
+ * @package    brianhenryie/bh-wp-plugins-page
+ *
  */
 
-namespace BH_WP_Plugins_Page\includes;
+namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
 
 /**
  * Define the internationalization functionality.
@@ -21,12 +21,11 @@ namespace BH_WP_Plugins_Page\includes;
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    BH_WP_Plugins_Page
- * @subpackage BH_WP_Plugins_Page/includes
+ * @package    brianhenryie/bh-wp-plugins-page
+ *
  * @author     BrianHenryIE <BrianHenryIE@gmail.com>
  */
 class I18n {
-
 
 	/**
 	 * Load the plugin text domain for translation.
@@ -40,7 +39,7 @@ class I18n {
 		load_plugin_textdomain(
 			'bh-wp-plugins-page',
 			false,
-			plugin_basename( dirname( __FILE__, 2 ) ) . '/languages/'
+			plugin_basename( dirname( __FILE__, 3 ) ) . '/languages/'
 		);
 
 	}

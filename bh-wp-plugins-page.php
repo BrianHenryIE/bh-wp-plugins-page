@@ -3,13 +3,13 @@
  * The plugin bootstrap file
  *
  * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
+ * admin area. This file also WP_Includes all of the dependencies used by the plugin,
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
  * @link              https://github.com/brianhenryie/bh-wp-plugins-page
  * @since             1.0.0
- * @package           BH_WP_Plugins_Page
+ * @package           brianhenryie/bh-wp-plugins-page
  *
  * @wordpress-plugin
  * Plugin Name:       Plugins Page Cleanup
@@ -24,9 +24,7 @@
  * Domain Path:       /languages
  */
 
-namespace BH_WP_Plugins_Page;
-
-use BH_WP_Plugins_Page\includes\BH_WP_Plugins_Page;
+namespace BrianHenryIE\WP_Plugins_Page;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -41,6 +39,7 @@ require_once plugin_dir_path( __FILE__ ) . 'autoload.php';
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.9' );
+define( 'BH_WP_PLUGINS_PAGE_BASENAME', plugin_basename( __FILE__ ) );
 
 /**
  * Begins execution of the plugin.
@@ -53,6 +52,11 @@ define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.9' );
  */
 function instantiate_bh_wp_plugins_page(): void {
 
+	// If we're not in the Admin UI, we have nothing to do.
+	if ( ! is_admin() ) {
+		return;
+	}
+
 	new BH_WP_Plugins_Page();
 
 }
@@ -62,4 +66,5 @@ function instantiate_bh_wp_plugins_page(): void {
  * admin-specific hooks, and frontend-facing site hooks.
  */
 instantiate_bh_wp_plugins_page();
+
 
