@@ -1,18 +1,18 @@
 <?php
 /**
- *@package brianhenryie/bh-wp-plugins-page
+ * @package brianhenryie/bh-wp-plugins-page
  * @author  BrianHenryIE <BrianHenryIE@gmail.com>
  */
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 /**
- *
+ * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table
  */
 class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\Admin\Plugins_List_Table::action_links
+	 * @covers ::action_links
 	 */
 	public function a_test_array_keys_preserved() {
 
@@ -86,7 +86,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 	}
 
-	public function test_ga_google_analytics() {
+	public function test_plugin_planet_ga_google_analytics() {
 
 		$ga_google_analytics_actions = array(
 			0            => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ga-google-analytics-pro/?plugin" title="Get GA Pro!" style="font-weight:bold;">Go&nbsp;Pro</a>',
@@ -112,9 +112,9 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 		$sut->row_meta( $ga_google_analytics_meta, $plugin_file, array(), '' );
 
-		$actions_result = $sut->plugin_specific_action_links( $plugin_actions, $plugin_file, array(), '' );
+		$actions_result = $sut->plugin_specific_action_links( $plugin_actions, $plugin_file, array( 'not' => 'empty' ), '' );
 
-		// The Get Pro link sould be gone.
+		// The Get Pro link should be gone.
 		$this->assertCount( 2, $actions_result );
 
 		$this->assertEquals( 'deactivate', array_key_last( $actions_result ) );
@@ -189,7 +189,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		// This is fired inside `plugin_specific_action_links` in order to find internal meta links.
 		add_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), PHP_INT_MAX, 4 );
 
-		$result = $sut->plugin_specific_action_links( $action_links, $plugin_basename, array(), '' );
+		$result = $sut->plugin_specific_action_links( $action_links, $plugin_basename, array( 'not' => 'empty' ), '' );
 
 		// Check a link with the word Settings is now in the first column.
 		$contains_settings = array_reduce(
@@ -231,7 +231,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		// This is fired inside `plugin_specific_action_links` in order to find internal meta links.
 		add_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), PHP_INT_MAX, 4 );
 
-		$result = $sut->plugin_specific_action_links( $action_links, $plugin_basename, array(), '' );
+		$result = $sut->plugin_specific_action_links( $action_links, $plugin_basename, array( 'not' => 'empty' ), '' );
 
 		// Check a link with the word Settings is now in the first column.
 		$contains_settings = array_reduce(
@@ -279,11 +279,11 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		// Need to run this to move them from the left to the center column.
 		$sut->plugin_specific_action_links( $action_links, $plugin_basename, array(), '' );
 
-		$result = $sut->row_meta( $meta_links, $plugin_basename, array(), '' );
+		$result = $sut->row_meta( $meta_links, $plugin_basename, array( 'not' => 'empty' ), '' );
 
 		remove_filter( 'plugin_row_meta', $return_meta_links );
 
-		$this->assertCount( 2, $result );
+		$this->assertCount( 1, $result );
 
 	}
 

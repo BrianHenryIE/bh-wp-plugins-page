@@ -8,8 +8,6 @@
 
 namespace BrianHenryIE\WP_Plugins_Page;
 
-use BrianHenryIE\WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page;
-
 class Plugin_Unit_Test extends \Codeception\Test\Unit {
 
 	protected function setup(): void {
@@ -32,13 +30,22 @@ class Plugin_Unit_Test extends \Codeception\Test\Unit {
 			function() {}
 		);
 
-		$plugin_root_dir = dirname( __DIR__, 2 ) . '/src';
+		global $plugin_root_dir;
 
 		\WP_Mock::userFunction(
 			'plugin_dir_path',
 			array(
 				'args'   => array( \WP_Mock\Functions::type( 'string' ) ),
 				'return' => $plugin_root_dir . '/',
+				'times'  => 1,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'plugin_basename',
+			array(
+				'args'   => array( \WP_Mock\Functions::type( 'string' ) ),
+				'return' => "$plugin_root_dir/$plugin_root_dir.php",
 				'times'  => 1,
 			)
 		);
@@ -54,6 +61,14 @@ class Plugin_Unit_Test extends \Codeception\Test\Unit {
 			'register_deactivation_hook',
 			array(
 				'times' => 0,
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'is_admin',
+			array(
+				'times'  => 1,
+				'return' => true,
 			)
 		);
 

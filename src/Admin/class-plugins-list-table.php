@@ -12,7 +12,6 @@
  * @since      1.0.0
  *
  * @package    brianhenryie/bh-wp-plugins-page
- *
  */
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
@@ -61,7 +60,7 @@ class Plugins_List_Table {
 	public function plugin_specific_action_links( array $action_links, string $plugin_basename, ?array $plugin_data, string $context ): array {
 
 		// This is probably the case where JetPack (or maybe another plugin) is running `apply_filters`, so this isn't the case we want to work on.
-		if( empty( $plugin_data ) ) {
+		if ( empty( $plugin_data ) ) {
 			return $action_links;
 		}
 

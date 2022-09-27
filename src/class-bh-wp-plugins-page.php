@@ -9,7 +9,6 @@
  * @since      1.0.0
  *
  * @package    brianhenryie/bh-wp-plugins-page
- *
  */
 
 namespace BrianHenryIE\WP_Plugins_Page;
@@ -17,6 +16,7 @@ namespace BrianHenryIE\WP_Plugins_Page;
 use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
+use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
 
 /**
  * The core plugin class.

@@ -4,14 +4,15 @@
  * @author  Your Name <email@example.com>
  */
 
-namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
+namespace BrianHenryIE\WP_Plugins_Page;
 
 use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
+use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
 use WP_Mock\Matcher\AnyInstance;
 
 /**
- * Class BH_WP_Plugins_Page_Unit_Test
+ * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\BH_WP_Plugins_Page
  */
 class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 
@@ -24,7 +25,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page::set_locale
+	 * @covers ::set_locale
 	 */
 	public function test_set_locale_hooked() {
 
@@ -46,7 +47,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page::define_admin_hooks
+	 * @covers ::define_admin_hooks
 	 */
 	public function test_admin_hooks() {
 
@@ -69,7 +70,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * @covers \BH_WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page::define_plugins_list_table_hooks
+	 * @covers ::define_plugins_list_table_hooks
 	 */
 	public function test_plugins_list_table_hooks() {
 

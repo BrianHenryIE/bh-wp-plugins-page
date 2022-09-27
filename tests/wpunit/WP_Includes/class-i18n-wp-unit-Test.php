@@ -9,7 +9,7 @@
 namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
 
 /**
- * Class I18n_Test
+ * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n
  *
  * @see I18n
  */
@@ -18,7 +18,7 @@ class I18n_WP_Unit_Test extends \Codeception\TestCase\WPTestCase {
 	/**
 	 * Checks if the filter run by WordPress in the load_plugin_textdomain() function is called.
 	 *
-	 * @see load_plugin_textdomain()
+	 * @covers ::load_plugin_textdomain
 	 */
 	public function test_load_plugin_textdomain_function() {
 

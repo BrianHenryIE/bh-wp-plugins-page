@@ -11,7 +11,7 @@
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 /**
- * Class Admin_Test
+ * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets
  */
 class Admin_Unit_Test extends \Codeception\Test\Unit {
 
@@ -24,24 +24,10 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 	}
 
 	/**
-	 * The plugin name. Unlikely to change.
-	 *
-	 * @var string Plugin name.
-	 */
-	private $plugin_name = 'plugin-slug';
-
-	/**
-	 * The plugin version, matching the version these tests were written against.
-	 *
-	 * @var string Plugin version.
-	 */
-	private $version = '1.0.3';
-
-	/**
 	 * Verifies enqueue_styles() calls wp_enqueue_style() with appropriate parameters.
 	 * Verifies the .css file exists.
 	 *
-	 * @covers \BH_WP_Plugins_Page\Admin\Admin_Assets::enqueue_scripts
+	 * @covers ::enqueue_scripts
 	 * @see wp_enqueue_style()
 	 */
 	public function test_enqueue_script_on_plugins_page() {
@@ -61,13 +47,14 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$js_src = $plugin_root_dir . '/admin/js/bh-wp-plugins-page-admin.js';
+		$js_src = $plugin_root_dir . '/assets/bh-wp-plugins-page-admin.js';
+		$js_url = '/Users/brianhenry/Sites/bh-wp-plugins-page/admin/js/bh-wp-plugins-page-admin.js';
 
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',
 			array(
 				'times' => 1,
-				'args'  => array( 'bh-wp-plugins-page', $js_src, array( 'jquery' ), '*', false ),
+				'args'  => array( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), '*', false ),
 			)
 		);
 
@@ -82,7 +69,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 	 * Verifies enqueue_scripts() calls wp_enqueue_script() with appropriate parameters.
 	 * Verifies the .js file exists.
 	 *
-	 * @covers \BH_WP_Plugins_Page\Admin\Admin_Assets::enqueue_scripts
+	 * @covers ::enqueue_scripts
 	 * @see wp_enqueue_script()
 	 */
 	public function test_enqueue_scripts_on_other_pages() {

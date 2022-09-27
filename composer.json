@@ -21,6 +21,11 @@
             "cweagans/composer-patches": true
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "BrianHenryIE\\WP_Plugins_Page\\": ["tests/integration","tests/unit","tests/wpunit"]
+        }
+    },
     "repositories": {
         "brianhenryie/composer-phpstorm": {
             "url": "https://github.com/BrianHenryIE/composer-phpstorm",

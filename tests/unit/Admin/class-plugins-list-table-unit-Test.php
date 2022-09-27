@@ -5,7 +5,7 @@ namespace BrianHenryIE\WP_Plugins_Page\Admin;
 use ReflectionClass;
 
 /**
- * @coversDefaultClass \BH_WP_Plugins_Page\Admin\Plugins_List_Table
+ * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table
  */
 class Plugins_List_Table_Unit_Test extends \Codeception\Test\Unit {
 

@@ -1,6 +1,6 @@
 <?php
 /**
- *@package brianhenryie/bh-wp-plugins-page
+ * @package brianhenryie/bh-wp-plugins-page
  * @author  BrianHenryIE <BrianHenryIE@gmail.com>
  */
 
