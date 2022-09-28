@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "374b3dfdb80ebd4ae0cc647da547a1c7",
+    "content-hash": "418ab46454b72126a78ad1909914a824",
     "packages": [
         {
             "name": "pablo-sg-pacheco/wp-namespace-autoloader",
@@ -11445,15 +11445,15 @@
         },
         {
             "name": "wpackagist-plugin/woocommerce",
-            "version": "5.9.1",
+            "version": "6.9.4",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/woocommerce/",
-                "reference": "tags/5.9.1"
+                "reference": "tags/6.9.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/woocommerce.5.9.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/woocommerce.6.9.4.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"

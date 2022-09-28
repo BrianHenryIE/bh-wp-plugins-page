@@ -43,12 +43,12 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::userFunction(
 			'plugin_dir_url',
 			array(
-				'return' => $plugin_root_dir . '/admin/',
+				'return' => $plugin_root_dir . '/'
 			)
 		);
 
 		$js_src = $plugin_root_dir . '/assets/bh-wp-plugins-page-admin.js';
-		$js_url = '/Users/brianhenry/Sites/bh-wp-plugins-page/admin/js/bh-wp-plugins-page-admin.js';
+		$js_url = '/Users/brianhenry/Sites/bh-wp-plugins-page/assets/bh-wp-plugins-page-admin.js';
 
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',

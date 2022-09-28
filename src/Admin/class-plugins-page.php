@@ -1,6 +1,8 @@
 <?php
 /**
  * Prevent redirects away from plugins.php after plugin activation.
+ *
+ * @package brianhenryie/bh-wp-plugins-page
  */
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
@@ -8,7 +10,6 @@ namespace BrianHenryIE\WP_Plugins_Page\Admin;
 class Plugins_Page {
 
 	/**
-	 * $location = apply_filters( 'wp_redirect', $location, $status );
 	 *
 	 * This only captures pageloads on plugins.php, no AJAX redirects.
 	 *
@@ -17,7 +18,7 @@ class Plugins_Page {
 	 *
 	 * @return string|bool
 	 */
-	public function prevent_redirect( string $location, $status ) {
+	public function prevent_redirect( string $location, $status ): string {
 
 		global $pagenow;
 

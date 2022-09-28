@@ -95,7 +95,7 @@
         "wpackagist-plugin/strong-testimonials": "*",
         "wpackagist-plugin/what-the-file": "*",
         "wpackagist-plugin/woo-product-variation-gallery": "*",
-        "wpackagist-plugin/woocommerce": "^5.1",
+        "wpackagist-plugin/woocommerce": "*",
         "wpackagist-plugin/woocommerce-google-adwords-conversion-tracking-tag": "*",
         "wpackagist-plugin/wp-data-access": "*",
         "wpackagist-theme/twentytwenty": "*"

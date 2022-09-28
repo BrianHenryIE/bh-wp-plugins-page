@@ -8,6 +8,7 @@ namespace BrianHenryIE\WP_Plugins_Page;
 
 use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
+use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
 use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
 use WP_Mock\Matcher\AnyInstance;
 
@@ -112,4 +113,26 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		new BH_WP_Plugins_Page();
 
 	}
+
+	/**
+	 * @covers ::define_plugins_page_hooks
+	 * @covers ::__construct
+	 */
+	public function test_plugins_page_hooks() {
+
+		\WP_Mock::expectFilterAdded(
+			'wp_redirect',
+			array( new AnyInstance( Plugins_Page::class ), 'prevent_redirect' ),
+			1,
+			2
+		);
+
+		\WP_Mock::expectActionAdded(
+			'admin_init',
+			array( new AnyInstance( Plugins_Page::class ), 'add_hook_for_freemius_redirect' )
+		);
+
+		new BH_WP_Plugins_Page();
+	}
+
 }
