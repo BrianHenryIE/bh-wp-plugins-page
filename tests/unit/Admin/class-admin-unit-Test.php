@@ -43,7 +43,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::userFunction(
 			'plugin_dir_url',
 			array(
-				'return' => $plugin_root_dir . '/'
+				'return' => $plugin_root_dir . '/',
 			)
 		);
 
