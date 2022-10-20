@@ -49,7 +49,6 @@ class BH_WP_Plugins_Page {
 		$this->define_admin_hooks();
 		$this->define_plugins_list_table_hooks();
 		$this->define_plugins_page_hooks();
-
 	}
 
 	/**
@@ -102,6 +101,9 @@ class BH_WP_Plugins_Page {
 		add_action( 'plugin_row_meta', array( $plugins_list_table, 'row_meta' ), PHP_INT_MAX, 4 );
 	}
 
+	/**
+	 * Add hooks to prevent unwanted redirects when plugins are installed.
+	 */
 	protected function define_plugins_page_hooks(): void {
 
 		$plugins_page = new Plugins_Page();
@@ -109,6 +111,5 @@ class BH_WP_Plugins_Page {
 		add_filter( 'wp_redirect', array( $plugins_page, 'prevent_redirect' ), 1, 2 );
 
 		add_action( 'admin_init', array( $plugins_page, 'add_hook_for_freemius_redirect' ) );
-
 	}
 }

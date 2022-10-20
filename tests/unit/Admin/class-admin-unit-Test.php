@@ -15,11 +15,12 @@ namespace BrianHenryIE\WP_Plugins_Page\Admin;
  */
 class Admin_Unit_Test extends \Codeception\Test\Unit {
 
-	protected function setup(): void {
+	protected function setUp(): void {
 		\WP_Mock::setUp();
 	}
 
 	protected function tearDown(): void {
+		parent::tearDown();
 		\WP_Mock::tearDown();
 	}
 
@@ -34,8 +35,6 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 
 		global $pagenow;
 		$pagenow = 'plugins.php';
-
-		// define( 'BH_WP_PLUGINS_PAGE_VERSION', '1.0.3' );
 
 		global $plugin_root_dir;
 
@@ -55,6 +54,14 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'times' => 1,
 				'args'  => array( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), '*', false ),
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_enqueue_style',
+			array(
+				'times' => 1,
+				'args'  => array( 'bh-wp-plugins-page', \WP_Mock\Functions::type( 'string' ), array(), '*' ),
 			)
 		);
 

@@ -6,11 +6,10 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
-use BrianHenryIE\WP_Plugins_Page\WP_Includes\BH_WP_Plugins_Page;
 use WP_Scripts;
 
 /**
- *
+ * @coversNothing
  */
 class Admin_Integration_Test extends \Codeception\TestCase\WPTestCase {
 
@@ -40,7 +39,7 @@ class Admin_Integration_Test extends \Codeception\TestCase\WPTestCase {
 			$wp_scripts->queue
 		);
 
-		$expected = get_option( 'siteurl' ) . '/wp-content/plugins/bh-wp-plugins-page/admin/js/bh-wp-plugins-page-admin.js';
+		$expected = get_option( 'siteurl' ) . '/wp-content/plugins/bh-wp-plugins-page/assets/bh-wp-plugins-page-admin.js';
 
 		$this->assertContains( $expected, $scripts );
 
@@ -71,7 +70,7 @@ class Admin_Integration_Test extends \Codeception\TestCase\WPTestCase {
 			$wp_scripts->queue
 		);
 
-		$expected = get_option( 'siteurl' ) . '/wp-content/plugins/bh-wp-plugins-page/admin/js/bh-wp-plugins-page-admin.js';
+		$expected = get_option( 'siteurl' ) . '/wp-content/plugins/bh-wp-plugins-page/assets/bh-wp-plugins-page-admin.js';
 
 		$this->assertNotContains( $expected, $scripts );
 	}
