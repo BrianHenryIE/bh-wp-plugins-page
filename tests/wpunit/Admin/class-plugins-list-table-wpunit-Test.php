@@ -16,14 +16,14 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 	 */
 	public function a_test_array_keys_preserved() {
 
-		// plugin_action_links
+		// plugin_action_links.
 
 		$sut = new Plugins_List_Table();
 
 		$plugin_file = 'a-plugin/a-plugin.php';
 
 		$actions = array(
-			'deactivate' => '<a href="' . get_site_url() . " . '/wp-admin/plugins.php?action=deactivate&plugin=" . urlencode( $plugin_file ) . '">Deactivate</a>',
+			'deactivate' => '<a href="' . get_site_url() . " . '/wp-admin/plugins.php?action=deactivate&plugin=" . rawurlencode( $plugin_file ) . '">Deactivate</a>',
 		);
 
 		$plugin_data = array( 'not-used' );
@@ -66,7 +66,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 	public function data() {
 
-		// Apex Notification Bar Lite: meta keys
+		// Apex Notification Bar Lite: meta keys.
 		$data = array(
 			0         => 'Version 2.0.4',
 			1         => 'By <a href="http://accesspressthemes.com">AccessPress Themes</a>',
@@ -134,7 +134,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 		$plugin_basename = 'apex-notification-bar-lite/apex-notification-bar-lite.php';
 
-		// Apex Notification Bar Lite: meta keys
+		// Apex Notification Bar Lite: meta keys.
 		$data = array(
 			0         => 'Version 2.0.4',
 			1         => 'By <a href="http://accesspressthemes.com">AccessPress Themes</a>',

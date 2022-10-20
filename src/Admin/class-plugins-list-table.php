@@ -6,8 +6,6 @@
  * Actions links runs first, but needs to pull in links from meta links, so fires that filter during its run, which
  * is then fired again later during the normal meta links run.
  *
- * @see WP_Plugins_List_Table
- *
  * @link       https://github.com/brianhenryie/bh-wp-plugins-page
  * @since      1.0.0
  *
@@ -16,15 +14,13 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
-use DOMDocument;
-use DOMElement;
-use DOMNode;
-use function tad\WPBrowser\strip_all_tags;
+use BrianHenryIE\WP_Plugins_Page\API\Parsed_Link;
 
 /**
- * Class Plugins_List_Table
+ * Parses each link, then decides to move or discard, then removes formatting.
  *
- * @package brianhenryie/bh-wp-plugins-page
+ * @see \WP_List_Table
+ * @see \WP_Plugins_List_Table
  */
 class Plugins_List_Table {
 
@@ -32,17 +28,17 @@ class Plugins_List_Table {
 	 * Links found in the first column that should be moved to the middle column.
 	 * indexed by plugin basename.
 	 *
-	 * @var array<array<int|string, string>>
+	 * @var array<string, array<Parsed_Link>>
 	 */
-	protected array $external_action_links = array();
+	protected array $external_parsed_action_links = array();
 
 	/**
 	 * Links from the middle column that should be moved to the first column.
 	 * indexed by plugin basename.
 	 *
-	 * @var array<array<int|string, string>>
+	 * @var array<string, array<Parsed_Link>>
 	 */
-	protected array $internal_meta_links = array();
+	protected array $internal_parsed_meta_links = array();
 
 	/**
 	 * Hooked to plugin-specific action links filters (by looping over 'active_plugins' option).
@@ -59,101 +55,91 @@ class Plugins_List_Table {
 	 */
 	public function plugin_specific_action_links( array $action_links, string $plugin_basename, ?array $plugin_data, string $context ): array {
 
-		// This is probably the case where JetPack (or maybe another plugin) is running `apply_filters`, so this isn't the case we want to work on.
+		// This is probably the case where JetPack (or maybe another plugin, like this does) is running `apply_filters`, so this isn't the case we want to work on.
 		if ( empty( $plugin_data ) ) {
 			return $action_links;
 		}
 
-		/**
-		 * Remove empty links.
-		 * `myworks-woo-sync-for-quickbooks-online%2Fmyworks-woo-sync-for-quickbooks-online.php` was adding an empty entry!
-		 */
-		$action_links = array_filter( $action_links );
+		$parsed_action_links = array();
+		foreach ( $action_links as $key => $html_string ) {
+			$parsed_action_links[ $key ] = new Parsed_Link( $key, $html_string );
+		}
+
+		$internal_parsed_action_links = array();
+		$external_parsed_action_links = array();
 
 		// Save external links to move them to the middle column.
-		$this->external_action_links[ $plugin_basename ] = array_filter( $action_links, array( $this, 'is_html_contains_external_link' ) );
+		foreach ( $parsed_action_links as $key => $parsed_link ) {
 
-		// Discard external links from the first column.
-		$action_links = array_filter( $action_links, array( $this, 'is_not_html_contains_external_link' ) );
-
-		// Get internal links from second column.
-		apply_filters( 'plugin_row_meta', array(), $plugin_basename, $plugin_data, $context );
-		$internal_meta_links = $this->internal_meta_links[ $plugin_basename ] ?? array();
-
-		$action_links = $this->merge_assoc_arrays( $action_links, $internal_meta_links );
-
-		$settings   = array();
-		$links      = array();
-		$log        = array();
-		$deactivate = array();
-
-		foreach ( $action_links as $key => $link ) {
-
-			$anchor = $this->map_html_to_anchor_element( $link );
-
-			// If there is no anchor, e.g. it is just text, we do not want it in the action links.
-			if ( is_null( $anchor ) ) {
-				continue;
-			}
-
-			if ( false !== stristr( $link, 'View details' ) ) {
-				continue;
-			}
-
-			// Filter unwanted links.
-			// Remove upsells.
-			if ( ! $this->check_link_has_no_unwanted_terms( $link ) ) {
-				continue;
-			}
-
-			// Remove licence links.
-			if ( ! $this->check_link_is_not_licence( $link ) ) {
-				continue;
-			}
-
-			if ( stristr( $link, 'settings' ) ) {
-				if ( is_int( $key ) ) {
-					$settings[] = $link;
-				} else {
-					$settings[ $key ] = $link;
-				}
-			} elseif ( stristr( $link, 'log' ) ) {
-				if ( is_int( $key ) ) {
-					$log[] = $link;
-				} else {
-					$log[ $key ] = $link;
-				}
-			} elseif ( stristr( $link, 'deactivate' ) ) {
-				$link = $this->remove_unwanted_html( array( $link ), true )[0];
-				if ( is_int( $key ) ) {
-					$deactivate[] = $link;
-				} else {
-					$deactivate[ $key ] = $link;
-				}
+			if ( $parsed_link->has_external_url() ) {
+				$external_parsed_action_links[ $key ] = $parsed_link;
 			} else {
-				if ( is_int( $key ) ) {
-					$links[] = $link;
-				} else {
-					$links[ $key ] = $link;
-				}
+				$internal_parsed_action_links[ $key ] = $parsed_link;
 			}
 		}
+
+		$this->external_parsed_action_links[ $plugin_basename ] = $external_parsed_action_links;
+
+		/**
+		 * Get internal links from second column.
+		 *
+		 * We're already hooked on this filter. We need to invoke it to pull in data from other plugins.
+		 *
+		 * @see self::row_meta()
+		 */
+		apply_filters( 'plugin_row_meta', array(), $plugin_basename, $plugin_data, $context );
+		$internal_parsed_meta_links = $this->internal_parsed_meta_links[ $plugin_basename ] ?? array();
+
+		/**
+		 * All links we want in this column.
+		 *
+		 * @var Parsed_Link[] $parsed_action_links
+		 */
+		$parsed_action_links = $this->merge_arrays( array( $internal_parsed_action_links, $internal_parsed_meta_links ) );
 
 		// Reorder:
 		// Move settings to the beginning.
 		// Move Logs second to end.
 		// Move Deactivate at the end.
-		$action_links = array();
-		$links_arrays = array( $settings, $links, $log, $deactivate );
-		foreach ( $links_arrays as $links_array ) {
-			$action_links = $this->merge_assoc_arrays( $action_links, $links_array );
+		$ordered_links_arrays = array(
+			'settings'   => array(),
+			'links'      => array(),
+			'log'        => array(),
+			'deactivate' => array(),
+		);
+
+		// If there is no anchor, e.g. it is just text, we do not want it in the action links.
+		// Filter unwanted links.
+		// Remove upsells.
+		foreach ( $parsed_action_links as $key => $parsed_link ) {
+
+			if ( $parsed_link->is_empty()
+				|| $parsed_link->is_contains_unwanted_terms() ) {
+				continue;
+			}
+
+			$type = $parsed_link->get_type() ?? 'links';
+
+			if ( is_int( $key ) ) {
+				$ordered_links_arrays[ $type ][] = $parsed_link;
+			} else {
+				$ordered_links_arrays[ $type ][ $key ] = $parsed_link;
+			}
 		}
 
-		$action_links = $this->remove_unwanted_html( $action_links );
+		/**
+		 * Merge the sorted links into one array.
+		 *
+		 * @var Parsed_Link[] $ordered_links
+		 */
+		$ordered_links = $this->merge_arrays( $ordered_links_arrays );
 
-		return $action_links;
+		$cleaned_action_links = array();
+		foreach ( $ordered_links as $key => $parsed_link ) {
+			$cleaned_action_links[ $key ] = $parsed_link->get_cleaned_link();
+		}
+		return $cleaned_action_links;
 	}
-
 
 	/**
 	 * Row meta is the middle column.
@@ -173,383 +159,79 @@ class Plugins_List_Table {
 	 *
 	 * @return string[] The filtered $plugin_meta.
 	 */
-	public function row_meta( $meta_links, $plugin_file_name, $plugin_data, $status ): array {
+	public function row_meta( array $meta_links, $plugin_file_name, ?array $plugin_data, ?string $status ): array {
+
+		$parsed_meta_links = array();
+		foreach ( $meta_links as $key => $html_string ) {
+			$parsed_meta_links[ $key ] = new Parsed_Link( $key, $html_string );
+		}
+
+		$internal_parsed_meta_links = array();
+		$external_parsed_meta_links = array();
+
+		// Save external links to move them to the middle column.
+		foreach ( $parsed_meta_links as $key => $parsed_link ) {
+
+			// Check all URLs in the text for external links.
+			if ( $parsed_link->has_internal_url() && 'view-details' !== $parsed_link->get_type() ) {
+				$internal_parsed_meta_links[ $key ] = $parsed_link;
+			} else {
+				$external_parsed_meta_links[ $key ] = $parsed_link;
+			}
+		}
+
+		// Save internal links for use in the first column.
+		$this->internal_parsed_meta_links[ $plugin_file_name ] = $internal_parsed_meta_links;
 
 		// Get external links from first column.
-		$external_action_links = $this->external_action_links[ $plugin_file_name ] ?? array();
+		$external_parsed_action_links = $this->external_parsed_action_links[ $plugin_file_name ] ?? array();
 
-		$meta_links = $this->merge_assoc_arrays( $meta_links, $external_action_links );
+		/**
+		 * All the links we want to display in this column.
+		 *
+		 * @var Parsed_Link[] $external_parsed_meta_links
+		 */
+		$external_parsed_meta_links = $this->merge_arrays( array( $external_parsed_meta_links, $external_parsed_action_links ) );
 
 		// Filter unwanted links.
 		// Remove upsells.
-		$meta_links = array_filter( array_filter( $meta_links ), array( $this, 'check_link_has_no_unwanted_terms' ) );
+		// Remove external license links.
+		$cleaned_links = array();
+		foreach ( $external_parsed_meta_links as $key => $parsed_link ) {
 
-		// Remove licence links.
-		$meta_links = array_filter( $meta_links, array( $this, 'check_link_is_not_licence' ) );
-
-		// Save internal links.
-		$this->internal_meta_links[ $plugin_file_name ] = array_filter( $meta_links, array( $this, 'is_internal_link' ) );
-
-		// Remove internal links.
-		$meta_links = array_filter( $meta_links, array( $this, 'is_not_link_or_is_external_link_or_is_view_details_link' ) );
-
-		$meta_links = $this->remove_unwanted_html( $meta_links );
-
-		// Remove empty elements.
-		$meta_links = array_filter( $meta_links, array( $this, 'is_not_empty_anchor_text' ) );
-
-		// Replace (GitHub) links with icon.
-		$meta_links = $this->replace_text_with_icons( $meta_links );
-
-		return $meta_links;
-	}
-
-	/**
-	 * Merge two associative arrays. If the primary array already has the same key, just append the value.
-	 *
-	 * TODO: Is there a PHP function for this already?
-	 *
-	 * @param array<string|int, mixed> $primary_array The array whose keys take precedence.
-	 * @param array<string|int, mixed> $secondary_array The lesser array.
-	 * @return array<string|int, mixed>
-	 */
-	protected function merge_assoc_arrays( array $primary_array, array $secondary_array ): array {
-
-		foreach ( $secondary_array as $key => $value ) {
-			if ( is_null( $value ) ) {
-				continue;
-			}
-			if ( is_int( $key ) ) {
-				$primary_array[] = $value;
-			} elseif ( array_key_exists( $key, $primary_array ) ) {
-				$primary_array[] = $value;
-			} else {
-				$primary_array[ $key ] = $value;
-			}
-		}
-
-		return $primary_array;
-	}
-
-	/**
-	 *
-	 * TODO: Are there CSS classes that need to be removed still? YES!
-	 *
-	 * @param array<int|string, string> $links The meta/action links in full.
-	 * @return array<int|string, string>
-	 */
-	protected function remove_unwanted_html( array $links, bool $remove_class = false ): array {
-
-		$allowed_html = array(
-			'a' => array(
-				'href'       => array(),
-				'target'     => array(),
-				'class'      => array(),
-				'aria-label' => array(),
-				'title'      => array(),
-				'data-title' => array(),
-			),
-		);
-
-		if ( $remove_class ) {
-			unset( $allowed_html['a']['class'] );
-		}
-
-		foreach ( $links as $key => $html_string ) {
-
-			$cleaned_html_string = wp_kses( $html_string, $allowed_html );
-
-			if ( $html_string !== $cleaned_html_string ) {
-				$links[ $key ] = $cleaned_html_string;
-			}
-		}
-
-		return $links;
-
-	}
-
-
-	/**
-	 * Get the anchor as an object from the HTML string.
-	 *
-	 * Discards the rest of the HTML string (e.g. "Version...", "By...").
-	 * Presumes one anchor per string.
-	 *
-	 * @param string $html_anchor_string A HTML string whose anchor we want to analyse.
-	 *
-	 * @return DOMElement|null
-	 *
-	 * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-	 * phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
-	 */
-	protected function map_html_to_anchor_element( $html_anchor_string ): ?DOMNode {
-		$dom_document                      = new DOMDocument();
-		$dom_document->strictErrorChecking = false;
-
-		$previous_internal_errors_value = libxml_use_internal_errors( true );
-		$bool_result                    = @$dom_document->loadHTML( $html_anchor_string );
-		libxml_use_internal_errors( $previous_internal_errors_value );
-
-		if ( false === $bool_result ) {
-			return null;
-		}
-
-		return $dom_document->getElementsByTagName( 'a' )->item( 0 );
-	}
-
-	/**
-	 * Filter to remove upsells and marketing links.
-	 *
-	 * "Donate" links are not removed.
-	 *
-	 * @param string $html The full meta/action html string.
-	 * @return bool True if the link should remain, false to remove.
-	 */
-	protected function check_link_has_no_unwanted_terms( string $html ): bool {
-
-		$link = $this->map_html_to_anchor_element( $html );
-
-		if ( is_null( $link ) ) {
-			return true;
-		}
-
-		$definitely_unwanted_terms = array(
-			'opt in',
-			'opt-in',
-			'add on',
-			'add-on',
-			'free',
-			'upgrade',
-			'trial',
-			'review',
-			'rate',
-		);
-
-		foreach ( $definitely_unwanted_terms as $term ) {
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			if ( stristr( $link->nodeValue, $term ) ) {
-				return false;
-			}
-		}
-
-		$probably_unwanted_terms = array(
-			'pro',
-			'premium',
-		);
-
-		foreach ( $probably_unwanted_terms as $term ) {
-			if ( is_null( $link->attributes ) || is_null( $link->attributes->getNamedItem( 'href' ) ) ) {
+			if ( $parsed_link->is_empty()
+			|| $parsed_link->is_contains_unwanted_terms() ) {
 				continue;
 			}
 
-			$hyperlink = $link->attributes->getNamedItem( 'href' )->nodeValue;
+			$parsed_link->replace_text_with_icons();
+			$cleaned_links[ $key ] = $parsed_link->get_cleaned_link();
+		}
 
-            // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			if ( preg_match( '/\b' . $term . '\b/i', $link->nodeValue ) && $this->is_external_link( $hyperlink ) ) {
-				return false;
+		return $cleaned_links;
+	}
+
+
+	/**
+	 * Merge associative arrays, preserve string keys.
+	 *
+	 * @param array<mixed> $all_arrays Array of arrays.
+	 *
+	 * @return array<mixed>
+	 */
+	protected function merge_arrays( array $all_arrays ): array {
+		$merged_array = array();
+
+		foreach ( $all_arrays as $sub_array ) {
+			foreach ( $sub_array as $key => $value ) {
+				if ( is_int( $key ) ) {
+					$merged_array[] = $value;
+				} else {
+					$merged_array[ $key ] = $value;
+				}
 			}
 		}
-
-		return true;
-	}
-
-	/**
-	 * Checks a bare url to see does it contain http and a domain other than this site's domain.
-	 *
-	 * @param string $url The URL to check.
-	 * @return bool
-	 */
-	protected function is_external_link( string $url ): bool {
-
-		if ( stristr( $url, 'http' ) && ! stristr( $url, get_site_url() ) ) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Checks is it a relative URL or a link containing the site url.
-	 *
-	 * @param string $url The URL to check.
-	 * @return bool
-	 */
-	protected function is_internal_link( string $url ): bool {
-		return ! $this->is_external_link( $url );
-	}
-
-	/**
-	 * Given a DOMElement, check is it an anchor link whose href points to an external site.
-	 *
-	 * @param DOMElement $anchor_node The A element.
-	 * @return bool
-	 */
-	protected function is_anchor_element_external_link( DOMElement $anchor_node ): ?bool {
-
-		if ( is_null( $anchor_node->attributes ) || is_null( $anchor_node->attributes->getNamedItem( 'href' ) ) ) {
-			return null;
-		}
-
-		$url_string = $anchor_node->attributes->getNamedItem( 'href' )->nodeValue;
-
-		return $this->is_external_link( $url_string );
-	}
-
-	/**
-	 * Checks does the HTML contain, partially or totally, a HTML anchor.
-	 *
-	 * @param string $html_string A meta link, e.g. "By BrianHenryIE" where it is partially a hyperlink.
-	 * @return bool|null Null when the string could not be parsed.
-	 */
-	protected function is_html_contains_external_link( string $html_string ): ?bool {
-
-		$anchor_node = $this->map_html_to_anchor_element( $html_string );
-
-		if ( is_null( $anchor_node ) ) {
-			return false;
-		}
-
-		return $this->is_anchor_element_external_link( $anchor_node );
-	}
-
-	/**
-	 * Determine is the HTML string NOT an external link.
-	 *
-	 * @param string $html_string A HTML string that may contain a link.
-	 *
-	 * @return bool
-	 */
-	protected function is_not_html_contains_external_link( string $html_string ): bool {
-		$is_html_contains_external_link = $this->is_html_contains_external_link( $html_string );
-		return is_null( $is_html_contains_external_link ) ? true : ! $is_html_contains_external_link;
-	}
-
-	/**
-	 * Checks do we want to keep the link in the meta column.
-	 *
-	 * Checks is this any of
-	 * * Not a link at all (i.e. the version)
-	 * * Is the view details link
-	 * * Is an external link
-	 *
-	 * @param string $html_string A HTML string from the array of links.
-	 * @return bool
-	 */
-	protected function is_not_link_or_is_external_link_or_is_view_details_link( string $html_string ): ?bool {
-
-		if ( stristr( $html_string, 'view details' ) ) {
-			return true;
-		}
-
-		$anchor_node = $this->map_html_to_anchor_element( $html_string );
-
-		if ( is_null( $anchor_node ) ) {
-			return true;
-		}
-
-		return $this->is_anchor_element_external_link( $anchor_node );
-	}
-
-	/**
-	 * Check is the anchor text empty. Some plugins have a JavaScript rating tool in the meta links which when
-	 * removed by wp_kses, results in a string of only whitespace.
-	 *
-	 * @param string $html_string HTML containing and anchor which may not have any text.
-	 * @return bool
-	 */
-	protected function is_not_empty_anchor_text( string $html_string ): bool {
-
-		$node = $this->map_html_to_anchor_element( $html_string );
-
-		if ( is_null( $node ) ) {
-			return true;
-		}
-
-        //phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$text = trim( $node->nodeValue );
-
-		return ! empty( $text );
-	}
-
-	/**
-	 * Filter to check for Licence links.
-	 *
-	 * TODO: A dismissible admin banner should be used to keep the link available for a few days after plugin activation.
-	 *
-	 * phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-	 *
-	 * @param string $action_link The HTML anchor.
-	 *
-	 * @return bool True if it is not a licence link (i.e. keep the link).
-	 */
-	protected function check_link_is_not_licence( $action_link ): bool {
-
-		$action_link = $this->map_html_to_anchor_element( $action_link );
-
-		if ( is_null( $action_link ) ) {
-			return true;
-		}
-
-		return ! ( stristr( $action_link->nodeValue, 'licence' )
-				|| stristr( $action_link->nodeValue, 'license' ) );
-	}
-
-	/**
-	 * Looks for GitHub links and replaces them with the GitHub icon.
-	 *
-	 * * Adds the original text as a mouseover hint.
-	 * TODO: Pulling the icon straight from GitHub probably isn't best practice.
-	 * TODO: WordPress.org links with WordPress icon?
-	 *
-	 * @param array<int|string, string> $meta_links The array of links.
-	 * @return array<int|string, string>
-	 */
-	protected function replace_text_with_icons( array $meta_links ): array {
-
-		$new_links = array();
-		foreach ( $meta_links as $key => $html_string ) {
-
-			$match_github_repo_links = '/https?:\/\/github.com\/(?!sponsors)[^\/]*\/[^\/]*\//i';
-
-			if ( '<a' !== substr( $html_string, 0, 2 )
-				|| '</a>' !== substr( $html_string, -4 )
-				|| 1 !== preg_match( $match_github_repo_links, $html_string ) ) {
-				$new_links[ $key ] = $html_string;
-				continue;
-			}
-
-			$node = $this->map_html_to_anchor_element( $html_string );
-			if ( is_null( $node ) ) {
-				$new_links[ $key ] = $html_string;
-				continue;
-			}
-			$style = "background: url('https://github.com/favicon.ico'); background-size: contain; height: 14px; width: 14px;  display: inline-block; vertical-align: middle; margin-top: -1px;";
-
-			$old_text = $node->nodeValue;
-
-			$node->setAttribute( 'style', $style );
-			$node->setAttribute( 'title', $old_text );
-
-            // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			$node->nodeValue = '';
-
-			if ( is_null( $node->ownerDocument ) ) {
-				$new_links[ $key ] = $html_string;
-				continue;
-			}
-
-			$node_html = $node->ownerDocument->saveHTML();
-
-			if ( false === $node_html ) {
-				$new_links[ $key ] = $html_string;
-				continue;
-			}
-
-			$new_links[ $key ] = $node_html;
-
-		}
-
-		return $new_links;
-
+		return $merged_array;
 	}
 
 }
