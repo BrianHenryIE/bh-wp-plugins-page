@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.1
+
+* Refactored logic into Parsed_Link class
+
+## 1.1.0
+
+* Add: Prevent plugins from redirecting away from plugins.php when installed
+* Fix: JetPack is calling plugin functions with null parameters
+* Project structure changed
+
 ## 1.0.9 2022-04-27
 
 * Refactoring, testing and linting.
