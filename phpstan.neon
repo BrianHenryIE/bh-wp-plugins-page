@@ -19,10 +19,10 @@ parameters:
         - vendor/wp-cli
     ignoreErrors:
         # LoggerAwareTrait allows for null $logger, but we set it in the constructor.
-        - '#LoggerInterface\|null#'
+        #- '#LoggerInterface\|null#'
         # PHPStan show errors when filters have more than two parameters.
         - '#^Function apply_filters(_ref_array)? invoked with \d parameters, 2 required\.$#'
         # Parameter #1 $message of method a expects b, c given.
-        - '/Parameter .* of .* expects .* given\./'
+        #- '/Parameter .* of .* expects .* given\./'
         # Setting an empty array with type associative array in the comments prints this.
-        - '/does not accept default value of type array\(\)/'
+        #- '/does not accept default value of type array\(\)/'

@@ -23,7 +23,7 @@ coverage:
     enabled: true
     include:
         - /src/*
-        - /bh-wp-autologin-urls.php
+        - /bh-wp-plugins-page.php
         - /uninstall.php
     exclude:
         - /vendor/*
