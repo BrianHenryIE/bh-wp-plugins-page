@@ -27,6 +27,18 @@
         }
     },
     "repositories": {
+        "brianhenryie/bh-wp-private-uploads": {
+            "type": "git",
+            "url": "https://github.com/brianhenryie/bh-wp-private-uploads"
+        },
+        "wptrt/admin-notices": {
+            "type": "git",
+            "url": "https://github.com/brianhenryie/admin-notices"
+        },
+        "brianhenryie/bh-wp-logger": {
+            "type": "git",
+            "url": "https://github.com/brianhenryie/bh-wp-logger"
+        },
         "brianhenryie/composer-phpstorm": {
             "url": "https://github.com/BrianHenryIE/composer-phpstorm",
             "type": "git"
@@ -35,23 +47,20 @@
             "type": "composer",
             "url": "https://wpackagist.org"
         },
-        "pablo-sg-pacheco/wp-namespace-autoloader": {
-            "url": "https://github.com/pablo-sg-pacheco/wp-namespace-autoloader",
-            "type": "git"
-        },
         "wordpress/wordpress": {
             "url": "https://github.com/WordPress/wordpress-develop",
             "type": "git"
         }
     },
     "require": {
+        "php": ">=7.4",
         "ext-dom": "*",
         "ext-libxml": "*",
-        "php": ">=7.4",
-        "pablo-sg-pacheco/wp-namespace-autoloader": "dev-master#015c9654459fd267cf12fa7846d3bf36b11c3bd7"
+        "alleyinteractive/wordpress-autoloader": "^1.1",
+        "brianhenryie/bh-wp-logger": "dev-master"
     },
     "require-dev": {
-        "10up/wp_mock": "0.4.2",
+        "10up/wp_mock": "*",
         "antecedent/patchwork": "^2.1",
         "brianhenryie/color-logger": "^1.0",
         "brianhenryie/composer-phpstorm": "dev-master",
@@ -105,15 +114,8 @@
             "jaschilz/php-coverage-badger": {
                 "Allow customising the text": "https://github.com/JASchilz/PHPCoverageBadge/pull/1.patch"
             },
-            "10up/wp_mock": {
-                "Add AnyObject matcher": "https://github.com/10up/wp_mock/pull/161.patch"
-            },
-            "ericmartel/codeception-email-mailtrap": {
-                "Fixed undefined property ": "https://github.com/ericmartel/codeception-email-mailtrap/pull/7.patch"
-            },
-            "brianhenryie/strauss": {
-                "Fix blocked by your allow-plugins config": "https://github.com/BrianHenryIE/strauss/pull/45.patch",
-                "Static in array and ternary": "https://github.com/BrianHenryIE/strauss/pull/46.patch"
+            "wp-cli/dist-archive-command": {
+                "Add Increment Version": "https://github.com/BrianHenryIE/dist-archive-command/commit/f37c375ba8069c9160d642dd0c00435e0f1c4804.patch"
             }
         },
         "strauss": {
@@ -159,11 +161,11 @@
         ],
         "setup-wordpress": [
             "wp core download --path=wordpress --allow-root || true",
-            "export $(grep -v '^#' .env.testing | xargs); wp config create --dbname=$TEST_SITE_DB_NAME --dbuser=$TEST_SITE_DB_USER --dbpass=$TEST_SITE_DB_PASSWORD --allow-root --extra-php=\"\ndefine( 'WP_DEBUG_LOG', true );\ndefine( 'SCRIPT_DEBUG', true );\" || true",
+            "export $(grep -v '^#' .env.testing | xargs); wp config create --dbname=$TEST_SITE_DB_NAME --dbuser=$TEST_SITE_DB_USER --dbpass=$TEST_SITE_DB_PASSWORD --allow-root || true",
             "export $(grep -v '^#' .env.testing | xargs); vendor/bin/wp core install --url=\"localhost:8080/$PLUGIN_SLUG\" --title=\"$PLUGIN_NAME\" --admin_user=admin --admin_password=password --admin_email=admin@example.org || true; wp plugin activate $PLUGIN_SLUG || true;",
+            "wp config set WP_DEBUG true --raw; wp config set WP_DEBUG_LOG true --raw; wp config set SCRIPT_DEBUG true --raw",
             "wp user create bob bob@example.org --user_pass=password || true;",
             "wp core update --allow-root || true",
-            "patch ./wordpress/wp-config.php ./patches/wp-debug.diff -s -N -f --no-backup-if-mismatch --reject-file= || true;",
             "patch ./wordpress/wp-includes/plugin.php ./patches/42670.diff -s -N -f --no-backup-if-mismatch --reject-file= || true;",
             "mkdir -p wordpress/wp-content/uploads"
         ],
@@ -174,9 +176,7 @@
             "@restore-acceptance-database"
         ],
         "delete-databases": [
-            "export $(grep -v '^#' .env.testing | xargs); mysql -e \"DROP TABLE IF EXISTS $TEST_SITE_DB_NAME;\" mysql -e \"DROP TABLE IF EXISTS $TEST_DB_NAME;\"",
-            "export $(grep -v '^#' .env.testing | xargs); DB_DIR=$(mysql -e \"select @@datadir\" -N -B); rm -rf $DB_DIR$TEST_SITE_DB_NAME; rm -rf  $DB_DIR$TEST_DB_NAME;",
-            "mysql -e \"FLUSH TABLES;\""
+            "export $(grep -v '^#' .env.testing | xargs); DB_DIR=$(mysql -e \"select @@datadir\" -N -B); rm -rf $DB_DIR$TEST_SITE_DB_NAME; rm -rf  $DB_DIR$TEST_DB_NAME;"
         ],
         "save-acceptance-database": [
             "export $(grep -v '^#' .env.testing | xargs); mysqldump -u $TEST_SITE_DB_USER -p$TEST_SITE_DB_PASSWORD  $TEST_SITE_DB_NAME > tests/_data/dump.sql;"
@@ -193,10 +193,13 @@
         "lint": [
             "vendor/bin/phpcbf || true",
             "vendor/bin/phpcs || true",
-            "vendor/bin/phpstan analyse --memory-limit 2G"
+            "vendor/bin/phpstan analyse --memory-limit 1G"
         ],
         "lint-changes": [
-            "updated_files=$( git status | grep 'modified:\\s.*.php$' | cut -c14- | awk '{ printf(\"%s \", $0) }' ); vendor/bin/phpcbf $(echo $updated_files); vendor/bin/phpcs $(echo $updated_files); vendor/bin/phpstan analyse $(echo $updated_files) --memory-limit 2G"
+            "updated_files=$( git status | grep 'modified:\\s.*.php$' | cut -c14- | awk '{ printf(\"%s \", $0) }' ); vendor/bin/phpcbf $(echo $updated_files); vendor/bin/phpcs $(echo $updated_files); vendor/bin/phpstan analyse $(echo $updated_files) --memory-limit 1G"
+        ],
+        "php-compatibility": [
+            "vendor/bin/phpcs -p src templates vendor-prefixed --standard=PHPCompatibilityWP --runtime-set testVersion 7.4-"
         ],
         "create-plugin-archive": [
             "vendor/bin/wp i18n make-pot src languages/$(basename \"$PWD\").pot --domain=$(basename \"$PWD\")",

@@ -17,6 +17,7 @@ use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
 use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
+use Psr\Log\LoggerInterface;
 
 /**
  * The core plugin class.
@@ -35,6 +36,11 @@ use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
 class BH_WP_Plugins_Page {
 
 	/**
+	 * A PSR logger to log changes.
+	 */
+	protected LoggerInterface $logger;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -42,8 +48,12 @@ class BH_WP_Plugins_Page {
 	 * the frontend-facing side of the site.
 	 *
 	 * @since    1.0.0
+	 *
+	 * @param LoggerInterface $logger A PSR logger.
 	 */
-	public function __construct() {
+	public function __construct( LoggerInterface $logger ) {
+
+		$this->logger = $logger;
 
 		$this->set_locale();
 		$this->define_admin_hooks();
