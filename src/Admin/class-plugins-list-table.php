@@ -234,4 +234,28 @@ class Plugins_List_Table {
 		return $merged_array;
 	}
 
+
+	protected function get_settings(): array {
+		return array(
+			'apex-notification-bar-lite/apex-notification-bar-lite.php' => array(
+				'Name'          => 'Edited title',
+				'Original_Name' => 'Apex Notification Bar Lite',
+			),
+		);
+	}
+
+	/**
+	 * @hooked all_plugins
+	 * @see \WP_Plugins_List_Table::prepare_items()
+	 */
+	public function edit_plugins_array( array $all_plugins ):array {
+
+		foreach ( $this->get_settings() as $plugin_basename => $plugin_settings ) {
+			if ( isset( $all_plugins[ $plugin_basename ] ) ) {
+				$all_plugins[ $plugin_basename ] = array_merge( $all_plugins[ $plugin_basename ], $plugin_settings );
+			}
+		}
+
+		return $all_plugins;
+	}
 }

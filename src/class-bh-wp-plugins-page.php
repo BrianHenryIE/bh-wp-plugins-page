@@ -99,6 +99,8 @@ class BH_WP_Plugins_Page {
 			);
 		}
 		add_action( 'plugin_row_meta', array( $plugins_list_table, 'row_meta' ), PHP_INT_MAX, 4 );
+
+		add_action( 'all_plugins', array( $plugins_list_table, 'edit_plugins_array' ) );
 	}
 
 	/**
@@ -111,5 +113,11 @@ class BH_WP_Plugins_Page {
 		add_filter( 'wp_redirect', array( $plugins_page, 'prevent_redirect' ), 1, 2 );
 
 		add_action( 'admin_init', array( $plugins_page, 'add_hook_for_freemius_redirect' ) );
+	}
+
+	protected function define_ajax_hooks(): void {
+
+		$ajax = new AJAX( new API( $this->logger ), $this->logger );
+
 	}
 }
