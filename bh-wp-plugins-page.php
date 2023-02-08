@@ -29,7 +29,7 @@ namespace BrianHenryIE\WP_Plugins_Page;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-	die;
+	throw new \Exception( 'WordPress required but not loaded.' );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'autoload.php';
