@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4d320b648b92dd6e27fb65430f21211",
+    "content-hash": "543b186bd2ef0b6e177e9aab44c385c8",
     "packages": [
         {
             "name": "alleyinteractive/wordpress-autoloader",
@@ -49,6 +49,552 @@
                 "source": "https://github.com/alleyinteractive/wordpress-autoloader/tree/v1.1.1"
             },
             "time": "2022-08-31T20:51:21+00:00"
+        },
+        {
+            "name": "brianhenryie/bh-wp-logger",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brianhenryie/bh-wp-logger",
+                "reference": "77f386ebae2ce5024d2faf63a373c5452217711a"
+            },
+            "require": {
+                "alleyinteractive/wordpress-autoloader": "^1.1",
+                "brianhenryie/bh-wp-private-uploads": "dev-master",
+                "ext-json": "*",
+                "katzgrau/klogger": "dev-master",
+                "php": ">=7.4",
+                "psr/log": "^1.0.0",
+                "spatie/backtrace": "^1.0.0",
+                "wptrt/admin-notices": "dev-master"
+            },
+            "require-dev": {
+                "10up/wp_mock": "*",
+                "antecedent/patchwork": "^2.1",
+                "brianhenryie/color-logger": "^1.0",
+                "brianhenryie/composer-phpstorm": "dev-master",
+                "codeception/module-asserts": "^1.0",
+                "codeception/module-cli": "^1.0",
+                "codeception/module-db": "^1.0.0",
+                "codeception/module-filesystem": "^1.0",
+                "codeception/module-phpbrowser": "^1.0.0",
+                "codeception/module-webdriver": "^1.0",
+                "codeception/util-universalframework": "^1.0",
+                "cweagans/composer-patches": "*",
+                "dealerdirect/phpcodesniffer-composer-installer": "*",
+                "jaschilz/php-coverage-badger": "^2.0",
+                "kporras07/composer-symlinks": "dev-master",
+                "lucatume/wp-browser": "*",
+                "php-stubs/woocommerce-stubs": "^5.2",
+                "phpcompatibility/phpcompatibility-wp": "*",
+                "phpstan/extension-installer": "*",
+                "phpunit/phpcov": "*",
+                "squizlabs/php_codesniffer": "*",
+                "szepeviktor/phpstan-wordpress": "*",
+                "wordpress/wordpress": "*",
+                "wp-cli/wp-cli-bundle": "*",
+                "wp-coding-standards/wpcs": "*",
+                "wpackagist-plugin/woocommerce": "*",
+                "wpackagist-theme/twentytwenty": "*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "patches": {
+                    "jaschilz/php-coverage-badger": {
+                        "Allow customising the text": "https://github.com/JASchilz/PHPCoverageBadge/pull/1.patch"
+                    },
+                    "wptrt/admin-notices": {
+                        "dev-merged": "https://github.com/BrianHenryIE/admin-notices/pull/1.patch"
+                    }
+                },
+                "symlinks": {
+                    "wp-content": "wordpress/wp-content",
+                    "test-plugin": "wp-content/plugins/bh-wp-logger-test-plugin",
+                    "src": "test-plugin/vendor/brianhenryie/bh-wp-logger/src",
+                    "assets": "test-plugin/vendor/brianhenryie/bh-wp-logger/src",
+                    "vendor/brianhenryie/bh-wp-private-uploads/src": "test-plugin/vendor/brianhenryie/bh-wp-private-uploads/src",
+                    "vendor/brianhenryie/bh-wp-private-uploads/assets": "test-plugin/vendor/brianhenryie/bh-wp-private-uploads/assets"
+                },
+                "phpstorm": {
+                    "exclude_folders": {
+                        "folders": [
+                            "vendor/php-stubs/woocommerce-stubs",
+                            "vendor/wordpress/wordpress/src",
+                            "vendor/wordpress/wordpress/build",
+                            "wp-content/plugins/bh-wp-logger-test-plugin",
+                            "wordpress/wp-content"
+                        ],
+                        "include_folders": [
+                            "vendor/wordpress/wordpress/"
+                        ],
+                        "composer-symlinks": false
+                    }
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/",
+                    "assets"
+                ]
+            },
+            "autoload-dev": {
+                "classmap": [
+                    "test-plugin/"
+                ]
+            },
+            "scripts": {
+                "post-install-cmd": [
+                    "vendor/bin/wp core download --path=wordpress --allow-root || true;",
+                    "Kporras07\\ComposerSymlinks\\ScriptHandler::createSymlinks",
+                    "@setup-wordpress",
+                    "BrianHenryIE\\ComposerPhpStorm\\ExcludeFolders::update",
+                    "BrianHenryIE\\ComposerPhpStorm\\PHPUnitRunConfigurations::update"
+                ],
+                "post-update-cmd": [
+                    "@setup-wordpress",
+                    "Kporras07\\ComposerSymlinks\\ScriptHandler::createSymlinks",
+                    "BrianHenryIE\\ComposerPhpStorm\\ExcludeFolders::update",
+                    "BrianHenryIE\\ComposerPhpStorm\\PHPUnitRunConfigurations::update"
+                ],
+                "setup-wordpress": [
+                    "wp core download --path=wordpress --allow-root || true",
+                    "export $(grep -v '^#' .env.testing | xargs); wp config create --dbname=$TEST_SITE_DB_NAME --dbuser=$TEST_SITE_DB_USER --dbpass=$TEST_SITE_DB_PASSWORD --allow-root --extra-php=\"\ndefine( 'WP_DEBUG_LOG', true );\ndefine( 'SCRIPT_DEBUG', true );\" || true",
+                    "export $(grep -v '^#' .env.testing | xargs); vendor/bin/wp core install --url=\"localhost:8080/$PLUGIN_SLUG\" --title=\"$PLUGIN_NAME\" --admin_user=admin --admin_password=password --admin_email=admin@example.org || true; wp plugin activate $PLUGIN_SLUG || true;",
+                    "wp user create bob bob@example.org --user_pass=password || true;",
+                    "wp core update --allow-root || true",
+                    "patch ./wordpress/wp-config.php ./patches/wp-debug.diff -s -N -f --no-backup-if-mismatch --reject-file= || true;",
+                    "patch ./wordpress/wp-includes/plugin.php ./patches/42670.diff -s -N -f --no-backup-if-mismatch --reject-file= || true;",
+                    "mkdir -p wordpress/wp-content/uploads"
+                ],
+                "create-databases": [
+                    "export $(grep -v '^#' .env.testing | xargs); [[ $(mysqld --version) =~ .*MariaDB.* ]] && mysql -e \"CREATE USER IF NOT EXISTS '\"$TEST_DB_USER\"'@'%' IDENTIFIED BY '\"$TEST_DB_PASSWORD\"';\" || mysql -e \"CREATE USER IF NOT EXISTS '\"$TEST_DB_USER\"'@'%' IDENTIFIED WITH mysql_native_password BY '\"$TEST_DB_PASSWORD\"';\";",
+                    "export $(grep -v '^#' .env.testing | xargs); mysql -e \"CREATE DATABASE IF NOT EXISTS \"$TEST_SITE_DB_NAME\"; USE \"$TEST_SITE_DB_NAME\"; GRANT ALL PRIVILEGES ON \"$TEST_SITE_DB_NAME\".* TO '\"$TEST_DB_USER\"'@'%';\";",
+                    "export $(grep -v '^#' .env.testing | xargs); mysql -e \"CREATE DATABASE IF NOT EXISTS \"$TEST_DB_NAME\"; USE \"$TEST_DB_NAME\"; GRANT ALL PRIVILEGES ON \"$TEST_DB_NAME\".* TO '\"$TEST_DB_USER\"'@'%';\";",
+                    "@restore-acceptance-database"
+                ],
+                "delete-databases": [
+                    "export $(grep -v '^#' .env.testing | xargs); mysql -e \"DROP TABLE IF EXISTS $TEST_SITE_DB_NAME;\" mysql -e \"DROP TABLE IF EXISTS $TEST_DB_NAME;\"",
+                    "export $(grep -v '^#' .env.testing | xargs); DB_DIR=$(mysql -e \"select @@datadir\" -N -B); rm -rf $DB_DIR$TEST_SITE_DB_NAME; rm -rf  $DB_DIR$TEST_DB_NAME;",
+                    "mysql -e \"FLUSH TABLES;\""
+                ],
+                "save-acceptance-database": [
+                    "export $(grep -v '^#' .env.testing | xargs); mysqldump -u $TEST_SITE_DB_USER -p$TEST_SITE_DB_PASSWORD  $TEST_SITE_DB_NAME > tests/_data/dump.sql;"
+                ],
+                "restore-acceptance-database": [
+                    "export $(grep -v '^#' .env.testing | xargs); mysql $TEST_SITE_DB_NAME < tests/_data/dump.sql"
+                ],
+                "coverage-tests": [
+                    "vendor/bin/codecept run unit --coverage unit.cov",
+                    "vendor/bin/codecept run wpunit --coverage wpunit.cov",
+                    "vendor/bin/phpcov merge --clover tests/_output/clover.xml --html tests/_output/html tests/_output;",
+                    "open tests/_output/html/index.html"
+                ],
+                "lint": [
+                    "vendor/bin/phpcbf || true",
+                    "vendor/bin/phpcs || true",
+                    "vendor/bin/phpstan analyse --memory-limit 2G"
+                ],
+                "lint-changes": [
+                    "updated_files=$( git status | grep 'modified:\\s.*.php$' | cut -c14- | awk '{ printf(\"%s \", $0) }' ); vendor/bin/phpcbf $(echo $updated_files); vendor/bin/phpcs $(echo $updated_files); vendor/bin/phpstan analyse $(echo $updated_files) --memory-limit 2G"
+                ]
+            },
+            "license": [
+                "GPL-2.0+-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Henry",
+                    "email": "BrianHenryIE@gmail.com"
+                }
+            ],
+            "description": "This is a short description of what plugin_title does.",
+            "time": "2023-01-19T02:45:55+00:00"
+        },
+        {
+            "name": "brianhenryie/bh-wp-private-uploads",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brianhenryie/bh-wp-private-uploads",
+                "reference": "d384fb97d1782a1148064717647ac934861dfb9f"
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "php": ">=7.4",
+                "psr/log": "^1.0.0",
+                "wptrt/admin-notices": "dev-master"
+            },
+            "require-dev": {
+                "10up/wp_mock": "dev-trunk",
+                "alleyinteractive/wordpress-autoloader": "^1.1",
+                "antecedent/patchwork": "^2.1",
+                "brianhenryie/bh-wp-logger": "dev-master",
+                "brianhenryie/color-logger": "^1.0",
+                "brianhenryie/composer-phpstorm": "dev-master",
+                "codeception/module-asserts": "^1.0",
+                "codeception/module-cli": "^1.0",
+                "codeception/module-db": "^1.0.0",
+                "codeception/module-filesystem": "^1.0",
+                "codeception/module-phpbrowser": "^1.0.0",
+                "codeception/module-webdriver": "^1.0",
+                "codeception/util-universalframework": "^1.0",
+                "cweagans/composer-patches": "*",
+                "dealerdirect/phpcodesniffer-composer-installer": "*",
+                "jaschilz/php-coverage-badger": "^2.0",
+                "kporras07/composer-symlinks": "dev-master",
+                "lucatume/wp-browser": "*",
+                "phpcompatibility/phpcompatibility-wp": "*",
+                "phpstan/extension-installer": "*",
+                "phpunit/phpcov": "*",
+                "squizlabs/php_codesniffer": "*",
+                "szepeviktor/phpstan-wordpress": "*",
+                "voku/portable-ascii": "dev-master",
+                "wordpress/wordpress": "*",
+                "wp-cli/dist-archive-command": "dev-main",
+                "wp-cli/wp-cli-bundle": "*",
+                "wp-coding-standards/wpcs": "*",
+                "wpackagist-theme/twentytwenty": "*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "patches": {
+                    "jaschilz/php-coverage-badger": {
+                        "Allow customising the text": "https://github.com/JASchilz/PHPCoverageBadge/pull/1.patch"
+                    },
+                    "wptrt/admin-notices": {
+                        "dev-merged": "https://github.com/BrianHenryIE/admin-notices/pull/1.patch"
+                    }
+                },
+                "symlinks": {
+                    "wp-content": "wordpress/wp-content",
+                    "test-plugin": "wp-content/plugins/bh-wp-private-uploads-test-plugin"
+                },
+                "phpstorm": {
+                    "exclude_folders": {
+                        "folders": [
+                            "vendor/wordpress/wordpress/src",
+                            "vendor/wordpress/wordpress/build",
+                            "wp-content/plugins/bh-wp-private-uploads-test-plugin",
+                            "wordpress/wp-content"
+                        ],
+                        "include_folders": [
+                            "vendor/wordpress/wordpress/"
+                        ],
+                        "composer-symlinks": false
+                    }
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/",
+                    "assets/"
+                ]
+            },
+            "autoload-dev": {
+                "classmap": [
+                    "test-plugin/"
+                ]
+            },
+            "scripts": {
+                "post-install-cmd": [
+                    "vendor/bin/wp core download --path=wordpress --allow-root || true;",
+                    "Kporras07\\ComposerSymlinks\\ScriptHandler::createSymlinks",
+                    "@setup-wordpress",
+                    "BrianHenryIE\\ComposerPhpStorm\\ExcludeFolders::update",
+                    "BrianHenryIE\\ComposerPhpStorm\\PHPUnitRunConfigurations::update"
+                ],
+                "post-update-cmd": [
+                    "@setup-wordpress",
+                    "Kporras07\\ComposerSymlinks\\ScriptHandler::createSymlinks",
+                    "BrianHenryIE\\ComposerPhpStorm\\ExcludeFolders::update",
+                    "BrianHenryIE\\ComposerPhpStorm\\PHPUnitRunConfigurations::update"
+                ],
+                "setup-wordpress": [
+                    "wp core download --path=wordpress --allow-root || true",
+                    "export $(grep -v '^#' .env.testing | xargs); wp config create --dbname=$TEST_SITE_DB_NAME --dbuser=$TEST_SITE_DB_USER --dbpass=$TEST_SITE_DB_PASSWORD --allow-root --extra-php=\"\ndefine( 'WP_DEBUG_LOG', true );\ndefine( 'SCRIPT_DEBUG', true );\" || true",
+                    "export $(grep -v '^#' .env.testing | xargs); vendor/bin/wp core install --url=\"localhost:8080/$PLUGIN_SLUG\" --title=\"$PLUGIN_NAME\" --admin_user=admin --admin_password=password --admin_email=admin@example.org || true; wp plugin activate $PLUGIN_SLUG || true;",
+                    "wp user create bob bob@example.org --user_pass=password || true;",
+                    "wp core update --allow-root || true",
+                    "patch ./wordpress/wp-config.php ./patches/wp-debug.diff -s -N -f --no-backup-if-mismatch --reject-file= || true;",
+                    "patch ./wordpress/wp-includes/plugin.php ./patches/42670.diff -s -N -f --no-backup-if-mismatch --reject-file= || true;",
+                    "mkdir -p wordpress/wp-content/uploads"
+                ],
+                "create-databases": [
+                    "export $(grep -v '^#' .env.testing | xargs); [[ $(mysqld --version) =~ .*MariaDB.* ]] && mysql -e \"CREATE USER IF NOT EXISTS '\"$TEST_DB_USER\"'@'%' IDENTIFIED BY '\"$TEST_DB_PASSWORD\"';\" || mysql -e \"CREATE USER IF NOT EXISTS '\"$TEST_DB_USER\"'@'%' IDENTIFIED WITH mysql_native_password BY '\"$TEST_DB_PASSWORD\"';\";",
+                    "export $(grep -v '^#' .env.testing | xargs); mysql -e \"CREATE DATABASE IF NOT EXISTS \"$TEST_SITE_DB_NAME\"; USE \"$TEST_SITE_DB_NAME\"; GRANT ALL PRIVILEGES ON \"$TEST_SITE_DB_NAME\".* TO '\"$TEST_DB_USER\"'@'%';\";",
+                    "export $(grep -v '^#' .env.testing | xargs); mysql -e \"CREATE DATABASE IF NOT EXISTS \"$TEST_DB_NAME\"; USE \"$TEST_DB_NAME\"; GRANT ALL PRIVILEGES ON \"$TEST_DB_NAME\".* TO '\"$TEST_DB_USER\"'@'%';\";",
+                    "@restore-acceptance-database"
+                ],
+                "delete-databases": [
+                    "export $(grep -v '^#' .env.testing | xargs); mysql -e \"DROP TABLE IF EXISTS $TEST_SITE_DB_NAME;\" mysql -e \"DROP TABLE IF EXISTS $TEST_DB_NAME;\"",
+                    "export $(grep -v '^#' .env.testing | xargs); DB_DIR=$(mysql -e \"select @@datadir\" -N -B); rm -rf $DB_DIR$TEST_SITE_DB_NAME; rm -rf  $DB_DIR$TEST_DB_NAME;",
+                    "mysql -e \"FLUSH TABLES;\""
+                ],
+                "save-acceptance-database": [
+                    "export $(grep -v '^#' .env.testing | xargs); mysqldump -u $TEST_SITE_DB_USER -p$TEST_SITE_DB_PASSWORD  $TEST_SITE_DB_NAME > tests/_data/dump.sql;"
+                ],
+                "restore-acceptance-database": [
+                    "export $(grep -v '^#' .env.testing | xargs); mysql $TEST_SITE_DB_NAME < tests/_data/dump.sql"
+                ],
+                "coverage-tests": [
+                    "vendor/bin/codecept run unit --coverage unit.cov",
+                    "vendor/bin/codecept run wpunit --coverage wpunit.cov",
+                    "vendor/bin/phpcov merge --clover tests/_output/clover.xml --html tests/_output/html tests/_output;",
+                    "open tests/_output/html/index.html"
+                ],
+                "lint": [
+                    "vendor/bin/phpcbf || true",
+                    "vendor/bin/phpcs || true",
+                    "vendor/bin/phpstan analyse --memory-limit 2G"
+                ],
+                "lint-changes": [
+                    "updated_files=$( git status | grep 'modified:\\s.*.php$' | cut -c14- | awk '{ printf(\"%s \", $0) }' ); vendor/bin/phpcbf $(echo $updated_files); vendor/bin/phpcs $(echo $updated_files); vendor/bin/phpstan analyse $(echo $updated_files) --memory-limit 2G"
+                ],
+                "create-plugin-archive": [
+                    "vendor/bin/wp i18n make-pot src languages/$(basename \"$PWD\").pot --domain=$(basename \"$PWD\")",
+                    "vendor/bin/wp dist-archive . ./dist-archive --plugin-dirname=$(basename \"$PWD\") --create-target-dir"
+                ],
+                "github-actions": [
+                    "act -P ubuntu-latest=shivammathur/node:latest"
+                ]
+            },
+            "license": [
+                "GPL-2.0+-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "BrianHenryIE",
+                    "email": "BrianHenryIE@gmail.com"
+                },
+                {
+                    "name": "Chris Dennis",
+                    "email": "cgdennis@btinternet.com"
+                }
+            ],
+            "description": "This is a short description of what plugin_title does.",
+            "time": "2022-12-03T04:40:40+00:00"
+        },
+        {
+            "name": "katzgrau/klogger",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/katzgrau/KLogger.git",
+                "reference": "36481c69db9305169a2ceadead25c2acaabd567c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/katzgrau/KLogger/zipball/36481c69db9305169a2ceadead25c2acaabd567c",
+                "reference": "36481c69db9305169a2ceadead25c2acaabd567c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "psr/log": "^1.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Katzgrau\\KLogger\\": "src/"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kenny Katzgrau",
+                    "email": "katzgrau@gmail.com"
+                },
+                {
+                    "name": "Dan Horrigan",
+                    "email": "dan@dhorrigan.com"
+                }
+            ],
+            "description": "A Simple Logging Class",
+            "keywords": [
+                "logging"
+            ],
+            "support": {
+                "issues": "https://github.com/katzgrau/KLogger/issues",
+                "source": "https://github.com/katzgrau/KLogger/tree/1.2.2"
+            },
+            "time": "2022-07-29T20:41:14+00:00"
+        },
+        {
+            "name": "psr/log",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
+            "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "spatie/backtrace",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/backtrace.git",
+                "reference": "4ee7d41aa5268107906ea8a4d9ceccde136dbd5b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/backtrace/zipball/4ee7d41aa5268107906ea8a4d9ceccde136dbd5b",
+                "reference": "4ee7d41aa5268107906ea8a4d9ceccde136dbd5b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "phpunit/phpunit": "^9.3",
+                "symfony/var-dumper": "^5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Backtrace\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van de Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A better backtrace",
+            "homepage": "https://github.com/spatie/backtrace",
+            "keywords": [
+                "Backtrace",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/backtrace/issues",
+                "source": "https://github.com/spatie/backtrace/tree/1.2.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/spatie",
+                    "type": "github"
+                },
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "other"
+                }
+            ],
+            "time": "2021-11-09T10:57:15+00:00"
+        },
+        {
+            "name": "wptrt/admin-notices",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WPTT/admin-notices.git",
+                "reference": "42101e8cf841b17342fcef984a06caf63990c6f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WPTT/admin-notices/zipball/42101e8cf841b17342fcef984a06caf63990c6f2",
+                "reference": "42101e8cf841b17342fcef984a06caf63990c6f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
+                "php": "~7.1",
+                "szepeviktor/phpstan-wordpress": "^0.6.0",
+                "wp-coding-standards/wpcs": "^2.3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WPTRT\\AdminNotices\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "WordPress.org Theme Review Team",
+                    "email": "themes@wordpress.org",
+                    "homepage": "https://make.wordpress.org/themes",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A class to create admin-notices for the WordPress dashboard.",
+            "homepage": "https://github.com/WPTRT/admin-notices",
+            "keywords": [
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/WPTRT/admin-notices/issues",
+                "source": "https://github.com/WPTT/admin-notices/tree/master"
+            },
+            "time": "2020-06-07T10:36:24+00:00"
         }
     ],
     "packages-dev": [
@@ -5780,56 +6326,6 @@
                 "source": "https://github.com/php-fig/http-message/tree/master"
             },
             "time": "2016-08-06T14:39:51+00:00"
-        },
-        {
-            "name": "psr/log",
-            "version": "1.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "homepage": "https://github.com/php-fig/log",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
-            },
-            "time": "2021-05-03T11:20:27+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -11578,6 +12074,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "brianhenryie/bh-wp-logger": 20,
         "brianhenryie/composer-phpstorm": 20,
         "kporras07/composer-symlinks": 20,
         "voku/portable-ascii": 20,

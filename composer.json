@@ -27,6 +27,18 @@
         }
     },
     "repositories": {
+        "brianhenryie/bh-wp-private-uploads": {
+            "type": "git",
+            "url": "https://github.com/brianhenryie/bh-wp-private-uploads"
+        },
+        "wptrt/admin-notices": {
+            "type": "git",
+            "url": "https://github.com/brianhenryie/admin-notices"
+        },
+        "brianhenryie/bh-wp-logger": {
+            "type": "git",
+            "url": "https://github.com/brianhenryie/bh-wp-logger"
+        },
         "brianhenryie/composer-phpstorm": {
             "url": "https://github.com/BrianHenryIE/composer-phpstorm",
             "type": "git"
@@ -34,10 +46,6 @@
         "composer/composer": {
             "type": "composer",
             "url": "https://wpackagist.org"
-        },
-        "pablo-sg-pacheco/wp-namespace-autoloader": {
-            "url": "https://github.com/pablo-sg-pacheco/wp-namespace-autoloader",
-            "type": "git"
         },
         "wordpress/wordpress": {
             "url": "https://github.com/WordPress/wordpress-develop",
@@ -48,10 +56,11 @@
         "php": ">=7.4",
         "ext-dom": "*",
         "ext-libxml": "*",
-        "alleyinteractive/wordpress-autoloader": "^1.1"
+        "alleyinteractive/wordpress-autoloader": "^1.1",
+        "brianhenryie/bh-wp-logger": "dev-master"
     },
     "require-dev": {
-        "10up/wp_mock": "0.4.2",
+        "10up/wp_mock": "*",
         "antecedent/patchwork": "^2.1",
         "brianhenryie/color-logger": "^1.0",
         "brianhenryie/composer-phpstorm": "dev-master",
