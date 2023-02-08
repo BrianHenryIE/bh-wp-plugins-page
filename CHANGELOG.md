@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+* Requires PHP 8.0 for DOMDocument properties.
+
 ## 1.1.1
 
 * Refactored logic into Parsed_Link class

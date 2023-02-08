@@ -16,6 +16,7 @@
  * Plugin URI:        http://github.com/BrianHenryIE/bh-wp-plugins-page/
  * Description:       Removes formatting and up-sells, and moves Settings links to the beginning and Deactivate links to the end of plugins.php action links. Disables plugin deactivation surveys.
  * Version:           1.1.1
+ * Requires PHP:      8.0
  * Author:            BrianHenryIE
  * Author URI:        https://BrianHenry.ie
  * License:           GPL-2.0+
