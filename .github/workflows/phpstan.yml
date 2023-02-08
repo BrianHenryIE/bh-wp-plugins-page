@@ -1,7 +1,6 @@
-name: Run PHP CodeSniffer
+name: Run PHPStan
 
-# Run PHPCBF to fix changes then annotate PHPCS
-# NB: Pull requests from forks do not have access to repository secrets so cannot commit changes.
+# Run PHPStan to annotate the code
 
 on:
   push:
@@ -9,7 +8,7 @@ on:
       - master
 
 jobs:
-  php-codesniffer:
+  phpstan:
     runs-on: ubuntu-latest
 
     services:
@@ -68,21 +67,6 @@ jobs:
           export $(grep -v '^#' .env.testing | xargs);
           sudo vendor/bin/wp config create --dbname=$TEST_SITE_DB_NAME --dbuser=$TEST_SITE_DB_USER --dbpass=$TEST_SITE_DB_PASSWORD --dbhost=127.0.0.1:${{ job.services.mysql.ports['3306'] }} --allow-root --extra-php="define( 'WP_DEBUG', true ); define( 'WP_DEBUG_LOG', true );"
 
-      - name: Run PHPCBF to fix what it can
+      - name: Run PHPStan to add annotations to the code
         continue-on-error: true
-        run: vendor/bin/phpcbf
-
-      - name: Run PHPCS to add annotations to the code
-        continue-on-error: true
-        run: vendor/bin/phpcs -q -n --report=checkstyle | cs2pr
-
-      - name: Discard environment changes before commiting other changes
-        run: |
-          git checkout -- .env.testing
-          git checkout -- tests/_data/dump.sql
-
-      - name: Commit PHPCBF changes
-        uses: stefanzweifel/git-auto-commit-action@v4.1.1
-        with:
-          commit_message: "🤖 PHPCBF"
-
+        run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G --no-progress --error-format=checkstyle | cs2pr
