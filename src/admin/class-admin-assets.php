@@ -43,7 +43,7 @@ class Admin_Assets {
 		$css_url         = plugin_dir_url( $plugin_basename ) . 'assets/bh-wp-plugins-page-admin.css';
 		$version         = defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.1.0';
 
-		wp_enqueue_script( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), $version, false );
+		wp_enqueue_script( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), $version, true );
 		$ajax_data      = array(
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( AJAX::class ),
