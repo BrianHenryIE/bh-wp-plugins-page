@@ -14,24 +14,15 @@
 namespace BrianHenryIE\WP_Plugins_Page;
 
 use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
+use BrianHenryIE\WP_Plugins_Page\Admin\AJAX;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
+use BrianHenryIE\WP_Plugins_Page\API\API;
 use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
 use Psr\Log\LoggerInterface;
 
 /**
- * The core plugin class.
- *
- * This is used to define internationalization, admin-specific hooks, and
- * frontend-facing site hooks.
- *
- * Also maintains the unique identifier of this plugin as well as the current
- * version of the plugin.
- *
- * @since      1.0.0
- * @package    brianhenryie/bh-wp-plugins-page
- *
- * @author     BrianHenryIE <BrianHenryIE@gmail.com>
+ * Hooks the plugin's classes to WordPress's actions and filters.
  */
 class BH_WP_Plugins_Page {
 
@@ -39,6 +30,11 @@ class BH_WP_Plugins_Page {
 	 * A PSR logger to log changes.
 	 */
 	protected LoggerInterface $logger;
+
+	/**
+	 * Plugin functions.
+	 */
+	protected API $api;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -49,16 +45,19 @@ class BH_WP_Plugins_Page {
 	 *
 	 * @since    1.0.0
 	 *
+	 * @param API             $api Some main plugin functions.
 	 * @param LoggerInterface $logger A PSR logger.
 	 */
-	public function __construct( LoggerInterface $logger ) {
+	public function __construct( API $api, LoggerInterface $logger ) {
 
 		$this->logger = $logger;
+		$this->api    = $api;
 
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_plugins_list_table_hooks();
 		$this->define_plugins_page_hooks();
+		$this->define_ajax_hooks();
 	}
 
 	/**
@@ -125,9 +124,14 @@ class BH_WP_Plugins_Page {
 		add_action( 'admin_init', array( $plugins_page, 'add_hook_for_freemius_redirect' ) );
 	}
 
+	/**
+	 * Add hook to handle AJAX requests.
+	 */
 	protected function define_ajax_hooks(): void {
 
-		$ajax = new AJAX( new API( $this->logger ), $this->logger );
+		$ajax = new AJAX( $this->api, $this->logger );
+
+		add_action( 'wp_ajax_bh_wp_plugins_page_set_plugin_name', array( $ajax, 'set_plugin_name' ) );
 
 	}
 }
