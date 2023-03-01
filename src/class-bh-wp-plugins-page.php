@@ -121,7 +121,14 @@ class BH_WP_Plugins_Page {
 
 		add_filter( 'wp_redirect', array( $plugins_page, 'prevent_redirect' ), 1, 2 );
 
-		add_action( 'admin_init', array( $plugins_page, 'add_hook_for_freemius_redirect' ) );
+		$active_plugins     = (array) get_option( 'active_plugins', array() );
+
+		// fs_redirect_on_activation_woocommerce-google-adwords-conversion-tracking-tag
+
+		foreach ( $active_plugins as $plugin_basename ) {
+			list( $plugin_slug ) = explode( '/', $plugin_basename );
+			add_filter( "fs_redirect_on_activation_{$plugin_slug}", '__return_false' );
+		}
 	}
 
 	/**

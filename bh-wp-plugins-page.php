@@ -58,7 +58,7 @@ define( 'BH_WP_PLUGINS_PAGE_BASENAME', plugin_basename( __FILE__ ) );
 function instantiate_bh_wp_plugins_page(): void {
 
 	// If we're not in the Admin UI, we have nothing to do.
-	if ( ! is_admin() ) {
+	if ( ! is_admin() && ! wp_doing_ajax() ) {
 		return;
 	}
 
@@ -69,7 +69,6 @@ function instantiate_bh_wp_plugins_page(): void {
 	$api = new API( $logger );
 
 	new BH_WP_Plugins_Page( $api, $logger );
-
 }
 
 /**
