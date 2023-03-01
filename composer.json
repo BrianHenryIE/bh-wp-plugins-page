@@ -22,9 +22,7 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "BrianHenryIE\\WP_Plugins_Page\\": ["tests/integration","tests/unit","tests/wpunit"]
-        }
+        "classmap": ["tests/integration","tests/unit","tests/wpunit"]
     },
     "repositories": {
         "brianhenryie/bh-wp-private-uploads": {
@@ -50,20 +48,25 @@
         "wordpress/wordpress": {
             "url": "https://github.com/WordPress/wordpress-develop",
             "type": "git"
+        },
+        "brianhenryie/php-diff-test": {
+            "type": "git",
+            "url": "https://github.com/brianhenryie/php-diff-test/"
         }
     },
     "require": {
-        "php": ">=7.4",
         "ext-dom": "*",
         "ext-libxml": "*",
         "alleyinteractive/wordpress-autoloader": "^1.1",
-        "brianhenryie/bh-wp-logger": "dev-master"
+        "brianhenryie/bh-wp-logger": "dev-master",
+        "ext-json": "*"
     },
     "require-dev": {
         "10up/wp_mock": "*",
         "antecedent/patchwork": "^2.1",
         "brianhenryie/color-logger": "^1.0",
         "brianhenryie/composer-phpstorm": "dev-master",
+        "brianhenryie/php-diff-test": "dev-master",
         "brianhenryie/strauss": "*",
         "codeception/module-asserts": "^1.0",
         "codeception/module-cli": "^1.0",
@@ -78,12 +81,13 @@
         "jaschilz/php-coverage-badger": "^2.0",
         "kporras07/composer-symlinks": "dev-master",
         "lucatume/wp-browser": "*",
+        "php": "^8",
         "php-stubs/woocommerce-stubs": "^5.2",
         "phpcompatibility/phpcompatibility-wp": "*",
-        "phpstan/extension-installer": "^1.1",
+        "phpstan/extension-installer": "*",
         "phpunit/phpcov": "*",
         "squizlabs/php_codesniffer": "*",
-        "szepeviktor/phpstan-wordpress": "^0.7.2",
+        "szepeviktor/phpstan-wordpress": "*",
         "voku/portable-ascii": "dev-master",
         "wordpress/wordpress": "*",
         "wp-cli/dist-archive-command": "dev-main",
