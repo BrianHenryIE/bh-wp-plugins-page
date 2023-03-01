@@ -6,9 +6,7 @@
  *
  * @link              http://example.com
  * @since             1.0.0
- * @package           
- *
- * @see https://github.com/pablo-sg-pacheco/wp-namespace-autoloader/
+ * @package           brianhenryie/bh-wp-plugins-page
  */
 
 namespace BrianHenryIE\WP_Plugins_Page;
