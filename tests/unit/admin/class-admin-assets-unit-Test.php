@@ -10,6 +10,8 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets
  */
@@ -31,23 +33,50 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 	 * @covers ::enqueue_scripts
 	 * @see wp_enqueue_style()
 	 */
-	public function test_enqueue_script_on_plugins_page() {
+	public function test_enqueue_script_on_plugins_page(): void {
 
 		global $pagenow;
 		$pagenow = 'plugins.php';
 
 		global $plugin_root_dir;
 
-		// Return any old url.
 		\WP_Mock::userFunction(
 			'plugin_dir_url',
 			array(
+				'times'  => 2,
 				'return' => $plugin_root_dir . '/',
 			)
 		);
 
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'times'  => 1,
+				'return' => array(),
+			)
+		);
+
+		\WP_Mock::passthruFunction( 'admin_url' );
+		\WP_Mock::passthruFunction( 'wp_create_nonce' );
+
 		$js_src = $plugin_root_dir . '/assets/bh-wp-plugins-page-admin.js';
 		$js_url = '/Users/brianhenry/Sites/bh-wp-plugins-page/assets/bh-wp-plugins-page-admin.js';
+
+		\WP_Mock::userFunction(
+			'wp_json_encode',
+			array(
+				'times'  => 2,
+				'return' => '',
+			)
+		);
+
+		\WP_Mock::userFunction(
+			'wp_add_inline_script',
+			array(
+				'times' => 1,
+				'args'  => array( 'bh-wp-plugins-page', \WP_Mock\Functions::type( 'string' ), 'before' ),
+			)
+		);
 
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',
@@ -79,7 +108,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 	 * @covers ::enqueue_scripts
 	 * @see wp_enqueue_script()
 	 */
-	public function test_enqueue_scripts_on_other_pages() {
+	public function test_enqueue_scripts_on_other_pages(): void {
 
 		\WP_Mock::userFunction(
 			'wp_enqueue_script',
@@ -92,6 +121,4 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 
 		$admin->enqueue_scripts();
 	}
-
-
 }

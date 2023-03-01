@@ -10,6 +10,8 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
+use BrianHenryIE\WP_Plugins_Page\API\API;
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -42,6 +44,27 @@ class Admin_Assets {
 		$version         = defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.1.0';
 
 		wp_enqueue_script( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), $version, false );
+		$ajax_data      = array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( AJAX::class ),
+		);
+		$ajax_data_json = wp_json_encode( $ajax_data, JSON_PRETTY_PRINT );
+
+		$changes = get_option( API::PLUGINS_PAGE_CHANGES_OPTION_NAME, array() );
+
+		$bh_wp_plugins_page_changes = wp_json_encode( $changes );
+
+		$script = <<<EOD
+var bh_wp_plugins_page_ajax_data = $ajax_data_json;
+var bh_wp_plugins_page_changes = $bh_wp_plugins_page_changes;
+EOD;
+
+		wp_add_inline_script(
+			'bh-wp-plugins-page',
+			$script,
+			'before'
+		);
+
 		wp_enqueue_style( 'bh-wp-plugins-page', $css_url, array(), $version );
 	}
 
