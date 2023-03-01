@@ -8,6 +8,8 @@
 
 namespace BrianHenryIE\WP_Plugins_Page;
 
+use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger;
+
 class Plugin_Unit_Test extends \Codeception\Test\Unit {
 
 	protected function setup(): void {
@@ -27,6 +29,11 @@ class Plugin_Unit_Test extends \Codeception\Test\Unit {
 		// Prevents code-coverage counting, and removes the need to define the WordPress functions that are used in that class.
 		\Patchwork\redefine(
 			array( BH_WP_Plugins_Page::class, '__construct' ),
+			function() {}
+		);
+
+		\Patchwork\redefine(
+			array( Logger::class, '__construct' ),
 			function() {}
 		);
 
