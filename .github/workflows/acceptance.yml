@@ -42,10 +42,10 @@ jobs:
         with:
           env-file: .env.testing
 
-      - name: Read .env.github
-        uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: .env.github
+#      - name: Read .env.github
+#        uses: c-py/action-dotenv-to-setenv@v2
+#        with:
+#          env-file: .env.github
 
 #      - name: Make envfile from Secrets
 #        uses: SpicyPizza/create-envfile@v1.1
