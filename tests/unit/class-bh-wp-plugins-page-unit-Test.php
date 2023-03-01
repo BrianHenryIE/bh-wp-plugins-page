@@ -42,7 +42,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
 				'return' => array(),
-				'times'  => 1,
+				'times'  => 2,
 			)
 		);
 
@@ -61,7 +61,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
 				'return' => array(),
-				'times'  => 1,
+				'times'  => 2,
 			)
 		);
 
@@ -91,7 +91,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
 				'return' => $active_plugins,
-				'times'  => 1,
+				'times'  => 2,
 			)
 		);
 
@@ -134,10 +134,17 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			2
 		);
 
-		\WP_Mock::expectActionAdded(
-			'admin_init',
-			array( new AnyInstance( Plugins_Page::class ), 'add_hook_for_freemius_redirect' )
+		\WP_Mock::userFunction(
+			'get_option',
+			array(
+				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
+				'return' => array( 'plugin1/plugin1.php', 'plugin2/plugin2.php' ),
+				'times'  => 2,
+			)
 		);
+
+		\WP_Mock::expectFilterAdded( 'fs_redirect_on_activation_plugin1', '__return_false' );
+		\WP_Mock::expectFilterAdded( 'fs_redirect_on_activation_plugin2', '__return_false' );
 
 		$logger = new ColorLogger();
 		$api    = $this->make( API::class );
