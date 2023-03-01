@@ -250,6 +250,7 @@ class Parsed_Link {
 			'trial',
 			'review',
 			'rate',
+			'Uninstall',
 		);
 
 		foreach ( $definitely_unwanted_terms as $term ) {

@@ -5,6 +5,8 @@
 
 	$( function() {
 
+		// jQuery('.plugin-title a:contains("Uninstall")').parent().remove();
+
 		$('td.plugin-title.column-primary strong').click(function (e) {
 
 			const titleElement = $(this);
