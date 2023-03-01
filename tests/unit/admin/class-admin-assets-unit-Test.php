@@ -82,7 +82,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			'wp_enqueue_script',
 			array(
 				'times' => 1,
-				'args'  => array( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), '*', false ),
+				'args'  => array( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), '*', true ),
 			)
 		);
 
