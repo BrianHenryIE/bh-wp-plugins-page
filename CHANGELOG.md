@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0
+
+ * Add: Rename plugins by clicking on their title
+ * Add: Prevents redirecting away from plugins.php when activating plugins
+ * Add: Hides "uninstall" links
+ * Add: GitHub Updater support
+ * Add: Logger to catch errors
+
 ## 1.1.2
 
 * Requires PHP 8.0 for DOMDocument properties.
