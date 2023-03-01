@@ -121,9 +121,7 @@ class BH_WP_Plugins_Page {
 
 		add_filter( 'wp_redirect', array( $plugins_page, 'prevent_redirect' ), 1, 2 );
 
-		$active_plugins     = (array) get_option( 'active_plugins', array() );
-
-		// fs_redirect_on_activation_woocommerce-google-adwords-conversion-tracking-tag
+		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
 			list( $plugin_slug ) = explode( '/', $plugin_basename );

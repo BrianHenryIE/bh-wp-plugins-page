@@ -364,7 +364,7 @@ class Parsed_Link {
 
 			$url_string = $anchor_node->attributes->getNamedItem( 'href' )->nodeValue;
 
-			if ( 1 !== preg_match( $match_github_repo_links, $url_string ) ) {
+			if ( 1 !== preg_match( $match_github_repo_links, $url_string ?? '' ) ) {
 				continue;
 			}
 
@@ -375,7 +375,6 @@ class Parsed_Link {
 
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$anchor_node->nodeValue = '';
-
 		}
 	}
 
