@@ -23,6 +23,9 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       bh-wp-plugins-page
  * Domain Path:       /languages
+ *
+ * GitHub Plugin URI: https://github.com/BrianHenryIE/bh-wp-plugins-page/
+ * Release Asset:     true
  */
 
 namespace BrianHenryIE\WP_Plugins_Page;
