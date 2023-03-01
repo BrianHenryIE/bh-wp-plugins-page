@@ -14,6 +14,7 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
+use BrianHenryIE\WP_Plugins_Page\API\API;
 use BrianHenryIE\WP_Plugins_Page\API\Parsed_Link;
 
 /**
@@ -234,25 +235,23 @@ class Plugins_List_Table {
 		return $merged_array;
 	}
 
-
-	protected function get_settings(): array {
-		return array(
-			'apex-notification-bar-lite/apex-notification-bar-lite.php' => array(
-				'Name'          => 'Edited title',
-				'Original_Name' => 'Apex Notification Bar Lite',
-			),
-		);
-	}
-
 	/**
+	 * Merge our saved changes into the get_plugins() array when the page is rendering.
+	 *
 	 * @hooked all_plugins
 	 * @see \WP_Plugins_List_Table::prepare_items()
+	 *
+	 * @param array<string,array<string,string>> $all_plugins The WordPress `get_plugins()` array.
+	 *
+	 * @return array<string,array<string,string>>
 	 */
 	public function edit_plugins_array( array $all_plugins ):array {
 
-		foreach ( $this->get_settings() as $plugin_basename => $plugin_settings ) {
+		$changes = get_option( API::PLUGINS_PAGE_CHANGES_OPTION_NAME, array() );
+
+		foreach ( $changes as $plugin_basename => $plugin_changes ) {
 			if ( isset( $all_plugins[ $plugin_basename ] ) ) {
-				$all_plugins[ $plugin_basename ] = array_merge( $all_plugins[ $plugin_basename ], $plugin_settings );
+				$all_plugins[ $plugin_basename ] = array_merge( $all_plugins[ $plugin_basename ], $plugin_changes );
 			}
 		}
 
