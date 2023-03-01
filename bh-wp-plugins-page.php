@@ -28,9 +28,9 @@
 namespace BrianHenryIE\WP_Plugins_Page;
 
 // If this file is called directly, abort.
+use BrianHenryIE\WP_Plugins_Page\API\Settings;
+use BrianHenryIE\WP_Plugins_Page\API\API;
 use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger;
-use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger_Settings_Interface;
-use Psr\Log\LogLevel;
 
 if ( ! defined( 'WPINC' ) ) {
 	throw new \Exception( 'WordPress required but not loaded.' );
@@ -62,26 +62,13 @@ function instantiate_bh_wp_plugins_page(): void {
 		return;
 	}
 
-	Logger::instance( new class() implements Logger_Settings_Interface {
+	$settings = new Settings();
 
-		public function get_log_level(): string {
-			return get_option( 'bh_wp_plugins_page_log_leve', LogLevel::INFO );
-		}
+	$logger = Logger::instance( $settings );
 
-		public function get_plugin_name(): string {
-			return 'Plugins Page Cleanup';
-		}
+	$api = new API( $logger );
 
-		public function get_plugin_slug(): string {
-			return 'bh-wp-plugins-page';
-		}
-
-		public function get_plugin_basename(): string {
-			return 'bh-wp-plugins-page/bh-wp-plugins-page.php';
-		}
-	});
-
-	new BH_WP_Plugins_Page( $logger );
+	new BH_WP_Plugins_Page( $api, $logger );
 
 }
 
