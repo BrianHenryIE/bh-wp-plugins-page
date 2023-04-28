@@ -125,7 +125,12 @@
         "strauss": {
             "namespace_prefix": "BrianHenryIE\\WP_Plugins_Page\\",
             "target_directory": "/vendor-prefixed/",
-            "classmap_prefix": "BH_WP_Plugins_Page_"
+            "classmap_prefix": "BH_WP_Plugins_Page_",
+            "exclude_from_prefix": {
+                "file_patterns": [
+                    "/^psr.*$/"
+                ]
+            }
         },
         "symlinks": {
             ".": "wp-content/plugins/bh-wp-plugins-page",
