@@ -17,7 +17,9 @@ use Psr\Log\LoggerInterface;
 class API {
 	use LoggerAwareTrait;
 
-	const PLUGINS_PAGE_CHANGES_OPTION_NAME = 'bh_wp_plugins_page_changes';
+	const PLUGINS_PAGE_CHANGES_OPTION_NAME       = 'bh_wp_plugins_page_changes';
+	const PLUGINS_PAGE_UPDATES_DATES_OPTION_NAME = 'bh_wp_plugins_page_plugin_update_available_dates';
+	const PLUGINS_PAGE_INSTALL_DATES_OPTION_NAME = 'bh_wp_plugins_page_plugin_install_dates';
 
 	/**
 	 * Constructor.

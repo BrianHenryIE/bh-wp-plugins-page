@@ -25,6 +25,11 @@
     <exclude-pattern>/wordpress/</exclude-pattern>
     <exclude-pattern>/wp-content/</exclude-pattern>
 
+    <!-- Exclude @var rule that is outdated by typed properties -->
+    <rule ref="Squiz.Commenting.VariableComment.MissingVar">
+        <exclude-pattern>*</exclude-pattern>
+    </rule>
+
     <!-- Enforce fewer rules on tests -->
     <rule ref="Generic.Commenting.DocComment.MissingShort">
         <exclude-pattern>*/tests/*</exclude-pattern>

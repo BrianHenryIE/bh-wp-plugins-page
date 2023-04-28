@@ -245,7 +245,7 @@ class Plugins_List_Table {
 	 *
 	 * @return array<string,array<string,string>>
 	 */
-	public function edit_plugins_array( array $all_plugins ):array {
+	public function edit_plugins_array( array $all_plugins ): array {
 
 		$changes = get_option( API::PLUGINS_PAGE_CHANGES_OPTION_NAME, array() );
 
