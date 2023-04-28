@@ -43,7 +43,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
 				'return' => array(),
-				'times'  => 2,
+				'times'  => 3,
 			)
 		);
 
@@ -63,7 +63,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
 				'return' => array(),
-				'times'  => 2,
+				'times'  => 3,
 			)
 		);
 
@@ -94,7 +94,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
 				'return' => $active_plugins,
-				'times'  => 2,
+				'times'  => 3,
 			)
 		);
 
@@ -148,7 +148,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array(
 				'args'   => array( 'active_plugins', \WP_Mock\Functions::type( 'array' ) ),
 				'return' => array( 'plugin1/plugin1.php', 'plugin2/plugin2.php' ),
-				'times'  => 2,
+				'times'  => 3,
 			)
 		);
 

@@ -8,7 +8,9 @@
 
 namespace BrianHenryIE\WP_Plugins_Page;
 
+use BrianHenryIE\ColorLogger\ColorLogger;
 use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger;
+use Psr\Log\LoggerInterface;
 
 class Plugin_Unit_Test extends \Codeception\Test\Unit {
 
@@ -33,8 +35,10 @@ class Plugin_Unit_Test extends \Codeception\Test\Unit {
 		);
 
 		\Patchwork\redefine(
-			array( Logger::class, '__construct' ),
-			function() {}
+			array( Logger::class, 'instance' ),
+			function(): LoggerInterface {
+				return new ColorLogger();
+			}
 		);
 
 		global $plugin_root_dir;
