@@ -93,7 +93,6 @@
         "wp-cli/dist-archive-command": "dev-main",
         "wp-cli/wp-cli-bundle": "*",
         "wp-coding-standards/wpcs": "*",
-        "wpackagist-plugin/apex-notification-bar-lite": "*",
         "wpackagist-plugin/flexible-shipping": "*",
         "wpackagist-plugin/ga-google-analytics": "*",
         "wpackagist-plugin/hurrytimer": "*",
