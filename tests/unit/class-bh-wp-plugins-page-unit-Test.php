@@ -95,19 +95,30 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		\WP_Mock::expectActionAdded(
-		\WP_Mock::expectActionAdded(
+		\WP_Mock::expectFilterAdded(
 			'plugin_action_links_one-plugin/one-plugin.php',
 			array( new AnyInstance( Plugins_List_Table::class ), 'plugin_specific_action_links' ),
 			9999,
 			4
 		);
 
-		\WP_Mock::expectActionAdded(
+		\WP_Mock::expectFilterAdded(
 			'plugin_action_links_another-plugin/another-plugin.php',
 			array( new AnyInstance( Plugins_List_Table::class ), 'plugin_specific_action_links' ),
 			9999,
 			4
+		);
+
+		\WP_Mock::expectFilterAdded(
+			'plugin_row_meta',
+			array( new AnyInstance( Plugins_List_Table::class ), 'row_meta' ),
+			9999,
+			4
+		);
+
+		\WP_Mock::expectFilterAdded(
+			'all_plugins',
+			array( new AnyInstance( Plugins_List_Table::class ), 'edit_plugins_array' )
 		);
 
 		$logger = new ColorLogger();

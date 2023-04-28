@@ -100,16 +100,17 @@ class BH_WP_Plugins_Page {
 		$active_plugins     = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
-			add_action(
+			add_filter(
 				"plugin_action_links_{$plugin_basename}",
 				array( $plugins_list_table, 'plugin_specific_action_links' ),
 				9999,
 				4
 			);
 		}
-		add_action( 'plugin_row_meta', array( $plugins_list_table, 'row_meta' ), PHP_INT_MAX, 4 );
+		add_filter( 'plugin_row_meta', array( $plugins_list_table, 'row_meta' ), 9999, 4 );
 
-		add_action( 'all_plugins', array( $plugins_list_table, 'edit_plugins_array' ) );
+		add_filter( 'all_plugins', array( $plugins_list_table, 'edit_plugins_array' ) );
+
 	}
 
 	/**
