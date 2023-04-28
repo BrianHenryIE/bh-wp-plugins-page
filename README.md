@@ -47,4 +47,4 @@ See [github.com/BrianHenryIE/WordPress-Plugin-Boilerplate](https://github.com/Br
 
 # Acknowledgements
 
-I was finally promoted to write this after seeing someone (Timbr) complain about this same irritating problem on Discord.
+I was finally promoted to write this after seeing someone (Timbr) [complain about this same irritating problem](https://discord.com/channels/518595560828174338/518597867074486272/799711294533271654) on Discord.
