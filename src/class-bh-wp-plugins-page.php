@@ -17,6 +17,7 @@ use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 use BrianHenryIE\WP_Plugins_Page\Admin\AJAX;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
+use BrianHenryIE\WP_Plugins_Page\Admin\Updates;
 use BrianHenryIE\WP_Plugins_Page\API\API;
 use BrianHenryIE\WP_Plugins_Page\API\Settings;
 use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
@@ -58,6 +59,7 @@ class BH_WP_Plugins_Page {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_plugins_list_table_hooks();
+		$this->define_plugins_list_table_zip_download_hooks();
 		$this->define_plugins_page_hooks();
 		$this->define_ajax_hooks();
 	}
@@ -112,7 +114,24 @@ class BH_WP_Plugins_Page {
 		add_filter( 'plugin_row_meta', array( $plugins_list_table, 'row_meta' ), 9999, 4 );
 
 		add_filter( 'all_plugins', array( $plugins_list_table, 'edit_plugins_array' ) );
+	}
 
+	/**
+	 * Define hooks for adding download links to plugins.php list table.
+	 */
+	protected function define_plugins_list_table_zip_download_hooks(): void {
+
+		$updates        = new Updates();
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+
+		foreach ( $active_plugins as $plugin_basename ) {
+			add_action(
+				"in_plugin_update_message-{$plugin_basename}",
+				array( $updates, 'add_zip_download_link' ),
+				10,
+				2
+			);
+		}
 	}
 
 	/**
