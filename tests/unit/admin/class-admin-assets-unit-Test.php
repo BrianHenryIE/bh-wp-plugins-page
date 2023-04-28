@@ -95,9 +95,12 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$settings = self::make( Settings::class, array(
-			'get_plugin_version' => '1.0.0'
-		));
+		$settings = self::make(
+			Settings::class,
+			array(
+				'get_plugin_version' => '1.0.0',
+			)
+		);
 
 		$admin = new Admin_Assets( $settings );
 
@@ -122,9 +125,12 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$settings = self::make( Settings::class, array(
-			'get_plugin_version' => '1.0.0'
-		));
+		$settings = self::make(
+			Settings::class,
+			array(
+				'get_plugin_version' => '1.0.0',
+			)
+		);
 
 		$admin = new Admin_Assets( $settings );
 

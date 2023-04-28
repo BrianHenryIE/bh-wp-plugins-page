@@ -47,8 +47,8 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$logger = new ColorLogger();
-		$api    = self::make( API::class );
+		$logger   = new ColorLogger();
+		$api      = self::make( API::class );
 		$settings = self::make( Settings::class );
 		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
@@ -73,8 +73,8 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			9999
 		);
 
-		$logger = new ColorLogger();
-		$api    = self::make( API::class );
+		$logger   = new ColorLogger();
+		$api      = self::make( API::class );
 		$settings = self::make( Settings::class );
 		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
@@ -124,8 +124,8 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 			array( new AnyInstance( Plugins_List_Table::class ), 'edit_plugins_array' )
 		);
 
-		$logger = new ColorLogger();
-		$api    = self::make( API::class );
+		$logger   = new ColorLogger();
+		$api      = self::make( API::class );
 		$settings = self::make( Settings::class );
 		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
@@ -155,8 +155,8 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::expectFilterAdded( 'fs_redirect_on_activation_plugin1', '__return_false' );
 		\WP_Mock::expectFilterAdded( 'fs_redirect_on_activation_plugin2', '__return_false' );
 
-		$logger = new ColorLogger();
-		$api    = self::make( API::class );
+		$logger   = new ColorLogger();
+		$api      = self::make( API::class );
 		$settings = self::make( Settings::class );
 		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
