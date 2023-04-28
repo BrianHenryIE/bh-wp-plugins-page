@@ -41,6 +41,12 @@
 
 		});
 
+		// Enclose every plugin version in a .plugin-version span.
+		$('.plugin-version-author-uri').each(function(e){
+			let updated = $(this).html().replace(/(Version.*?) \|/,'<span class="plugin-version">$1</span> |');
+			jQuery(this).html(updated);
+		});
+
 	});
 
 })( jQuery );
