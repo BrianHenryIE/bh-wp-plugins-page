@@ -11,6 +11,7 @@
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 use BrianHenryIE\WP_Plugins_Page\API\API;
+use BrianHenryIE\WP_Plugins_Page\API\Settings;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -23,6 +24,22 @@ use BrianHenryIE\WP_Plugins_Page\API\API;
  * @author     BrianHenryIE <BrianHenryIE@gmail.com>
  */
 class Admin_Assets {
+
+	/**
+	 * Uses the plugin version for JS caching.
+	 *
+	 * @uses Settings::get_plugin_version()
+	 */
+	protected Settings $settings;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param Settings $settings The plugin settings.
+	 */
+	public function __construct( Settings $settings ) {
+		$this->settings = $settings;
+	}
 
 	/**
 	 * Register the JavaScript for the admin area.
@@ -41,7 +58,7 @@ class Admin_Assets {
 		$plugin_basename = defined( 'BH_WP_PLUGINS_PAGE_BASENAME' ) ? BH_WP_PLUGINS_PAGE_BASENAME : 'bh-wp-plugins-page/bh-wp-plugins-page.php';
 		$js_url          = plugin_dir_url( $plugin_basename ) . 'assets/bh-wp-plugins-page-admin.js';
 		$css_url         = plugin_dir_url( $plugin_basename ) . 'assets/bh-wp-plugins-page-admin.css';
-		$version         = defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.2.0';
+		$version         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : $this->settings->get_plugin_version();
 
 		wp_enqueue_script( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), $version, true );
 		$ajax_data      = array(

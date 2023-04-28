@@ -18,6 +18,7 @@ use BrianHenryIE\WP_Plugins_Page\Admin\AJAX;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
 use BrianHenryIE\WP_Plugins_Page\API\API;
+use BrianHenryIE\WP_Plugins_Page\API\Settings;
 use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
 use Psr\Log\LoggerInterface;
 
@@ -37,21 +38,22 @@ class BH_WP_Plugins_Page {
 	protected API $api;
 
 	/**
-	 * Define the core functionality of the plugin.
+	 * The plugin settings.
+	 */
+	protected Settings $settings;
+
+	/**
+	 * Wire up actions and filters for the plugin.
 	 *
-	 * Set the plugin name and the plugin version that can be used throughout the plugin.
-	 * Load the dependencies, define the locale, and set the hooks for the admin area and
-	 * the frontend-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 *
+	 * @param Settings        $settings The plugin settings.
 	 * @param API             $api Some main plugin functions.
 	 * @param LoggerInterface $logger A PSR logger.
 	 */
-	public function __construct( API $api, LoggerInterface $logger ) {
+	public function __construct( Settings $settings, API $api, LoggerInterface $logger ) {
 
-		$this->logger = $logger;
-		$this->api    = $api;
+		$this->logger   = $logger;
+		$this->api      = $api;
+		$this->settings = $settings;
 
 		$this->set_locale();
 		$this->define_admin_hooks();

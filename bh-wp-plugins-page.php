@@ -71,7 +71,7 @@ function instantiate_bh_wp_plugins_page(): void {
 
 	$api = new API( $logger );
 
-	new BH_WP_Plugins_Page( $api, $logger );
+	new BH_WP_Plugins_Page( $settings, $api, $logger );
 }
 
 /**

@@ -10,6 +10,7 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
+use BrianHenryIE\WP_Plugins_Page\API\Settings;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 /**
@@ -94,7 +95,11 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$admin = new Admin_Assets();
+		$settings = self::make( Settings::class, array(
+			'get_plugin_version' => '1.0.0'
+		));
+
+		$admin = new Admin_Assets( $settings );
 
 		$admin->enqueue_scripts();
 
@@ -117,7 +122,11 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			)
 		);
 
-		$admin = new Admin_Assets();
+		$settings = self::make( Settings::class, array(
+			'get_plugin_version' => '1.0.0'
+		));
+
+		$admin = new Admin_Assets( $settings );
 
 		$admin->enqueue_scripts();
 	}

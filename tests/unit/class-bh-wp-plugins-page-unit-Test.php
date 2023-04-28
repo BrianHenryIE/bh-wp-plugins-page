@@ -11,6 +11,7 @@ use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table;
 use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
 use BrianHenryIE\WP_Plugins_Page\API\API;
+use BrianHenryIE\WP_Plugins_Page\API\Settings;
 use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
 use WP_Mock\Matcher\AnyInstance;
 
@@ -47,8 +48,9 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		);
 
 		$logger = new ColorLogger();
-		$api    = $this->make( API::class );
-		new BH_WP_Plugins_Page( $api, $logger );
+		$api    = self::make( API::class );
+		$settings = self::make( Settings::class );
+		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
 
 	/**
@@ -72,8 +74,9 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		);
 
 		$logger = new ColorLogger();
-		$api    = $this->make( API::class );
-		new BH_WP_Plugins_Page( $api, $logger );
+		$api    = self::make( API::class );
+		$settings = self::make( Settings::class );
+		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
 
 	/**
@@ -122,8 +125,9 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		);
 
 		$logger = new ColorLogger();
-		$api    = $this->make( API::class );
-		new BH_WP_Plugins_Page( $api, $logger );
+		$api    = self::make( API::class );
+		$settings = self::make( Settings::class );
+		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
 
 	/**
@@ -152,8 +156,9 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::expectFilterAdded( 'fs_redirect_on_activation_plugin2', '__return_false' );
 
 		$logger = new ColorLogger();
-		$api    = $this->make( API::class );
-		new BH_WP_Plugins_Page( $api, $logger );
+		$api    = self::make( API::class );
+		$settings = self::make( Settings::class );
+		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
 
 }

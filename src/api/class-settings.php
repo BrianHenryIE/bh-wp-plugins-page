@@ -45,4 +45,11 @@ class Settings implements Logger_Settings_Interface {
 			: 'bh-wp-plugins-page/bh-wp-plugins-page.php';
 	}
 
+	/**
+	 * The plugin version, used for JS and CSS caching.
+	 */
+	public function get_plugin_version(): string {
+		return defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.2.0';
+	}
+
 }
