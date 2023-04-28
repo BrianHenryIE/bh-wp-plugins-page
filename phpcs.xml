@@ -29,6 +29,10 @@
     <rule ref="Squiz.Commenting.VariableComment.MissingVar">
         <exclude-pattern>*</exclude-pattern>
     </rule>
+    <!-- ?: isn't that hard to understand -->
+    <rule ref="WordPress.PHP.DisallowShortTernary.Found">
+        <exclude-pattern>*</exclude-pattern>
+    </rule>
 
     <!-- Enforce fewer rules on tests -->
     <rule ref="Generic.Commenting.DocComment.MissingShort">
