@@ -84,8 +84,8 @@ class BH_WP_Plugins_Page {
 	 */
 	protected function define_admin_hooks(): void {
 
-		$plugin_admin = new Admin_Assets();
-		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ), PHP_INT_MAX );
+		$plugin_admin = new Admin_Assets( $this->settings );
+		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ), 9999 );
 	}
 
 	/**
@@ -103,7 +103,7 @@ class BH_WP_Plugins_Page {
 			add_action(
 				"plugin_action_links_{$plugin_basename}",
 				array( $plugins_list_table, 'plugin_specific_action_links' ),
-				PHP_INT_MAX,
+				9999,
 				4
 			);
 		}

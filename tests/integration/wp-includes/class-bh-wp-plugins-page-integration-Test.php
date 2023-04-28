@@ -23,7 +23,7 @@ class BH_WP_Plugins_Page_Integration_Test extends \Codeception\TestCase\WPTestCa
 	public function test_action_admin_enqueue_scripts_scripts() {
 
 		$action_name       = 'admin_enqueue_scripts';
-		$expected_priority = PHP_INT_MAX;
+		$expected_priority = 9999;
 		$class_type        = Admin_Assets::class;
 		$method_name       = 'enqueue_scripts';
 

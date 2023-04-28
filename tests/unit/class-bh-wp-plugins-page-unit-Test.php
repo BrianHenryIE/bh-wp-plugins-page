@@ -68,7 +68,7 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::expectActionAdded(
 			'admin_enqueue_scripts',
 			array( new AnyInstance( Admin_Assets::class ), 'enqueue_scripts' ),
-			PHP_INT_MAX
+			9999
 		);
 
 		$logger = new ColorLogger();
@@ -96,23 +96,17 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		);
 
 		\WP_Mock::expectActionAdded(
-			'plugin_row_meta',
-			array( new AnyInstance( Plugins_List_Table::class ), 'row_meta' ),
-			PHP_INT_MAX,
-			4
-		);
-
 		\WP_Mock::expectActionAdded(
 			'plugin_action_links_one-plugin/one-plugin.php',
 			array( new AnyInstance( Plugins_List_Table::class ), 'plugin_specific_action_links' ),
-			PHP_INT_MAX,
+			9999,
 			4
 		);
 
 		\WP_Mock::expectActionAdded(
 			'plugin_action_links_another-plugin/another-plugin.php',
 			array( new AnyInstance( Plugins_List_Table::class ), 'plugin_specific_action_links' ),
-			PHP_INT_MAX,
+			9999,
 			4
 		);
 

@@ -149,7 +149,7 @@ class Plugins_List_Table {
 	 * column to the description column.
 	 *
 	 * @hooked plugin_row_meta
-	 * Hooked at PHP_INT_MAX so all links have been added first.
+	 * Hooked at 9999 so all links have been added first.
 	 *
 	 * @see https://rudrastyh.com/wordpress/plugin_action_links-plugin_row_meta.html
 	 *

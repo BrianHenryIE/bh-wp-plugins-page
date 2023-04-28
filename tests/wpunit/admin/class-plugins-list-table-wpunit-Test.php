@@ -187,7 +187,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$sut = new Plugins_List_Table();
 
 		// This is fired inside `plugin_specific_action_links` in order to find internal meta links.
-		add_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), PHP_INT_MAX, 4 );
+		add_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), 9999, 4 );
 
 		$result = $sut->plugin_specific_action_links( $action_links, $plugin_basename, array( 'not' => 'empty' ), '' );
 
@@ -200,7 +200,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 			false
 		);
 
-		remove_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), PHP_INT_MAX );
+		remove_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), 9999 );
 		remove_filter( 'plugin_row_meta', $return_meta_links );
 
 		$this->assertTrue( $contains_settings );
@@ -229,7 +229,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$sut = new Plugins_List_Table();
 
 		// This is fired inside `plugin_specific_action_links` in order to find internal meta links.
-		add_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), PHP_INT_MAX, 4 );
+		add_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), 9999, 4 );
 
 		$result = $sut->plugin_specific_action_links( $action_links, $plugin_basename, array( 'not' => 'empty' ), '' );
 
@@ -242,7 +242,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 			false
 		);
 
-		remove_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), PHP_INT_MAX );
+		remove_filter( 'plugin_row_meta', array( $sut, 'row_meta' ), 9999 );
 		remove_filter( 'plugin_row_meta', $return_meta_links );
 
 		$this->assertTrue( $contains_settings );

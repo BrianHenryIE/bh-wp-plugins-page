@@ -39,7 +39,7 @@ Removes JavaScript hooked to deactivation buttons to prevent these:
 * Add a UI for adding Settings links for plugins that don't have them
 * Add installed date and last updated date on each plugin
 * Logs should go before Deactivate, never ahead of anything else.
-* Reconsider use of PHP_INT_MAX in actions.
+* ~~Reconsider use of PHP_INT_MAX in actions.~~
 
 ### More Information
 
