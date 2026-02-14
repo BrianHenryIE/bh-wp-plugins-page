@@ -13,7 +13,7 @@ use BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets;
 /**
  * Class Develop_Test
  */
-class BH_WP_Plugins_Page_Integration_Test extends \Codeception\TestCase\WPTestCase {
+class BH_WP_Plugins_Page_Integration_Test extends \BrianHenryIE\WP_Plugins_Page\WPUnit_Testcase {
 
 	/**
 	 * Verify admin_enqueue_scripts action is added for scripts, at priority 10.

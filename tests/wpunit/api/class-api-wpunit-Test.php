@@ -3,11 +3,12 @@
 namespace BrianHenryIE\WP_Plugins_Page\API;
 
 use BrianHenryIE\ColorLogger\ColorLogger;
+use BrianHenryIE\WP_Plugins_Page\WPUnit_Testcase;
 
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\API\API
  */
-class API_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
+class API_WPUnit_Test extends WPUnit_Testcase {
 
 	/**
 	 * @covers ::set_plugin_name
@@ -18,7 +19,9 @@ class API_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$sut = new API( $logger );
 
 		$cache_plugins = array(
-			'bh-wp-autologin-urls/bh-wp-autologin-urls.php' => array( 'Name' => 'Autologin URLs' ),
+			'' => array(
+				'bh-wp-autologin-urls/bh-wp-autologin-urls.php' => array( 'Name' => 'Autologin URLs' ),
+			),
 		);
 		wp_cache_set( 'plugins', $cache_plugins, 'plugins' );
 

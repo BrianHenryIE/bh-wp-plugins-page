@@ -377,5 +377,4 @@ class Parsed_Link {
 			$anchor_node->nodeValue = '';
 		}
 	}
-
 }

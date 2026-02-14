@@ -13,7 +13,7 @@ namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
  *
  * @see I18n
  */
-class I18n_Integration_Test extends \Codeception\TestCase\WPTestCase {
+class I18n_Integration_Test extends \BrianHenryIE\WP_Plugins_Page\WPUnit_Testcase {
 
 	/**
 	 * AFAICT, this will fail until a translation has been added.
@@ -31,7 +31,5 @@ class I18n_Integration_Test extends \Codeception\TestCase\WPTestCase {
 
 		// Seems to fail because there are no translations to load.
 		$this->assertTrue( is_textdomain_loaded( 'bh-wp-plugins-page' ), 'i18n text domain not loaded.' );
-
 	}
-
 }

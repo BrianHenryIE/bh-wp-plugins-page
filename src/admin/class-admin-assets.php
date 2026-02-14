@@ -84,5 +84,4 @@ EOD;
 
 		wp_enqueue_style( 'bh-wp-plugins-page', $css_url, array(), $version );
 	}
-
 }

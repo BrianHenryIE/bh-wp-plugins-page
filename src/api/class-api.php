@@ -94,5 +94,4 @@ class API {
 			'Name'            => $name,
 		);
 	}
-
 }

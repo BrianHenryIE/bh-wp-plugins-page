@@ -11,12 +11,12 @@
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 use BrianHenryIE\WP_Plugins_Page\API\Settings;
-use SebastianBergmann\CodeCoverage\CodeCoverage;
+use BrianHenryIE\WP_Plugins_Page\Unit_Testcase;
 
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets
  */
-class Admin_Unit_Test extends \Codeception\Test\Unit {
+class Admin_Unit_Test extends Unit_Testcase {
 
 	protected function setUp(): void {
 		\WP_Mock::setUp();
@@ -61,7 +61,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::passthruFunction( 'wp_create_nonce' );
 
 		$js_src = $plugin_root_dir . '/assets/bh-wp-plugins-page-admin.js';
-		$js_url = '/Users/brianhenry/Sites/bh-wp-plugins-page/assets/bh-wp-plugins-page-admin.js';
+		$js_url = codecept_root_dir( 'assets/bh-wp-plugins-page-admin.js' );
 
 		\WP_Mock::userFunction(
 			'wp_json_encode',
@@ -83,7 +83,13 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			'wp_enqueue_script',
 			array(
 				'times' => 1,
-				'args'  => array( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), '*', true ),
+				'args'  => array(
+					'bh-wp-plugins-page',
+					$js_url,
+					array( 'jquery' ),
+					'*',
+					true,
+				),
 			)
 		);
 
@@ -91,7 +97,12 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			'wp_enqueue_style',
 			array(
 				'times' => 1,
-				'args'  => array( 'bh-wp-plugins-page', \WP_Mock\Functions::type( 'string' ), array(), '*' ),
+				'args'  => array(
+					'bh-wp-plugins-page',
+					\WP_Mock\Functions::type( 'string' ),
+					array(),
+					'*',
+				),
 			)
 		);
 

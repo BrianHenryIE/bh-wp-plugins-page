@@ -12,16 +12,7 @@ use BrianHenryIE\ColorLogger\ColorLogger;
 use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger;
 use Psr\Log\LoggerInterface;
 
-class Plugin_Unit_Test extends \Codeception\Test\Unit {
-
-	protected function setup(): void {
-		\WP_Mock::setUp();
-	}
-
-	protected function tearDown(): void {
-		\WP_Mock::tearDown();
-		\Patchwork\restoreAll();
-	}
+class Plugin_Unit_Test extends Unit_Testcase {
 
 	/**
 	 * Verifies the plugin initialization.
@@ -31,12 +22,12 @@ class Plugin_Unit_Test extends \Codeception\Test\Unit {
 		// Prevents code-coverage counting, and removes the need to define the WordPress functions that are used in that class.
 		\Patchwork\redefine(
 			array( BH_WP_Plugins_Page::class, '__construct' ),
-			function() {}
+			function () {}
 		);
 
 		\Patchwork\redefine(
 			array( Logger::class, 'instance' ),
-			function(): LoggerInterface {
+			function (): LoggerInterface {
 				return new ColorLogger();
 			}
 		);
@@ -92,7 +83,5 @@ class Plugin_Unit_Test extends \Codeception\Test\Unit {
 		ob_end_clean();
 
 		$this->assertEmpty( $printed_output );
-
 	}
-
 }

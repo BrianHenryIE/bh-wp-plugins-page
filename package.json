@@ -1,0 +1,10 @@
+{
+  "name": "bh-wp-plugins-page",
+  "version": "1.2.0",
+  "description": "Tidies up common annoyances on the WordPress plugins.php page.",
+  "author": "BrianHenryIE",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@wordpress/env": "^10.39.0"
+  }
+}

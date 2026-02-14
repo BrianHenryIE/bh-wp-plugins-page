@@ -77,7 +77,6 @@ class BH_WP_Plugins_Page {
 		$plugin_i18n = new I18n();
 
 		add_action( 'plugins_loaded', array( $plugin_i18n, 'load_plugin_textdomain' ) );
-
 	}
 
 	/**
@@ -159,6 +158,5 @@ class BH_WP_Plugins_Page {
 		$ajax = new AJAX( $this->api, $this->logger );
 
 		add_action( 'wp_ajax_bh_wp_plugins_page_set_plugin_name', array( $ajax, 'set_plugin_name' ) );
-
 	}
 }

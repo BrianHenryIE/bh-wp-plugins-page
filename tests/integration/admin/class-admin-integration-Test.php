@@ -11,7 +11,7 @@ use WP_Scripts;
 /**
  * @coversNothing
  */
-class Admin_Integration_Test extends \Codeception\TestCase\WPTestCase {
+class Admin_Integration_Test extends \BrianHenryIE\WP_Plugins_Page\WPUnit_Testcase {
 
 	/**
 	 * @see WP_Scripts
@@ -33,7 +33,7 @@ class Admin_Integration_Test extends \Codeception\TestCase\WPTestCase {
 		$wp_scripts = wp_scripts();
 
 		$scripts = array_map(
-			function( $script ) use ( $wp_scripts ) {
+			function ( $script ) use ( $wp_scripts ) {
 				return $wp_scripts->registered[ $script ]->src;
 			},
 			$wp_scripts->queue
@@ -42,7 +42,6 @@ class Admin_Integration_Test extends \Codeception\TestCase\WPTestCase {
 		$expected = get_option( 'siteurl' ) . '/wp-content/plugins/bh-wp-plugins-page/assets/bh-wp-plugins-page-admin.js';
 
 		$this->assertContains( $expected, $scripts );
-
 	}
 
 
@@ -64,7 +63,7 @@ class Admin_Integration_Test extends \Codeception\TestCase\WPTestCase {
 		do_action( 'admin_enqueue_scripts' );
 
 		$scripts = array_map(
-			function( $script ) use ( $wp_scripts ) {
+			function ( $script ) use ( $wp_scripts ) {
 				return $wp_scripts->registered[ $script ]->src;
 			},
 			$wp_scripts->queue

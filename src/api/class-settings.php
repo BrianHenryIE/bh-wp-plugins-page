@@ -8,12 +8,14 @@
 namespace BrianHenryIE\WP_Plugins_Page\API;
 
 use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger_Settings_Interface;
+use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger_Settings_Trait;
 use Psr\Log\LogLevel;
 
 /**
  * Plugin settings for Logger.
  */
 class Settings implements Logger_Settings_Interface {
+	use Logger_Settings_Trait;
 
 	/**
 	 * Detail of logs to record.
@@ -49,7 +51,6 @@ class Settings implements Logger_Settings_Interface {
 	 * The plugin version, used for JS and CSS caching.
 	 */
 	public function get_plugin_version(): string {
-		return defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.2.0';
+		return defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.3.0';
 	}
-
 }

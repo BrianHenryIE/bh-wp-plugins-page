@@ -18,7 +18,8 @@ use WP_Mock\Matcher\AnyInstance;
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\BH_WP_Plugins_Page
  */
-class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
+class BH_WP_Plugins_Page_Unit_Test extends Unit_Testcase {
+
 
 	protected function setup(): void {
 		\WP_Mock::setUp();
@@ -160,5 +161,4 @@ class BH_WP_Plugins_Page_Unit_Test extends \Codeception\Test\Unit {
 		$settings = self::make( Settings::class );
 		new BH_WP_Plugins_Page( $settings, $api, $logger );
 	}
-
 }

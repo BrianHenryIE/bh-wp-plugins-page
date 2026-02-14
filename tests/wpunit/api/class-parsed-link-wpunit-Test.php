@@ -2,10 +2,12 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\API;
 
+use BrianHenryIE\WP_Plugins_Page\WPUnit_Testcase;
+
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\API\Parsed_Link
  */
-class Parsed_Link_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
+class Parsed_Link_WPUnit_Test extends WPUnit_Testcase {
 
 	public function test_parse_html_happy_path(): void {
 
@@ -45,5 +47,4 @@ class Parsed_Link_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 		$this->assertEquals( 'view-details', $sut->get_type() );
 	}
-
 }
