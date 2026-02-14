@@ -33,9 +33,7 @@ class Admin_Integration_Test extends \BrianHenryIE\WP_Plugins_Page\WPUnit_Testca
 		$wp_scripts = wp_scripts();
 
 		$scripts = array_map(
-			function ( $script ) use ( $wp_scripts ) {
-				return $wp_scripts->registered[ $script ]->src;
-			},
+			fn( $script ) => $wp_scripts->registered[ $script ]->src,
 			$wp_scripts->queue
 		);
 
@@ -63,9 +61,7 @@ class Admin_Integration_Test extends \BrianHenryIE\WP_Plugins_Page\WPUnit_Testca
 		do_action( 'admin_enqueue_scripts' );
 
 		$scripts = array_map(
-			function ( $script ) use ( $wp_scripts ) {
-				return $wp_scripts->registered[ $script ]->src;
-			},
+			fn( $script ) => $wp_scripts->registered[ $script ]->src,
 			$wp_scripts->queue
 		);
 

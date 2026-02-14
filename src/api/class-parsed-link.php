@@ -25,13 +25,6 @@ class Parsed_Link {
 	protected ?string $key = null;
 
 	/**
-	 * The original HTML.
-	 *
-	 * @var string
-	 */
-	protected string $original = '';
-
-	/**
 	 * The parsed HTML. This may be updated from the original.
 	 *
 	 * @var DOMDocument
@@ -70,17 +63,17 @@ class Parsed_Link {
 	 * A representation of the HTML in a plugins.php meta or action link.
 	 *
 	 * @param int|string $key The original array key.
-	 * @param string     $value The html string.
+	 * @param string     $original The HTML string.
 	 */
-	public function __construct( $key, string $value ) {
-
+	public function __construct(
+		$key,
+		protected string $original
+	) {
 		if ( is_string( $key ) ) {
 			$this->key = $key;
 		}
 
-		$this->original = $value;
-
-		$this->parse_html_string( $value );
+		$this->parse_html_string( $this->original );
 	}
 
 
@@ -212,7 +205,7 @@ class Parsed_Link {
 	protected function is_external_url( string $url ): bool {
 
 		$is_external_link = ! is_null( wp_parse_url( $url, PHP_URL_SCHEME ) )
-							&& ! stristr( $url, get_site_url() );
+							&& ! stristr( $url, (string) get_site_url() );
 
 		return $is_external_link;
 	}

@@ -26,19 +26,13 @@ use BrianHenryIE\WP_Plugins_Page\API\Settings;
 class Admin_Assets {
 
 	/**
-	 * Uses the plugin version for JS caching.
-	 *
-	 * @uses Settings::get_plugin_version()
-	 */
-	protected Settings $settings;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param Settings $settings The plugin settings.
 	 */
-	public function __construct( Settings $settings ) {
-		$this->settings = $settings;
+	public function __construct(
+		protected Settings $settings
+	) {
 	}
 
 	/**

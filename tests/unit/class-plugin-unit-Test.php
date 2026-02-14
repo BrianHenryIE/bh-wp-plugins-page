@@ -27,9 +27,7 @@ class Plugin_Unit_Test extends Unit_Testcase {
 
 		\Patchwork\redefine(
 			array( Logger::class, 'instance' ),
-			function (): LoggerInterface {
-				return new ColorLogger();
-			}
+			fn(): LoggerInterface => new ColorLogger()
 		);
 
 		global $plugin_root_dir;

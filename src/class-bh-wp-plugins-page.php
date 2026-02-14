@@ -29,33 +29,17 @@ use Psr\Log\LoggerInterface;
 class BH_WP_Plugins_Page {
 
 	/**
-	 * A PSR logger to log changes.
-	 */
-	protected LoggerInterface $logger;
-
-	/**
-	 * Plugin functions.
-	 */
-	protected API $api;
-
-	/**
-	 * The plugin settings.
-	 */
-	protected Settings $settings;
-
-	/**
 	 * Wire up actions and filters for the plugin.
 	 *
 	 * @param Settings        $settings The plugin settings.
 	 * @param API             $api Some main plugin functions.
 	 * @param LoggerInterface $logger A PSR logger.
 	 */
-	public function __construct( Settings $settings, API $api, LoggerInterface $logger ) {
-
-		$this->logger   = $logger;
-		$this->api      = $api;
-		$this->settings = $settings;
-
+	public function __construct(
+		protected Settings $settings,
+		protected API $api,
+		protected LoggerInterface $logger
+	) {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_plugins_list_table_hooks();
@@ -145,7 +129,7 @@ class BH_WP_Plugins_Page {
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
-			list( $plugin_slug ) = explode( '/', $plugin_basename );
+			[$plugin_slug] = explode( '/', $plugin_basename );
 			add_filter( "fs_redirect_on_activation_{$plugin_slug}", '__return_false' );
 		}
 	}

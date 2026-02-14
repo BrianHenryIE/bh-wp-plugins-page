@@ -18,19 +18,16 @@ class AJAX {
 	use LoggerAwareTrait;
 
 	/**
-	 * The plugin functions.
-	 */
-	protected API $api;
-
-	/**
 	 * Constructor
 	 *
 	 * @param API             $api The plugin functions.
 	 * @param LoggerInterface $logger A PSR logger.
 	 */
-	public function __construct( API $api, LoggerInterface $logger ) {
+	public function __construct(
+		protected API $api,
+		LoggerInterface $logger
+	) {
 		$this->setLogger( $logger );
-		$this->api = $api;
 	}
 
 	/**
