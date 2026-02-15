@@ -12,6 +12,3 @@ parameters:
     scanDirectories:
         - vendor-prefixed
         - vendor/wp-cli
-    ignoreErrors:
-        # PHPStan show errors when filters have more than two parameters.
-        - '#^Function apply_filters(_ref_array)? invoked with \d parameters, 2 required\.$#'

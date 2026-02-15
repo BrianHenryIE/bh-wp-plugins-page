@@ -38,11 +38,10 @@ class API {
 	 * @param string $plugin_basename The plugin whose title is being updated.
 	 * @param string $new_name The name to set, or empty to reset to the original.
 	 *
-	 * @return array{updated:bool,plugin_basename:string,before:array,after:array,Name:string}
+	 * @return array{updated:bool,plugin_basename:string,before:array{}|array{Name:string,Original_Name:string},after:array{Name?:string,Original_Name?:string}|null,Name:string}
 	 * @throws Exception When the plugin whose title is being updated is not found in WordPress's plugin list.
 	 */
 	public function set_plugin_name( string $plugin_basename, string $new_name ): array {
-
 		$plugins = get_plugins();
 
 		if ( ! isset( $plugins[ $plugin_basename ] ) ) {
@@ -76,8 +75,10 @@ class API {
 			$name = $plugins[ $plugin_basename ]['Name'];
 		} else {
 
-			$saved_changes[ $plugin_basename ]['Name']          = $new_name;
-			$saved_changes[ $plugin_basename ]['Original_Name'] = $plugins[ $plugin_basename ]['Name'];
+			$saved_changes[ $plugin_basename ] = array(
+				'Name'          => $new_name,
+				'Original_Name' => $plugins[ $plugin_basename ]['Name'],
+			);
 
 			$after = $saved_changes[ $plugin_basename ];
 

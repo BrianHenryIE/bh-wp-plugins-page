@@ -119,7 +119,7 @@ class Plugins_List_Table {
 				continue;
 			}
 
-			$type = $parsed_link->get_type() ?? 'links';
+			$type = $parsed_link->get_type();
 
 			if ( is_int( $key ) ) {
 				$ordered_links_arrays[ $type ][] = $parsed_link;

@@ -9,7 +9,9 @@ namespace BrianHenryIE\WP_Plugins_Page\API;
 
 use DOMDocument;
 use DOMElement;
+use DOMNamedNodeMap;
 use DOMNode;
+use DOMNodeList;
 
 /**
  * Uses DOMDocument to extract links from the text, the bare text, and provides utility functions for classifying the
@@ -126,7 +128,10 @@ class Parsed_Link {
 
 			$this->anchors[ $item_index ] = $anchor_node;
 
-			if ( is_null( $anchor_node->attributes ) || is_null( $anchor_node->attributes->getNamedItem( 'href' ) ) ) {
+			if (
+				! ( $anchor_node->attributes instanceof DOMNamedNodeMap ) /** @phpstan-ignore instanceof.alwaysTrue */
+				|| is_null( $anchor_node->attributes->getNamedItem( 'href' ) )
+			) {
 				continue;
 			}
 
@@ -351,7 +356,10 @@ class Parsed_Link {
 		$match_github_repo_links = '/^https?:\/\/github.com\/(?!sponsors)[^\/]*\/[^\/]*[^\/]?$/i';
 
 		foreach ( $this->anchors as $anchor_node ) {
-			if ( is_null( $anchor_node->attributes ) || is_null( $anchor_node->attributes->getNamedItem( 'href' ) ) ) {
+			if (
+				! ( $anchor_node->attributes instanceof DOMNamedNodeMap ) /** @phpstan-ignore instanceof.alwaysTrue */
+				|| is_null( $anchor_node->attributes->getNamedItem( 'href' ) )
+			) {
 				continue;
 			}
 
@@ -364,7 +372,9 @@ class Parsed_Link {
 			$old_text = $anchor_node->nodeValue;
 
 			$anchor_node->setAttribute( 'class', 'bh-wp-plugins-page-github-icon' );
-			$anchor_node->setAttribute( 'title', $old_text );
+			if ( ! is_null( $old_text ) ) {
+				$anchor_node->setAttribute( 'title', $old_text );
+			}
 
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$anchor_node->nodeValue = '';
