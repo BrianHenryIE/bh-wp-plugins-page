@@ -54,6 +54,6 @@ class Settings implements Logger_Settings_Interface {
 	public function get_plugin_version(): string {
 		return defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) && is_string( constant( 'BH_WP_PLUGINS_PAGE_VERSION' ) )
 			? (string) constant( 'BH_WP_PLUGINS_PAGE_VERSION' ) /** @phpstan-ignore cast.string */
-			: '1.3.0';
+			: '1.4.0';
 	}
 }
