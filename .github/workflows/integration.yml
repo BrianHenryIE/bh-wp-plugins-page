@@ -36,7 +36,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer, cs2pr
-          extensions: zip
+          extensions: ext-zip, mysqli
 
       - name: Install sponge
         run: sudo apt-get install moreutils
@@ -46,8 +46,8 @@ jobs:
         with:
           env-file: .env.testing
 
-      - name: Run composer install
-        uses: php-actions/composer@v6
+      - name: Install PHP dependencies
+        run: composer install --verbose
 
 #      - name: Allow writing to wp-content
 #        run: sudo chmod -R a+w wp-content
