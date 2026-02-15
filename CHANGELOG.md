@@ -1,7 +1,8 @@
 # Changelog
 
-## 1.3.0
+## 2.0.0
 
+* Require PHP 8.4
 * Update dependencies
 
 ## 1.2.0

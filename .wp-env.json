@@ -19,5 +19,5 @@
     "../setup": "./tests/_wp-env",
     "wp-content/plugins/query-monitor": "./wp-content/plugins/query-monitor"
   },
-  "phpVersion": "8.0"
+  "phpVersion": "8.4"
 }
