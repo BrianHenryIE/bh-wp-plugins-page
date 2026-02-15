@@ -12,3 +12,4 @@ parameters:
     scanDirectories:
         - vendor-prefixed
         - vendor/wp-cli
+    reportUnmatchedIgnoredErrors: false
