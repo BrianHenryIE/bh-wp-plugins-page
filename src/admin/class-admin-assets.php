@@ -53,8 +53,8 @@ class Admin_Assets {
 		$plugin_basename = defined( 'BH_WP_PLUGINS_PAGE_BASENAME' ) && is_string( constant( 'BH_WP_PLUGINS_PAGE_BASENAME' ) )
 			? constant( 'BH_WP_PLUGINS_PAGE_BASENAME' )
 			: 'bh-wp-plugins-page/bh-wp-plugins-page.php';
-		$js_url          = plugin_dir_url( $plugin_basename ) . 'assets/bh-wp-plugins-page-admin.js';
-		$css_url         = plugin_dir_url( $plugin_basename ) . 'assets/bh-wp-plugins-page-admin.css';
+		$js_url          = plugins_url( 'assets/bh-wp-plugins-page-admin.js', $plugin_basename );
+		$css_url         = plugins_url( 'assets/bh-wp-plugins-page-admin.css', $plugin_basename );
 		$version         = (string) ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : $this->settings->get_plugin_version() );
 
 		wp_enqueue_script( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), $version, true );

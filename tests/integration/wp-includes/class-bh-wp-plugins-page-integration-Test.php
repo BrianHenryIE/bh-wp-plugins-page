@@ -56,7 +56,7 @@ class BH_WP_Plugins_Page_Integration_Test extends \BrianHenryIE\WP_Plugins_Page\
 
 		$actions_hooked = $wp_filter[ $action_name ];
 
-		$this->assertArrayHasKey( $expected_priority, $actions_hooked, "$method_name definitely not hooked to $action_name priority $expected_priority" );
+		$this->assertArrayHasKey( $expected_priority, $actions_hooked->callbacks, "$method_name definitely not hooked to $action_name priority $expected_priority (nothing is)" );
 
 		$hooked_method = null;
 		foreach ( $actions_hooked[ $expected_priority ] as $action ) {

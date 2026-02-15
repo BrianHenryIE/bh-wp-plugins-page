@@ -18,3 +18,4 @@ modules:
             plugins: []
             activatePlugins: []
             WP_CONTENT_DIR: wp-content
+bootstrap: _bootstrap.php

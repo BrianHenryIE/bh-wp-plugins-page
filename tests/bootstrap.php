@@ -28,12 +28,14 @@ if ( $is_phpstorm ) {
 
 $is_integration_test = array_reduce(
 	(array) $_SERVER['argv'],
-	fn( $carry, $arg ) => $carry || 'integration' === $arg,
+	fn( $carry, $arg ) => $carry || str_contains( $arg, 'integration' ),
 	false
 );
 if ( $is_integration_test ) {
 	global $arbitrary_plugins;
 	$arbitrary_plugins = array(
-		dirname( __DIR__, 1 ) . '/bh-wp-plugins-page.php.php',
+		dirname( __DIR__, 1 ) . '/bh-wp-plugins-page.php',
 	);
+
+	define( 'WP_ADMIN', true );
 }
