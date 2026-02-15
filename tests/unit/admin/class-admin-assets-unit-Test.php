@@ -44,11 +44,16 @@ class Admin_Unit_Test extends Unit_Testcase {
 
 		global $plugin_root_dir;
 
+		$plugin_root_url = 'http://localhost/wp-content/plugins/' . basename( $plugin_root_dir ) . '/';
+
+		/** @see plugins_url() */
 		\WP_Mock::userFunction(
-			'plugin_dir_url',
+			'plugins_url',
 			array(
 				'times'  => 2,
-				'return' => $plugin_root_dir . '/',
+				'return' => function ( $path, $plugin ) use ( $plugin_root_url ) {
+					return $plugin_root_url . $path;
+				},
 			)
 		);
 
@@ -64,7 +69,7 @@ class Admin_Unit_Test extends Unit_Testcase {
 		\WP_Mock::passthruFunction( 'wp_create_nonce' );
 
 		$js_src = $plugin_root_dir . '/assets/bh-wp-plugins-page-admin.js';
-		$js_url = codecept_root_dir( 'assets/bh-wp-plugins-page-admin.js' );
+		$js_url = $plugin_root_url . 'assets/bh-wp-plugins-page-admin.js';
 
 		\WP_Mock::userFunction(
 			'wp_json_encode',
