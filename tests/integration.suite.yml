@@ -1,6 +1,6 @@
 # Codeception Test Suite Configuration
 #
-# Suite for integration tests that require WordPress functions and classes.
+# Suite for integration tests that require the plugin itself be loaded.
 
 actor: WpunitTester
 modules:
