@@ -31,20 +31,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install PHP
-        uses: shivammathur/setup-php@2.11.0
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           tools: composer, cs2pr
           extensions: ext-zip, mysqli
 
-      - name: Install sponge
-        run: sudo apt-get install moreutils
+      - name: Update .env.testing config for GitHub Actions
+        env:
+          PLUGIN_SLUG: ${{ github.event.repository.name }}
+        run: |
+          find . -depth \( -name '.env.testing' \) -exec sed -i "s/_DB_PORT=\"33066\"/_DB_PORT=\"${{ job.services.mysql.ports['3306'] }}\"/g" {} +
 
       - name: Read .env.testing
         uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: .env.testing
+
+      - name: Install sponge
+        run: sudo apt-get install moreutils
 
       - name: Install PHP dependencies
         run: composer install --verbose
