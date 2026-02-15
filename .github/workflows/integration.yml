@@ -38,31 +38,19 @@ jobs:
           tools: composer, cs2pr
           extensions: zip
 
+      - name: Install sponge
+        run: sudo apt-get install moreutils
+
       - name: Read .env.testing
         uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: .env.testing
 
-      - name: Install sponge
-        run: sudo apt-get install moreutils
-
       - name: Run composer install
         uses: php-actions/composer@v6
-        with:
-          args: --ignore-platform-reqs
 
-      - name: Create wpconfig ... the composer.json creation didn't work
-        run: |
-          export $(grep -v '^#' .env.testing | xargs);
-          sudo vendor/bin/wp config create --dbname=$TEST_SITE_DB_NAME --dbuser=$TEST_SITE_DB_USER --dbpass=$TEST_SITE_DB_PASSWORD --dbhost=127.0.0.1:${{ job.services.mysql.ports['3306'] }} --allow-root --extra-php="define( 'WP_DEBUG', true ); define( 'WP_DEBUG_LOG', true );"
-
-#      - name: Update site URL to match GA
-#        run: |
-#          vendor/bin/wp option update home 'http://localhost:8080'
-#          vendor/bin/wp option update siteurl 'http://localhost:8080'
-
-      - name: Allow writing to wp-content
-        run: sudo chmod -R a+w wp-content
+#      - name: Allow writing to wp-content
+#        run: sudo chmod -R a+w wp-content
 
       - name: Run integration tests
         run: vendor/bin/codecept run integration --report
