@@ -13,6 +13,7 @@ use BrianHenryIE\WP_Plugins_Page\Admin\Plugins_Page;
 use BrianHenryIE\WP_Plugins_Page\API\API;
 use BrianHenryIE\WP_Plugins_Page\API\Settings;
 use BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n;
+use Override;
 use WP_Mock\Matcher\AnyInstance;
 
 /**
@@ -21,10 +22,12 @@ use WP_Mock\Matcher\AnyInstance;
 class BH_WP_Plugins_Page_Unit_Test extends Unit_Testcase {
 
 
+	#[Override]
 	protected function setup(): void {
 		\WP_Mock::setUp();
 	}
 
+	#[Override]
 	protected function tearDown(): void {
 		\WP_Mock::tearDown();
 	}

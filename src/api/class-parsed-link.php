@@ -171,14 +171,7 @@ class Parsed_Link {
 		if ( 0 === count( $this->urls ) ) {
 			return false;
 		}
-
-		foreach ( $this->urls as $url ) {
-			if ( ! $this->is_external_url( $url ) ) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any( $this->urls, fn( $url ) => ! $this->is_external_url( $url ) );
 	}
 
 	/**
@@ -191,14 +184,7 @@ class Parsed_Link {
 		if ( 0 === count( $this->urls ) ) {
 			return false;
 		}
-
-		foreach ( $this->urls as $url ) {
-			if ( $this->is_external_url( $url ) ) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any( $this->urls, fn( $url ) => $this->is_external_url( $url ) );
 	}
 
 	/**
@@ -264,16 +250,7 @@ class Parsed_Link {
 			'licence',
 			'license',
 		);
-
-		foreach ( $probably_unwanted_terms as $term ) {
-
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			if ( preg_match( '/\b' . $term . '\b/i', $this->text ) && $this->has_external_url() ) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any( $probably_unwanted_terms, fn( $term ) => preg_match( '/\b' . $term . '\b/i', $this->text ) && $this->has_external_url() );
 	}
 
 	/**

@@ -12,16 +12,19 @@ namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 use BrianHenryIE\WP_Plugins_Page\API\Settings;
 use BrianHenryIE\WP_Plugins_Page\Unit_Testcase;
+use Override;
 
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets
  */
 class Admin_Unit_Test extends Unit_Testcase {
 
+	#[Override]
 	protected function setUp(): void {
 		\WP_Mock::setUp();
 	}
 
+	#[Override]
 	protected function tearDown(): void {
 		parent::tearDown();
 		\WP_Mock::tearDown();
