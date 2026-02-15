@@ -41,7 +41,11 @@ class Updates {
 	 */
 	public function add_zip_download_link( array $plugin_data, stdClass $response ): void {
 
-		if ( ! filter_var( $response->package, FILTER_VALIDATE_URL ) ) {
+		if ( ! is_string( $response->package ) || sanitize_url( $response->package ) !== $response->package ) {
+			return;
+		}
+
+		if ( ! is_string( $response->new_version ) ) {
 			return;
 		}
 
@@ -53,7 +57,7 @@ class Updates {
 
 		$filetype = wp_check_filetype( basename( $parsed_url['path'] ) )['ext'];
 
-		if ( ! $filetype ) {
+		if ( ! is_string( $filetype ) ) {
 			return;
 		}
 

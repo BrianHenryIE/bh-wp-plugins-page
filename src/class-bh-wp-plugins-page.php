@@ -84,7 +84,8 @@ class BH_WP_Plugins_Page {
 	protected function define_plugins_list_table_hooks(): void {
 
 		$plugins_list_table = new Plugins_List_Table();
-		$active_plugins     = (array) get_option( 'active_plugins', array() );
+		/** @var array{}|array<int,string> $active_plugins */
+		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
 			add_filter(
@@ -104,7 +105,8 @@ class BH_WP_Plugins_Page {
 	 */
 	protected function define_plugins_list_table_zip_download_hooks(): void {
 
-		$updates        = new Updates();
+		$updates = new Updates();
+		/** @var array{}|array<int,string> $active_plugins */
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
@@ -126,6 +128,7 @@ class BH_WP_Plugins_Page {
 
 		add_filter( 'wp_redirect', array( $plugins_page, 'prevent_redirect' ), 1, 2 );
 
+		/** @var array{}|array<int,string> $active_plugins */
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {

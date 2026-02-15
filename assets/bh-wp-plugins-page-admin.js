@@ -36,7 +36,7 @@
 
 				const newData = response.data;
 
-				titleElement.text(newData.Name);
+				titleElement.text(newData.plugin_name);
 			} );
 
 		});

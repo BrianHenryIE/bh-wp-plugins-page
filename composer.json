@@ -116,7 +116,8 @@
 			"phpcbf || true",
 			"@cs"
 		],
-		"cs-strict": [
+		"cs-fix-strict": [
+      "phpcbf || true",
 			"phpcs || true",
 			"phpstan analyse --level max --memory-limit 1G"
 		],

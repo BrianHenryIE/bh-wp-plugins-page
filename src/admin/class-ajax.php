@@ -47,7 +47,11 @@ class AJAX {
 			wp_send_json_error( array( 'message' => 'Unauthorized' ), 401 );
 		}
 
-		if ( ! isset( $_POST['pluginBasename'], $_POST['pluginName'] ) ) {
+		if (
+			! isset( $_POST['pluginBasename'], $_POST['pluginName'] )
+			|| ! is_string( $_POST['pluginBasename'] )
+			|| ! is_string( $_POST['pluginName'] )
+		) {
 			wp_send_json_error( array( 'message' => 'Bad request.' ), 400 );
 		}
 

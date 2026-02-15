@@ -107,10 +107,10 @@ class Parsed_Link {
 		$this->text = $dom_document->textContent;
 
 		$html_tag = $dom_document->firstElementChild;
-		$body_tag = $html_tag->firstElementChild;
+		$body_tag = $html_tag?->firstElementChild;
 
-		$body_nodes_count = count( $body_tag->childNodes );
-		$is_anchor        = 'a' === $body_tag->firstElementChild->tagName;
+		$body_nodes_count = count( $body_tag->childNodes ?? array() );
+		$is_anchor        = 'a' === $body_tag?->firstElementChild?->tagName;
 
 		$this->is_only_link = ( 1 === $body_nodes_count ) && $is_anchor;
 
@@ -307,7 +307,9 @@ class Parsed_Link {
 
 		$unclean = '';
 		if ( isset( $this->dom_document ) ) {
-			$unclean = $this->dom_document->saveHTML( $this->dom_document->firstElementChild->firstElementChild->firstElementChild );
+			/** @var ?DOMElement $anchor <html> -> <body> -> <a>. */
+			$anchor  = $this->dom_document->firstElementChild?->firstElementChild?->firstElementChild;
+			$unclean = $this->dom_document->saveHTML( $anchor );
 		}
 
 		if ( empty( $unclean ) ) {

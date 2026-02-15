@@ -39,7 +39,10 @@ class Plugins_Page {
 
 		if ( 'admin-ajax.php' === $pagenow
 			&& isset( $_POST['plugin-install'] )
-			&& 'plugin-install' === sanitize_text_field( wp_unslash( $_POST['plugin-install'] ) )
+			&& (
+				! is_string( $_POST['plugin-install'] )
+				|| 'plugin-install' === sanitize_text_field( wp_unslash( $_POST['plugin-install'] ) )
+			)
 		) {
 			return false;
 		}
