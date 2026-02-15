@@ -26,19 +26,13 @@ use BrianHenryIE\WP_Plugins_Page\API\Settings;
 class Admin_Assets {
 
 	/**
-	 * Uses the plugin version for JS caching.
-	 *
-	 * @uses Settings::get_plugin_version()
-	 */
-	protected Settings $settings;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param Settings $settings The plugin settings.
 	 */
-	public function __construct( Settings $settings ) {
-		$this->settings = $settings;
+	public function __construct(
+		protected Settings $settings
+	) {
 	}
 
 	/**
@@ -55,10 +49,13 @@ class Admin_Assets {
 			return;
 		}
 
-		$plugin_basename = defined( 'BH_WP_PLUGINS_PAGE_BASENAME' ) ? BH_WP_PLUGINS_PAGE_BASENAME : 'bh-wp-plugins-page/bh-wp-plugins-page.php';
-		$js_url          = plugin_dir_url( $plugin_basename ) . 'assets/bh-wp-plugins-page-admin.js';
-		$css_url         = plugin_dir_url( $plugin_basename ) . 'assets/bh-wp-plugins-page-admin.css';
-		$version         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : $this->settings->get_plugin_version();
+		/** @var string $plugin_basename */
+		$plugin_basename = defined( 'BH_WP_PLUGINS_PAGE_BASENAME' ) && is_string( constant( 'BH_WP_PLUGINS_PAGE_BASENAME' ) )
+			? constant( 'BH_WP_PLUGINS_PAGE_BASENAME' )
+			: 'bh-wp-plugins-page/bh-wp-plugins-page.php';
+		$js_url          = plugins_url( 'assets/bh-wp-plugins-page-admin.js', $plugin_basename );
+		$css_url         = plugins_url( 'assets/bh-wp-plugins-page-admin.css', $plugin_basename );
+		$version         = (string) ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : $this->settings->get_plugin_version() );
 
 		wp_enqueue_script( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), $version, true );
 		$ajax_data      = array(
@@ -84,5 +81,4 @@ EOD;
 
 		wp_enqueue_style( 'bh-wp-plugins-page', $css_url, array(), $version );
 	}
-
 }

@@ -119,7 +119,7 @@ class Plugins_List_Table {
 				continue;
 			}
 
-			$type = $parsed_link->get_type() ?? 'links';
+			$type = $parsed_link->get_type();
 
 			if ( is_int( $key ) ) {
 				$ordered_links_arrays[ $type ][] = $parsed_link;
@@ -212,11 +212,10 @@ class Plugins_List_Table {
 		return $cleaned_links;
 	}
 
-
 	/**
 	 * Merge associative arrays, preserve string keys.
 	 *
-	 * @param array<mixed> $all_arrays Array of arrays.
+	 * @param array<array<mixed>> $all_arrays Array of arrays.
 	 *
 	 * @return array<mixed>
 	 */
@@ -241,12 +240,13 @@ class Plugins_List_Table {
 	 * @hooked all_plugins
 	 * @see \WP_Plugins_List_Table::prepare_items()
 	 *
-	 * @param array<string,array<string,string>> $all_plugins The WordPress `get_plugins()` array.
+	 * @param array<string,array<string,string|bool>> $all_plugins The WordPress `get_plugins()` array.
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string,array<string,string|bool>>
 	 */
 	public function edit_plugins_array( array $all_plugins ): array {
 
+		/** @var array{}|array<string,array<string,string>> $changes */
 		$changes = get_option( API::PLUGINS_PAGE_CHANGES_OPTION_NAME, array() );
 
 		foreach ( $changes as $plugin_basename => $plugin_changes ) {

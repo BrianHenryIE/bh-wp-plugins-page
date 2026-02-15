@@ -6,10 +6,12 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
+use BrianHenryIE\WP_Plugins_Page\WPUnit_Testcase;
+
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Plugins_List_Table
  */
-class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
+class Plugins_List_Table_WPUnit_Test extends WPUnit_Testcase {
 
 	/**
 	 * @covers ::action_links
@@ -32,7 +34,6 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$new_actions = $sut->action_links( $actions, $plugin_file, $plugin_data, $context );
 
 		$this->assertEqualSets( array_keys( $actions ), array_keys( $new_actions ) );
-
 	}
 
 	/**
@@ -61,7 +62,6 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$this->assertArrayHasKey( 'doc', $result );
 
 		$this->assertEquals( '<a href="https://accesspressthemes.com/documentation/apex-notification-bar-lite/" target="_blank">Documentation</a>', $result['doc'] );
-
 	}
 
 	public function data() {
@@ -83,7 +83,6 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$webapppick_actions = array(
 			'deactivate' => '<a href="plugins.php?action=deactivate&amp;plugin=webappick-product-feed-for-woocommerce%2Fwoo-feed.php&amp;plugin_status=all&amp;paged=1&amp;s&amp;_wpnonce=18cc9813fc" id="deactivate-webappick-product-feed-for-woocommerce" aria-label="Deactivate CTX Feed">Deactivate</a>',
 		);
-
 	}
 
 	public function test_plugin_planet_ga_google_analytics() {
@@ -123,7 +122,6 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 
 		// The review link should be gone.
 		$this->assertCount( 4, $meta_result );
-
 	}
 
 
@@ -150,20 +148,16 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$result = $sut->row_meta( $data, $plugin_basename, array(), '' );
 
 		$this->assertArrayNotHasKey( 'pro', $result );
-
 	}
 
 
 	public function test_external_links_removed_from_first_column() {
-
 	}
 
 	public function test_external_links_added_to_second_column() {
-
 	}
 
 	public function test_internal_links_removed_from_second_column() {
-
 	}
 
 	public function test_internal_meta_links_added_to_first_column() {
@@ -179,9 +173,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 			0 => '<a href="http://localhost:8080/bh-wp-plugins-page/wp-admin/options-general.php?page=wpdataaccess">Settings</a>',
 		);
 
-		$return_meta_links = function( $links, $plugin_basename, $plugin_data, $status ) use ( $meta_links ) {
-			return $meta_links;
-		};
+		$return_meta_links = fn( $links, $plugin_basename, $plugin_data, $status ) => $meta_links;
 		add_filter( 'plugin_row_meta', $return_meta_links, 10, 4 );
 
 		$sut = new Plugins_List_Table();
@@ -194,9 +186,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		// Check a link with the word Settings is now in the first column.
 		$contains_settings = array_reduce(
 			$result,
-			function( $carry, $element ) {
-				return $carry || stristr( $element, 'Settings' );
-			},
+			fn( $carry, $element ) => $carry || stristr( $element, 'Settings' ),
 			false
 		);
 
@@ -204,7 +194,6 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'plugin_row_meta', $return_meta_links );
 
 		$this->assertTrue( $contains_settings );
-
 	}
 
 	public function test_internal_meta_links_are_removed() {
@@ -221,9 +210,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 			0 => '<a href="http://localhost:8080/bh-wp-plugins-page/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_setup_options_page#vtprd-delete-plugin-buttons-anchor" target="_blank">Remove All</a>',
 		);
 
-		$return_meta_links = function( $links, $plugin_file, $plugin_data, $status ) use ( $meta_links ) {
-			return $meta_links;
-		};
+		$return_meta_links = fn( $links, $plugin_file, $plugin_data, $status ) => $meta_links;
 		add_filter( 'plugin_row_meta', $return_meta_links, 10, 4 );
 
 		$sut = new Plugins_List_Table();
@@ -236,9 +223,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		// Check a link with the word Settings is now in the first column.
 		$contains_settings = array_reduce(
 			$result,
-			function( $carry, $element ) {
-				return $carry || stristr( $element, 'Remove' );
-			},
+			fn( $carry, $element ) => $carry || stristr( $element, 'Remove' ),
 			false
 		);
 
@@ -246,7 +231,6 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'plugin_row_meta', $return_meta_links );
 
 		$this->assertTrue( $contains_settings );
-
 	}
 
 	/**
@@ -269,9 +253,7 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
             <i class=\'wdi-rate-stars\'><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'15\' height=\'15\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'feather feather-star\'><polygon points=\'12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\'/></svg><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'15\' height=\'15\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'feather feather-star\'><polygon points=\'12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\'/></svg><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'15\' height=\'15\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'feather feather-star\'><polygon points=\'12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\'/></svg><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'15\' height=\'15\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'feather feather-star\'><polygon points=\'12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\'/></svg><svg xmlns=\'http://www.w3.org/2000/svg\' width=\'15\' height=\'15\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'feather feather-star\'><polygon points=\'12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\'/></svg></i></a>',
 		);
 
-		$return_meta_links = function( $links, $plugin_file, $plugin_data, $status ) use ( $meta_links ) {
-			return $meta_links;
-		};
+		$return_meta_links = fn( $links, $plugin_file, $plugin_data, $status ) => $meta_links;
 		add_filter( 'plugin_row_meta', $return_meta_links, 10, 4 );
 
 		$sut = new Plugins_List_Table();
@@ -284,7 +266,6 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		remove_filter( 'plugin_row_meta', $return_meta_links );
 
 		$this->assertCount( 1, $result );
-
 	}
 
 	public function test_remove_empty_meta_links() {
@@ -297,7 +278,5 @@ class Plugins_List_Table_WPUnit_Test extends \Codeception\TestCase\WPTestCase {
 		$result  = $sut->row_meta( array( $problem ), $plugin_basename, array(), '' );
 
 		$this->assertEmpty( $result );
-
 	}
-
 }

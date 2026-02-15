@@ -8,18 +8,21 @@
 namespace BrianHenryIE\WP_Plugins_Page\API;
 
 use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger_Settings_Interface;
+use BrianHenryIE\WP_Plugins_Page\BrianHenryIE\WP_Logger\Logger_Settings_Trait;
 use Psr\Log\LogLevel;
 
 /**
  * Plugin settings for Logger.
  */
 class Settings implements Logger_Settings_Interface {
+	use Logger_Settings_Trait;
 
 	/**
 	 * Detail of logs to record.
 	 */
 	public function get_log_level(): string {
-		return get_option( 'bh_wp_plugins_page_log_level', LogLevel::INFO );
+		$log_level = get_option( 'bh_wp_plugins_page_log_level' );
+		return is_string( $log_level ) ? $log_level : LogLevel::INFO;
 	}
 
 	/**
@@ -40,8 +43,8 @@ class Settings implements Logger_Settings_Interface {
 	 * The plugin basename used when determining is a log related to this plugin, and to add the logs link to the plugins page.
 	 */
 	public function get_plugin_basename(): string {
-		return defined( 'BH_WP_PLUGINS_PAGE_BASENAME' )
-			? BH_WP_PLUGINS_PAGE_BASENAME
+		return defined( 'BH_WP_PLUGINS_PAGE_BASENAME' ) && is_string( constant( 'BH_WP_PLUGINS_PAGE_BASENAME' ) )
+			? (string) constant( 'BH_WP_PLUGINS_PAGE_BASENAME' ) /** @phpstan-ignore cast.string */
 			: 'bh-wp-plugins-page/bh-wp-plugins-page.php';
 	}
 
@@ -49,7 +52,8 @@ class Settings implements Logger_Settings_Interface {
 	 * The plugin version, used for JS and CSS caching.
 	 */
 	public function get_plugin_version(): string {
-		return defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) ? BH_WP_PLUGINS_PAGE_VERSION : '1.2.0';
+		return defined( 'BH_WP_PLUGINS_PAGE_VERSION' ) && is_string( constant( 'BH_WP_PLUGINS_PAGE_VERSION' ) )
+			? (string) constant( 'BH_WP_PLUGINS_PAGE_VERSION' ) /** @phpstan-ignore cast.string */
+			: '1.3.0';
 	}
-
 }

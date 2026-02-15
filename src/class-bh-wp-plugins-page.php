@@ -29,33 +29,17 @@ use Psr\Log\LoggerInterface;
 class BH_WP_Plugins_Page {
 
 	/**
-	 * A PSR logger to log changes.
-	 */
-	protected LoggerInterface $logger;
-
-	/**
-	 * Plugin functions.
-	 */
-	protected API $api;
-
-	/**
-	 * The plugin settings.
-	 */
-	protected Settings $settings;
-
-	/**
 	 * Wire up actions and filters for the plugin.
 	 *
 	 * @param Settings        $settings The plugin settings.
 	 * @param API             $api Some main plugin functions.
 	 * @param LoggerInterface $logger A PSR logger.
 	 */
-	public function __construct( Settings $settings, API $api, LoggerInterface $logger ) {
-
-		$this->logger   = $logger;
-		$this->api      = $api;
-		$this->settings = $settings;
-
+	public function __construct(
+		protected Settings $settings,
+		protected API $api,
+		protected LoggerInterface $logger
+	) {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_plugins_list_table_hooks();
@@ -77,7 +61,6 @@ class BH_WP_Plugins_Page {
 		$plugin_i18n = new I18n();
 
 		add_action( 'plugins_loaded', array( $plugin_i18n, 'load_plugin_textdomain' ) );
-
 	}
 
 	/**
@@ -101,7 +84,8 @@ class BH_WP_Plugins_Page {
 	protected function define_plugins_list_table_hooks(): void {
 
 		$plugins_list_table = new Plugins_List_Table();
-		$active_plugins     = (array) get_option( 'active_plugins', array() );
+		/** @var array{}|array<int,string> $active_plugins */
+		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
 			add_filter(
@@ -121,7 +105,8 @@ class BH_WP_Plugins_Page {
 	 */
 	protected function define_plugins_list_table_zip_download_hooks(): void {
 
-		$updates        = new Updates();
+		$updates = new Updates();
+		/** @var array{}|array<int,string> $active_plugins */
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
@@ -143,10 +128,11 @@ class BH_WP_Plugins_Page {
 
 		add_filter( 'wp_redirect', array( $plugins_page, 'prevent_redirect' ), 1, 2 );
 
+		/** @var array{}|array<int,string> $active_plugins */
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		foreach ( $active_plugins as $plugin_basename ) {
-			list( $plugin_slug ) = explode( '/', $plugin_basename );
+			[$plugin_slug] = explode( '/', $plugin_basename );
 			add_filter( "fs_redirect_on_activation_{$plugin_slug}", '__return_false' );
 		}
 	}
@@ -159,6 +145,5 @@ class BH_WP_Plugins_Page {
 		$ajax = new AJAX( $this->api, $this->logger );
 
 		add_action( 'wp_ajax_bh_wp_plugins_page_set_plugin_name', array( $ajax, 'set_plugin_name' ) );
-
 	}
 }

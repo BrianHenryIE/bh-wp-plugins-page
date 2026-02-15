@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0
+
+* Require PHP 8.4
+* Update dependencies
+
 ## 1.2.0
 
  * Add: Rename plugins by clicking on their title

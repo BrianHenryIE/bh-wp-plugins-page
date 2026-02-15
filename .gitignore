@@ -40,9 +40,11 @@ cache
 
 node_modules
 scratch
-wp-content/
 wordpress
-vendor/
+wp-content/*
+!wp-content/mu-plugins/
+wp-content/mu-plugins/*
+/vendor/
 
 *.zip
 *.phar
@@ -62,4 +64,12 @@ docker_tag
 vendor-prefixed
 dist-archive
 
-languages/*.pot
+*.pot
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+.claude/settings.local.json
+
+!wp-content/mu-plugins/bh-plugin-outside-dir.php

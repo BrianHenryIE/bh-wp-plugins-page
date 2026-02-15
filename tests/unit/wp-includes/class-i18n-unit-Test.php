@@ -8,17 +8,22 @@
 
 namespace BrianHenryIE\WP_Plugins_Page\WP_Includes;
 
+use BrianHenryIE\WP_Plugins_Page\Unit_Testcase;
+use Override;
+
 /**
  * Class Plugin_WP_Mock_Test
  *
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\WP_Includes\I18n
  */
-class I18n_Unit_Test extends \Codeception\Test\Unit {
+class I18n_Unit_Test extends Unit_Testcase {
 
+	#[Override]
 	protected function setup(): void {
 		\WP_Mock::setUp();
 	}
 
+	#[Override]
 	protected function tearDown(): void {
 		\WP_Mock::tearDown();
 	}

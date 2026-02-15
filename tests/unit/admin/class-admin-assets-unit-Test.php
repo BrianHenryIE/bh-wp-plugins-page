@@ -11,17 +11,20 @@
 namespace BrianHenryIE\WP_Plugins_Page\Admin;
 
 use BrianHenryIE\WP_Plugins_Page\API\Settings;
-use SebastianBergmann\CodeCoverage\CodeCoverage;
+use BrianHenryIE\WP_Plugins_Page\Unit_Testcase;
+use Override;
 
 /**
  * @coversDefaultClass \BrianHenryIE\WP_Plugins_Page\Admin\Admin_Assets
  */
-class Admin_Unit_Test extends \Codeception\Test\Unit {
+class Admin_Unit_Test extends Unit_Testcase {
 
+	#[Override]
 	protected function setUp(): void {
 		\WP_Mock::setUp();
 	}
 
+	#[Override]
 	protected function tearDown(): void {
 		parent::tearDown();
 		\WP_Mock::tearDown();
@@ -41,11 +44,16 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 
 		global $plugin_root_dir;
 
+		$plugin_root_url = 'http://localhost/wp-content/plugins/' . basename( $plugin_root_dir ) . '/';
+
+		/** @see plugins_url() */
 		\WP_Mock::userFunction(
-			'plugin_dir_url',
+			'plugins_url',
 			array(
 				'times'  => 2,
-				'return' => $plugin_root_dir . '/',
+				'return' => function ( $path, $plugin ) use ( $plugin_root_url ) {
+					return $plugin_root_url . $path;
+				},
 			)
 		);
 
@@ -61,7 +69,7 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 		\WP_Mock::passthruFunction( 'wp_create_nonce' );
 
 		$js_src = $plugin_root_dir . '/assets/bh-wp-plugins-page-admin.js';
-		$js_url = '/Users/brianhenry/Sites/bh-wp-plugins-page/assets/bh-wp-plugins-page-admin.js';
+		$js_url = $plugin_root_url . 'assets/bh-wp-plugins-page-admin.js';
 
 		\WP_Mock::userFunction(
 			'wp_json_encode',
@@ -83,7 +91,13 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			'wp_enqueue_script',
 			array(
 				'times' => 1,
-				'args'  => array( 'bh-wp-plugins-page', $js_url, array( 'jquery' ), '*', true ),
+				'args'  => array(
+					'bh-wp-plugins-page',
+					$js_url,
+					array( 'jquery' ),
+					'*',
+					true,
+				),
 			)
 		);
 
@@ -91,7 +105,12 @@ class Admin_Unit_Test extends \Codeception\Test\Unit {
 			'wp_enqueue_style',
 			array(
 				'times' => 1,
-				'args'  => array( 'bh-wp-plugins-page', \WP_Mock\Functions::type( 'string' ), array(), '*' ),
+				'args'  => array(
+					'bh-wp-plugins-page',
+					\WP_Mock\Functions::type( 'string' ),
+					array(),
+					'*',
+				),
 			)
 		);
 

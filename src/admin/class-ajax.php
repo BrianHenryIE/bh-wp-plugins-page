@@ -18,19 +18,16 @@ class AJAX {
 	use LoggerAwareTrait;
 
 	/**
-	 * The plugin functions.
-	 */
-	protected API $api;
-
-	/**
 	 * Constructor
 	 *
 	 * @param API             $api The plugin functions.
 	 * @param LoggerInterface $logger A PSR logger.
 	 */
-	public function __construct( API $api, LoggerInterface $logger ) {
+	public function __construct(
+		protected API $api,
+		LoggerInterface $logger
+	) {
 		$this->setLogger( $logger );
-		$this->api = $api;
 	}
 
 	/**
@@ -50,7 +47,11 @@ class AJAX {
 			wp_send_json_error( array( 'message' => 'Unauthorized' ), 401 );
 		}
 
-		if ( ! isset( $_POST['pluginBasename'], $_POST['pluginName'] ) ) {
+		if (
+			! isset( $_POST['pluginBasename'], $_POST['pluginName'] )
+			|| ! is_string( $_POST['pluginBasename'] )
+			|| ! is_string( $_POST['pluginName'] )
+		) {
 			wp_send_json_error( array( 'message' => 'Bad request.' ), 400 );
 		}
 
@@ -65,5 +66,4 @@ class AJAX {
 
 		wp_send_json_success( $result );
 	}
-
 }

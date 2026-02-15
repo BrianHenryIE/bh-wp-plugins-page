@@ -9,7 +9,9 @@ namespace BrianHenryIE\WP_Plugins_Page\API;
 
 use DOMDocument;
 use DOMElement;
+use DOMNamedNodeMap;
 use DOMNode;
+use DOMNodeList;
 
 /**
  * Uses DOMDocument to extract links from the text, the bare text, and provides utility functions for classifying the
@@ -23,13 +25,6 @@ class Parsed_Link {
 	 * @var string|null
 	 */
 	protected ?string $key = null;
-
-	/**
-	 * The original HTML.
-	 *
-	 * @var string
-	 */
-	protected string $original = '';
 
 	/**
 	 * The parsed HTML. This may be updated from the original.
@@ -70,17 +65,17 @@ class Parsed_Link {
 	 * A representation of the HTML in a plugins.php meta or action link.
 	 *
 	 * @param int|string $key The original array key.
-	 * @param string     $value The html string.
+	 * @param string     $original The HTML string.
 	 */
-	public function __construct( $key, string $value ) {
-
+	public function __construct(
+		$key,
+		protected string $original
+	) {
 		if ( is_string( $key ) ) {
 			$this->key = $key;
 		}
 
-		$this->original = $value;
-
-		$this->parse_html_string( $value );
+		$this->parse_html_string( $this->original );
 	}
 
 
@@ -112,10 +107,10 @@ class Parsed_Link {
 		$this->text = $dom_document->textContent;
 
 		$html_tag = $dom_document->firstElementChild;
-		$body_tag = $html_tag->firstElementChild;
+		$body_tag = $html_tag?->firstElementChild;
 
-		$body_nodes_count = count( $body_tag->childNodes );
-		$is_anchor        = 'a' === $body_tag->firstElementChild->tagName;
+		$body_nodes_count = count( $body_tag->childNodes ?? array() );
+		$is_anchor        = 'a' === $body_tag?->firstElementChild?->tagName;
 
 		$this->is_only_link = ( 1 === $body_nodes_count ) && $is_anchor;
 
@@ -133,7 +128,10 @@ class Parsed_Link {
 
 			$this->anchors[ $item_index ] = $anchor_node;
 
-			if ( is_null( $anchor_node->attributes ) || is_null( $anchor_node->attributes->getNamedItem( 'href' ) ) ) {
+			if (
+				! ( $anchor_node->attributes instanceof DOMNamedNodeMap ) /** @phpstan-ignore instanceof.alwaysTrue */
+				|| is_null( $anchor_node->attributes->getNamedItem( 'href' ) )
+			) {
 				continue;
 			}
 
@@ -173,14 +171,7 @@ class Parsed_Link {
 		if ( 0 === count( $this->urls ) ) {
 			return false;
 		}
-
-		foreach ( $this->urls as $url ) {
-			if ( ! $this->is_external_url( $url ) ) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any( $this->urls, fn( $url ) => ! $this->is_external_url( $url ) );
 	}
 
 	/**
@@ -193,14 +184,7 @@ class Parsed_Link {
 		if ( 0 === count( $this->urls ) ) {
 			return false;
 		}
-
-		foreach ( $this->urls as $url ) {
-			if ( $this->is_external_url( $url ) ) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any( $this->urls, fn( $url ) => $this->is_external_url( $url ) );
 	}
 
 	/**
@@ -212,7 +196,7 @@ class Parsed_Link {
 	protected function is_external_url( string $url ): bool {
 
 		$is_external_link = ! is_null( wp_parse_url( $url, PHP_URL_SCHEME ) )
-							&& ! stristr( $url, get_site_url() );
+							&& ! stristr( $url, (string) get_site_url() );
 
 		return $is_external_link;
 	}
@@ -266,16 +250,7 @@ class Parsed_Link {
 			'licence',
 			'license',
 		);
-
-		foreach ( $probably_unwanted_terms as $term ) {
-
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			if ( preg_match( '/\b' . $term . '\b/i', $this->text ) && $this->has_external_url() ) {
-				return true;
-			}
-		}
-
-		return false;
+		return array_any( $probably_unwanted_terms, fn( $term ) => preg_match( '/\b' . $term . '\b/i', $this->text ) && $this->has_external_url() );
 	}
 
 	/**
@@ -309,7 +284,9 @@ class Parsed_Link {
 
 		$unclean = '';
 		if ( isset( $this->dom_document ) ) {
-			$unclean = $this->dom_document->saveHTML( $this->dom_document->firstElementChild->firstElementChild->firstElementChild );
+			/** @var ?DOMElement $anchor <html> -> <body> -> <a>. */
+			$anchor  = $this->dom_document->firstElementChild?->firstElementChild?->firstElementChild;
+			$unclean = $this->dom_document->saveHTML( $anchor );
 		}
 
 		if ( empty( $unclean ) ) {
@@ -358,7 +335,10 @@ class Parsed_Link {
 		$match_github_repo_links = '/^https?:\/\/github.com\/(?!sponsors)[^\/]*\/[^\/]*[^\/]?$/i';
 
 		foreach ( $this->anchors as $anchor_node ) {
-			if ( is_null( $anchor_node->attributes ) || is_null( $anchor_node->attributes->getNamedItem( 'href' ) ) ) {
+			if (
+				! ( $anchor_node->attributes instanceof DOMNamedNodeMap ) /** @phpstan-ignore instanceof.alwaysTrue */
+				|| is_null( $anchor_node->attributes->getNamedItem( 'href' ) )
+			) {
 				continue;
 			}
 
@@ -371,11 +351,12 @@ class Parsed_Link {
 			$old_text = $anchor_node->nodeValue;
 
 			$anchor_node->setAttribute( 'class', 'bh-wp-plugins-page-github-icon' );
-			$anchor_node->setAttribute( 'title', $old_text );
+			if ( ! is_null( $old_text ) ) {
+				$anchor_node->setAttribute( 'title', $old_text );
+			}
 
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$anchor_node->nodeValue = '';
 		}
 	}
-
 }
