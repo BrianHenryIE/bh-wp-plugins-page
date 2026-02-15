@@ -15,6 +15,6 @@ modules:
             domain: "%TEST_SITE_WP_DOMAIN%"
             adminEmail: "%TEST_SITE_ADMIN_EMAIL%"
             title: "bh-wp-plugins-page"
-            plugins: ["bh-wp-plugins-page/bh-wp-plugins-page.php"]
-            activatePlugins: ["bh-wp-plugins-page/bh-wp-plugins-page.php"]
+            plugins: []
+            activatePlugins: []
             WP_CONTENT_DIR: wp-content

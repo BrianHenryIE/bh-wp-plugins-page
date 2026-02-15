@@ -25,3 +25,15 @@ $is_phpstorm = array_reduce(
 if ( $is_phpstorm ) {
 	define( 'WP_PHP_BINARY', PHP_BINARY );
 }
+
+$is_integration_test = array_reduce(
+	(array) $_SERVER['argv'],
+	fn( $carry, $arg ) => $carry || 'integration' === $arg,
+	false
+);
+if ( $is_integration_test ) {
+	global $arbitrary_plugins;
+	$arbitrary_plugins = array(
+		dirname( __DIR__, 1 ) . '/bh-wp-plugins-page.php.php',
+	);
+}

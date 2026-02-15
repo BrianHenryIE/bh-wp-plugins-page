@@ -71,3 +71,5 @@ dist-archive
 /playwright/.cache/
 
 .claude/settings.local.json
+
+!wp-content/mu-plugins/bh-plugin-outside-dir.php
