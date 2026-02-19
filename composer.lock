@@ -200,16 +200,16 @@
         },
         {
             "name": "brianhenryie/bh-wp-logger",
-            "version": "0.2",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BrianHenryIE/bh-wp-logger.git",
-                "reference": "d59d7c2c72c1e40ed2f395bb8c2102431ba52f5a"
+                "reference": "aa17d93e0a5502bb2ac34fd04164853a3fb42a41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BrianHenryIE/bh-wp-logger/zipball/d59d7c2c72c1e40ed2f395bb8c2102431ba52f5a",
-                "reference": "d59d7c2c72c1e40ed2f395bb8c2102431ba52f5a",
+                "url": "https://api.github.com/repos/BrianHenryIE/bh-wp-logger/zipball/aa17d93e0a5502bb2ac34fd04164853a3fb42a41",
+                "reference": "aa17d93e0a5502bb2ac34fd04164853a3fb42a41",
                 "shasum": ""
             },
             "require": {
@@ -244,22 +244,6 @@
                 "wpackagist-theme/twentytwenty": "*"
             },
             "type": "library",
-            "extra": {
-                "phpstorm": {
-                    "exclude_folders": {
-                        "folders": [
-                            "vendor/php-stubs/woocommerce-stubs",
-                            "vendor/wordpress/wordpress/includes",
-                            "vendor/wordpress/wordpress/build",
-                            "wp-content/plugins/bh-wp-logger-development-plugin",
-                            "wordpress/wp-content"
-                        ],
-                        "include_folders": [
-                            "vendor/wordpress/wordpress/"
-                        ]
-                    }
-                }
-            },
             "autoload": {
                 "classmap": [
                     "includes/",
@@ -279,9 +263,9 @@
             "description": "A PSR logger for WordPress plugins, with a nice WP_List_Table UI.",
             "support": {
                 "issues": "https://github.com/BrianHenryIE/bh-wp-logger/issues",
-                "source": "https://github.com/BrianHenryIE/bh-wp-logger/tree/0.2"
+                "source": "https://github.com/BrianHenryIE/bh-wp-logger/tree/0.2.1"
             },
-            "time": "2026-02-13T22:04:55+00:00"
+            "time": "2026-02-18T20:02:36+00:00"
         },
         {
             "name": "brianhenryie/bh-wp-private-uploads",
@@ -12674,5 +12658,5 @@
     "platform-overrides": {
         "php": "8.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
