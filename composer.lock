@@ -10169,11 +10169,11 @@
         },
         {
             "name": "wordpress/wordpress",
-            "version": "6.9.0",
+            "version": "6.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/wordpress-develop",
-                "reference": "3a87241015aff96c7a38c1304949908b9588b218"
+                "reference": "074792ef21d9160a8fabdda215f8bf48f7a91d43"
             },
             "require": {
                 "ext-hash": "*",
@@ -10223,7 +10223,7 @@
             "support": {
                 "issues": "https://core.trac.wordpress.org/"
             },
-            "time": "2025-12-02T18:34:26+00:00"
+            "time": "2026-03-11T14:55:00+00:00"
         },
         {
             "name": "wp-cli/cache-command",
@@ -12658,5 +12658,5 @@
     "platform-overrides": {
         "php": "8.4"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
