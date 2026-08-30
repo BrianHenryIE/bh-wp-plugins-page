@@ -5,6 +5,10 @@
 * Require PHP 8.4
 * Update dependencies
 
+## 1.3.0 2023-04-27
+
+* 
+
 ## 1.2.0
 
  * Add: Rename plugins by clicking on their title

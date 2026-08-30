@@ -6,3 +6,7 @@
 .plugin-title.column-primary>strong {
     cursor: pointer;
 }
+
+.plugin-version {
+    cursor: pointer;
+}
