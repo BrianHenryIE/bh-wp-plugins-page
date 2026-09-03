@@ -17,7 +17,15 @@
   },
   "mappings": {
     "../setup": "./tests/_wp-env",
-    "wp-content/plugins/query-monitor": "./wp-content/plugins/query-monitor"
+    "wp-content/plugins/bh-wp-autologin-urls": "./wp-content/plugins/bh-wp-autologin-urls",
+    "wp-content/plugins/jetpack": "./wp-content/plugins/jetpack",
+    "wp-content/plugins/kb-support": "./wp-content/plugins/kb-support",
+    "wp-content/plugins/lh-add-media-from-url": "./wp-content/plugins/lh-add-media-from-url",
+    "wp-content/plugins/log-http-requests": "./wp-content/plugins/log-http-requests",
+    "wp-content/plugins/query-monitor": "./wp-content/plugins/query-monitor",
+    "wp-content/plugins/user-switching": "./wp-content/plugins/user-switching",
+    "wp-content/plugins/webappick-product-feed-for-woocommerce": "./wp-content/plugins/webappick-product-feed-for-woocommerce",
+    "wp-content/plugins/zippy": "./wp-content/plugins/zippy"
   },
   "phpVersion": "8.4"
 }
